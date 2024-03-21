@@ -4,6 +4,7 @@ import Nullable from "src/types/Nullable";
 import { getTask } from "../tasks";
 import { updateTask } from "../redux/slices/tasksSlice"
 import store from "../store";
+import Calculator from "src/components/Calculator/Calculator";
 
 
 
@@ -33,25 +34,7 @@ const Contact = () => {
 	const { task } = useLoaderData() as { task: Nullable<TaskType> };
 
 	return (
-		<div id="task">
-
-			<div>
-				<h1>
-					{task?.name ? (
-						<>
-							{task?.name}
-						</>
-					) : (
-						<i>No Name</i>
-					)}
-					{" "}
-
-				</h1>
-
-				{task?.description && <p>{task?.description}</p>}
-
-			</div>
-		</div>
+		<Calculator task={task!}></Calculator>
 	);
 }
 
