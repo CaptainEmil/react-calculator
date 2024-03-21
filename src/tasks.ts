@@ -10,7 +10,7 @@ export const getTasks = (): TaskType[] => {
 	return tasks.sort(sortBy("last", "createdAt"));
 }
 
-export const getTask = (tasks:TaskType[],id?: string): Nullable<TaskType> => {
+export const getTask = (tasks: TaskType[], id?: string): Nullable<TaskType> => {
 	let task = tasks.find(task => task.id === id);
 
 	return task ?? null;
@@ -28,11 +28,47 @@ export const createTask: CaseReducer<TaskType[]> = (state): TaskType[] => {
 	return tasks;
 }
 
+export const calcTask: CaseReducer<TaskType[], PayloadAction<string>> = (state, action): TaskType[] => {
+
+	let tasks: TaskType[] = state;
+
+	let task = tasks.find(task => task.id === action.payload);
+
+	if (!task) throw new Error("No task found for", { cause: action.payload });
+
+	if (task.num1 === undefined || task.num2 === undefined || task.oper === undefined) throw new Error("No num1,num2 or oper field found for", { cause: action.payload });
+
+	let res: number;
+
+	switch (task.oper) {
+		case "+":
+			res = task.num1 + task.num2;
+			break;
+		case "-":
+			res = task.num1 - task.num2;
+			break;
+		case "*":
+			res = task.num1 * task.num2;
+			break;
+		case "/":
+			res = task.num1 / task.num2;
+			break;
+		default:
+			throw new Error("No such operation:", { cause: task.oper });
+	}
+
+	Object.assign(task, { res });
+
+	set(tasks);
+
+	return tasks;
+}
+
 
 export const updateTask: CaseReducer<TaskType[], PayloadAction<TaskType>> = (state, action): TaskType[] => {
-	
+
 	let tasks: TaskType[] = state;
-	
+
 	let task = tasks.find(task => task.id === action.payload.id);
 
 	if (!task) throw new Error("No task found for", { cause: action.payload.id });
@@ -41,7 +77,7 @@ export const updateTask: CaseReducer<TaskType[], PayloadAction<TaskType>> = (sta
 	Object.assign(task, action.payload);
 
 	set(tasks);
-	
+
 	return tasks;
 }
 

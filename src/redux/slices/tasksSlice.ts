@@ -3,7 +3,8 @@ import {
 	getTasks,
 	createTask as createTaskImp,
 	updateTask as updateTaskImp,
-	deleteTask as deleteTaskImp
+	deleteTask as deleteTaskImp,
+	calcTask as calcTaskImp
 } from "../../tasks";
 
 
@@ -13,7 +14,8 @@ export const tasksSlice = createSlice({
 	reducers: {
 		createTask: createTaskImp,
 		updateTask: updateTaskImp,
-		deleteTask: deleteTaskImp
+		deleteTask: deleteTaskImp,
+		calcTask: calcTaskImp
 	}
 });
 
