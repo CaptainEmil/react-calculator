@@ -1,5 +1,6 @@
 import TaskType from "src/types/Task";
 import Buttons from "./Buttons/Buttons";
+import Display from "./Display/Display";
 type CalculatorProps = {
     task: TaskType
 }
@@ -7,7 +8,7 @@ type CalculatorProps = {
 const Calculator = ({ task }: CalculatorProps) => {
     return (
         <div className="calculator-container">
-            <Display></Display>
+            <Display task={task}></Display>
             <Buttons task={task}></Buttons>
         </div>
     )

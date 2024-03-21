@@ -5,7 +5,7 @@ type TaskType = {
 	oper?: string,
 	num2?: number,
 	name?: string,
-	result?: number,
+	res?: number,
 }
 
 export default TaskType;
