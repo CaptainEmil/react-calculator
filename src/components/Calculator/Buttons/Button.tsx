@@ -15,6 +15,9 @@ const Button = ({ task, children,oper }: ButtonProps) => {
     const handleClick: React.MouseEventHandler<HTMLButtonElement> | undefined = e => {
         const text = e.currentTarget.textContent;
         const num = Number(text);
+        if(oper){
+            
+        }
         if (Number.isNaN(num)) {
             dispatch(updateTask({ id: task.id, oper: text! }));
             return;
