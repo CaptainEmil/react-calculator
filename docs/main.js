@@ -4352,6 +4352,167 @@ function persistAppliedTransitions(_window, transitions) {
 
 /***/ }),
 
+/***/ "./src/components/Calculator/Buttons/Button.tsx":
+/*!******************************************************!*\
+  !*** ./src/components/Calculator/Buttons/Button.tsx ***!
+  \******************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../store */ "./src/store.ts");
+/* harmony import */ var _redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../redux/slices/tasksSlice */ "./src/redux/slices/tasksSlice.ts");
+/* provided dependency */ var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+
+var Button = function Button(_ref) {
+  var task = _ref.task,
+    children = _ref.children;
+  var dispatch = (0,_store__WEBPACK_IMPORTED_MODULE_0__.useTypedDispatch)();
+  var handleClick = function handleClick(e) {
+    var text = e.currentTarget.textContent;
+    var num = Number(text);
+    if (Number.isNaN(num)) {
+      dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_1__.updateTask)({
+        id: task.id,
+        oper: text
+      }));
+      return;
+    }
+    if (task.num1 === undefined) {
+      dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_1__.updateTask)({
+        id: task.id,
+        num1: num
+      }));
+      return;
+    }
+    dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_1__.updateTask)({
+      id: task.id,
+      num2: num
+    }));
+  };
+  return /*#__PURE__*/React.createElement("button", {
+    onClick: handleClick
+  }, children);
+};
+/* harmony default export */ __webpack_exports__["default"] = (Button);
+
+/***/ }),
+
+/***/ "./src/components/Calculator/Buttons/Buttons.tsx":
+/*!*******************************************************!*\
+  !*** ./src/components/Calculator/Buttons/Buttons.tsx ***!
+  \*******************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Button__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Button */ "./src/components/Calculator/Buttons/Button.tsx");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/dist/index.js");
+/* provided dependency */ var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+
+var Buttons = function Buttons(_ref) {
+  var task = _ref.task;
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "line-container"
+  }, /*#__PURE__*/React.createElement(_Button__WEBPACK_IMPORTED_MODULE_0__["default"], {
+    task: task
+  }, "7"), /*#__PURE__*/React.createElement(_Button__WEBPACK_IMPORTED_MODULE_0__["default"], {
+    task: task
+  }, "8"), /*#__PURE__*/React.createElement(_Button__WEBPACK_IMPORTED_MODULE_0__["default"], {
+    task: task
+  }, "9"), /*#__PURE__*/React.createElement(_Button__WEBPACK_IMPORTED_MODULE_0__["default"], {
+    task: task
+  }, "\xF7")), /*#__PURE__*/React.createElement("div", {
+    className: "line-container"
+  }, /*#__PURE__*/React.createElement(_Button__WEBPACK_IMPORTED_MODULE_0__["default"], {
+    task: task
+  }, "4"), /*#__PURE__*/React.createElement(_Button__WEBPACK_IMPORTED_MODULE_0__["default"], {
+    task: task
+  }, "5"), /*#__PURE__*/React.createElement(_Button__WEBPACK_IMPORTED_MODULE_0__["default"], {
+    task: task
+  }, "6"), /*#__PURE__*/React.createElement(_Button__WEBPACK_IMPORTED_MODULE_0__["default"], {
+    task: task
+  }, "\xD7")), /*#__PURE__*/React.createElement("div", {
+    className: "line-container"
+  }, /*#__PURE__*/React.createElement(_Button__WEBPACK_IMPORTED_MODULE_0__["default"], {
+    task: task
+  }, "1"), /*#__PURE__*/React.createElement(_Button__WEBPACK_IMPORTED_MODULE_0__["default"], {
+    task: task
+  }, "2"), /*#__PURE__*/React.createElement(_Button__WEBPACK_IMPORTED_MODULE_0__["default"], {
+    task: task
+  }, "3"), /*#__PURE__*/React.createElement(_Button__WEBPACK_IMPORTED_MODULE_0__["default"], {
+    task: task
+  }, "-")), /*#__PURE__*/React.createElement("div", {
+    className: "line-container"
+  }, /*#__PURE__*/React.createElement(_Button__WEBPACK_IMPORTED_MODULE_0__["default"], {
+    task: task
+  }, "0"), /*#__PURE__*/React.createElement(_Button__WEBPACK_IMPORTED_MODULE_0__["default"], {
+    task: task
+  }, "."), /*#__PURE__*/React.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__.Form, {
+    method: "post"
+  }, /*#__PURE__*/React.createElement("button", {
+    type: "submit"
+  }, "=")), /*#__PURE__*/React.createElement(_Button__WEBPACK_IMPORTED_MODULE_0__["default"], {
+    task: task
+  }, "+")));
+};
+/* harmony default export */ __webpack_exports__["default"] = (Buttons);
+
+/***/ }),
+
+/***/ "./src/components/Calculator/Calculator.tsx":
+/*!**************************************************!*\
+  !*** ./src/components/Calculator/Calculator.tsx ***!
+  \**************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Buttons_Buttons__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Buttons/Buttons */ "./src/components/Calculator/Buttons/Buttons.tsx");
+/* harmony import */ var _Display_Display__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Display/Display */ "./src/components/Calculator/Display/Display.tsx");
+/* provided dependency */ var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+
+var Calculator = function Calculator(_ref) {
+  var task = _ref.task;
+  return /*#__PURE__*/React.createElement("div", {
+    className: "calculator-container"
+  }, /*#__PURE__*/React.createElement(_Display_Display__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    task: task
+  }), /*#__PURE__*/React.createElement(_Buttons_Buttons__WEBPACK_IMPORTED_MODULE_0__["default"], {
+    task: task
+  }));
+};
+/* harmony default export */ __webpack_exports__["default"] = (Calculator);
+
+/***/ }),
+
+/***/ "./src/components/Calculator/Display/Display.tsx":
+/*!*******************************************************!*\
+  !*** ./src/components/Calculator/Display/Display.tsx ***!
+  \*******************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* provided dependency */ var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var Display = function Display(_ref) {
+  var task = _ref.task;
+  var expr = "".concat(task.num1, " ").concat(task.oper, " ").concat(task.num2);
+  return /*#__PURE__*/React.createElement("div", {
+    className: "display-container"
+  }, /*#__PURE__*/React.createElement("div", {
+    id: "upper"
+  }, expr), /*#__PURE__*/React.createElement("div", {
+    id: "lower"
+  }, task.res === undefined ? expr : task.res));
+};
+/* harmony default export */ __webpack_exports__["default"] = (Display);
+
+/***/ }),
+
 /***/ "./src/error-page.tsx":
 /*!****************************!*\
   !*** ./src/error-page.tsx ***!
@@ -4398,7 +4559,8 @@ var tasksSlice = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_1__.createSlice)({
   reducers: {
     createTask: _tasks__WEBPACK_IMPORTED_MODULE_0__.createTask,
     updateTask: _tasks__WEBPACK_IMPORTED_MODULE_0__.updateTask,
-    deleteTask: _tasks__WEBPACK_IMPORTED_MODULE_0__.deleteTask
+    deleteTask: _tasks__WEBPACK_IMPORTED_MODULE_0__.deleteTask,
+    calcTask: _tasks__WEBPACK_IMPORTED_MODULE_0__.calcTask
   }
 });
 var _tasksSlice$actions = tasksSlice.actions,
@@ -4532,82 +4694,36 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   action: function() { return /* binding */ action; }
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "./node_modules/@babel/runtime/helpers/esm/slicedToArray.js");
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-router-dom */ "./node_modules/@remix-run/router/dist/router.js");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/dist/index.js");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/dist/index.js");
-/* harmony import */ var _redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../redux/slices/tasksSlice */ "./src/redux/slices/tasksSlice.ts");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/dist/react-redux.mjs");
-/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../store */ "./src/store.ts");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-router-dom */ "./node_modules/@remix-run/router/dist/router.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/dist/index.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/dist/index.js");
+/* harmony import */ var _redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../redux/slices/tasksSlice */ "./src/redux/slices/tasksSlice.ts");
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../store */ "./src/store.ts");
 /* provided dependency */ var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 
 
-
-
-
-
-
 function action() {
-  _store__WEBPACK_IMPORTED_MODULE_5__["default"].dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_3__.createTask)());
-  var tasks = _store__WEBPACK_IMPORTED_MODULE_5__["default"].getState().tasksReducer;
+  _store__WEBPACK_IMPORTED_MODULE_1__["default"].dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_0__.createTask)());
+  var tasks = _store__WEBPACK_IMPORTED_MODULE_1__["default"].getState().tasksReducer;
   var task = tasks[tasks.length - 1];
-  return (0,react_router_dom__WEBPACK_IMPORTED_MODULE_6__.redirect)("/".concat(task.id, "/edit"));
+  return (0,react_router_dom__WEBPACK_IMPORTED_MODULE_2__.redirect)("/".concat(task.id, "/edit"));
 }
 var Root = function Root() {
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)('all'),
-    _useState2 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__["default"])(_useState, 2),
-    filterType = _useState2[0],
-    setFiltertype = _useState2[1];
-  var tasks = (0,_store__WEBPACK_IMPORTED_MODULE_5__.useTypedSelector)(function (state) {
+  var tasks = (0,_store__WEBPACK_IMPORTED_MODULE_1__.useTypedSelector)(function (state) {
     return state.tasksReducer;
   });
-  var navigation = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_7__.useNavigation)();
+  var navigation = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_3__.useNavigation)();
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     id: "sidebar"
-  }, /*#__PURE__*/React.createElement("h1", null, "React Router Tasks"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_8__.Form, {
-    id: "search-form",
-    role: "search"
-  }, /*#__PURE__*/React.createElement("button", {
-    onClick: function onClick() {
-      setFiltertype("done");
-    }
-  }, "Show done"), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("button", {
-    onClick: function onClick() {
-      setFiltertype("undone");
-    }
-  }, "Show undone"), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("button", {
-    onClick: function onClick() {
-      setFiltertype("all");
-    }
-  }, "Show all"), /*#__PURE__*/React.createElement("div", {
-    className: "sr-only",
-    "aria-live": "polite"
-  })), /*#__PURE__*/React.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_8__.Form, {
+  }, /*#__PURE__*/React.createElement("h1", null, "React Router Tasks"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Form, {
     method: "post"
   }, /*#__PURE__*/React.createElement("button", {
     type: "submit"
-  }, "New"))), /*#__PURE__*/React.createElement("nav", null, tasks.length ? /*#__PURE__*/React.createElement("ul", null, tasks.filter(function (task) {
-    switch (filterType) {
-      case "all":
-        return task;
-      case "done":
-        return task.isDone == true ? task : undefined;
-      case "undone":
-        return task.isDone == false ? task : undefined;
-      default:
-        return;
-    }
-  }).map(function (task) {
-    var _task$id;
+  }, "New"))), /*#__PURE__*/React.createElement("nav", null, tasks.length ? /*#__PURE__*/React.createElement("ul", null, tasks.map(function (task) {
     return /*#__PURE__*/React.createElement("li", {
       key: task.id
-    }, /*#__PURE__*/React.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_8__.NavLink, {
+    }, /*#__PURE__*/React.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.NavLink, {
       to: "/".concat(task.id),
       className: function className(_ref) {
         var isActive = _ref.isActive,
@@ -4616,11 +4732,11 @@ var Root = function Root() {
       }
     }, task.name ? /*#__PURE__*/React.createElement(React.Fragment, null, task.name) : /*#__PURE__*/React.createElement("i", null, "No Name"), " "), /*#__PURE__*/React.createElement("div", {
       className: "button-container"
-    }, /*#__PURE__*/React.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_8__.Form, {
+    }, /*#__PURE__*/React.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Form, {
       action: "/".concat(task.id, "/edit")
     }, /*#__PURE__*/React.createElement("button", {
       type: "submit"
-    }, "Edit")), /*#__PURE__*/React.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_8__.Form, {
+    }, "Edit")), /*#__PURE__*/React.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Form, {
       method: "post",
       action: "/".concat(task.id, "/destroy"),
       onSubmit: function onSubmit(event) {
@@ -4630,60 +4746,13 @@ var Root = function Root() {
       }
     }, /*#__PURE__*/React.createElement("button", {
       type: "submit"
-    }, "Delete")), /*#__PURE__*/React.createElement(IsDone, {
-      id: (_task$id = task.id) !== null && _task$id !== void 0 ? _task$id : ''
-    })));
+    }, "Delete"))));
   })) : /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("i", null, "No tasks")))), /*#__PURE__*/React.createElement("div", {
     id: "detail",
     className: navigation.state === "loading" ? "loading" : ""
-  }, /*#__PURE__*/React.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_7__.Outlet, null)));
+  }, /*#__PURE__*/React.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__.Outlet, null)));
 };
 /* harmony default export */ __webpack_exports__["default"] = (Root);
-var IsDone = function IsDone(_ref2) {
-  var id = _ref2.id;
-  var tasks = (0,_store__WEBPACK_IMPORTED_MODULE_5__.useTypedSelector)(function (state) {
-    return state.tasksReducer;
-  });
-  var task = tasks.find(function (task) {
-    return task.id === id;
-  });
-  var dispatch = (0,react_redux__WEBPACK_IMPORTED_MODULE_9__.useDispatch)();
-  var handleInput = /*#__PURE__*/function () {
-    var _ref3 = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default().mark(function _callee(e) {
-      var input;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default().wrap(function _callee$(_context) {
-        while (1) switch (_context.prev = _context.next) {
-          case 0:
-            input = e.currentTarget;
-            dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_3__.updateTask)({
-              id: input.id,
-              isDone: !task.isDone
-            }));
-          case 2:
-          case "end":
-            return _context.stop();
-        }
-      }, _callee);
-    }));
-    return function handleInput(_x) {
-      return _ref3.apply(this, arguments);
-    };
-  }();
-  return /*#__PURE__*/React.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_8__.Form, {
-    action: ""
-  }, /*#__PURE__*/React.createElement("input", {
-    id: task === null || task === void 0 ? void 0 : task.id,
-    type: "checkbox",
-    name: "isDone",
-    value: task !== null && task !== void 0 && task.isDone ? "true" : "false",
-    defaultChecked: task !== null && task !== void 0 && task.isDone ? true : false,
-    onInput: handleInput,
-    "aria-label": task !== null && task !== void 0 && task.isDone ? "Remove from isDones" : "Add to isDones"
-  }), /*#__PURE__*/React.createElement("label", {
-    id: (task === null || task === void 0 ? void 0 : task.id) + '-status-label',
-    htmlFor: "isDone"
-  }, "Status: ", task !== null && task !== void 0 && task.isDone ? "Done" : "Undone"));
-};
 
 /***/ }),
 
@@ -4702,11 +4771,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/dist/index.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/dist/index.js");
 /* harmony import */ var _tasks__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../tasks */ "./src/tasks.ts");
 /* harmony import */ var _redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../redux/slices/tasksSlice */ "./src/redux/slices/tasksSlice.ts");
 /* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../store */ "./src/store.ts");
+/* harmony import */ var _components_Calculator_Calculator__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/Calculator/Calculator */ "./src/components/Calculator/Calculator.tsx");
 /* provided dependency */ var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
 
 
 
@@ -4728,8 +4799,8 @@ function _action() {
         case 3:
           formData = _context.sent;
           return _context.abrupt("return", _store__WEBPACK_IMPORTED_MODULE_4__["default"].dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_3__.updateTask)({
-            id: params.taskId,
-            isDone: formData.get("isDone") === "true"
+            id: params.taskId
+            // isDone: formData.get("isDone") === "true",
           })));
         case 5:
         case "end":
@@ -4741,7 +4812,8 @@ function _action() {
 }
 function loader(_ref2) {
   var params = _ref2.params;
-  var task = (0,_tasks__WEBPACK_IMPORTED_MODULE_2__.getTask)(params.taskId);
+  var tasks = _store__WEBPACK_IMPORTED_MODULE_4__["default"].getState().tasksReducer;
+  var task = (0,_tasks__WEBPACK_IMPORTED_MODULE_2__.getTask)(tasks, params.taskId);
   if (!task) {
     throw new Response("", {
       status: 404,
@@ -4753,11 +4825,11 @@ function loader(_ref2) {
   };
 }
 var Contact = function Contact() {
-  var _ref3 = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_5__.useLoaderData)(),
+  var _ref3 = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_6__.useLoaderData)(),
     task = _ref3.task;
-  return /*#__PURE__*/React.createElement("div", {
-    id: "task"
-  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h1", null, task !== null && task !== void 0 && task.name ? /*#__PURE__*/React.createElement(React.Fragment, null, task === null || task === void 0 ? void 0 : task.name) : /*#__PURE__*/React.createElement("i", null, "No Name"), " "), (task === null || task === void 0 ? void 0 : task.description) && /*#__PURE__*/React.createElement("p", null, task === null || task === void 0 ? void 0 : task.description)));
+  return /*#__PURE__*/React.createElement(_components_Calculator_Calculator__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    task: task
+  });
 };
 /* harmony default export */ __webpack_exports__["default"] = (Contact);
 {/* <button
@@ -4818,6 +4890,7 @@ var useTypedSelector = react_redux__WEBPACK_IMPORTED_MODULE_2__.useSelector.with
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   calcTask: function() { return /* binding */ calcTask; },
 /* harmony export */   createTask: function() { return /* binding */ createTask; },
 /* harmony export */   deleteTask: function() { return /* binding */ deleteTask; },
 /* harmony export */   getTask: function() { return /* binding */ getTask; },
@@ -4833,8 +4906,7 @@ var getTasks = function getTasks() {
   var tasks = tasksStr === null ? [] : JSON.parse(tasksStr);
   return tasks.sort(sort_by__WEBPACK_IMPORTED_MODULE_0___default()("last", "createdAt"));
 };
-var getTask = function getTask(id) {
-  var tasks = getTasks();
+var getTask = function getTask(tasks, id) {
   var task = tasks.find(function (task) {
     return task.id === id;
   });
@@ -4852,8 +4924,40 @@ var createTask = function createTask(state) {
   set(tasks);
   return tasks;
 };
-
-// id?: string, updates?: TaskType
+var calcTask = function calcTask(state, action) {
+  var tasks = state;
+  var task = tasks.find(function (task) {
+    return task.id === action.payload;
+  });
+  if (!task) throw new Error("No task found for", {
+    cause: action.payload
+  });
+  if (task.num1 === undefined || task.num2 === undefined || task.oper === undefined) return tasks;
+  var res;
+  switch (task.oper) {
+    case "+":
+      res = task.num1 + task.num2;
+      break;
+    case "-":
+      res = task.num1 - task.num2;
+      break;
+    case "*":
+      res = task.num1 * task.num2;
+      break;
+    case "/":
+      res = task.num1 / task.num2;
+      break;
+    default:
+      throw new Error("No such operation:", {
+        cause: task.oper
+      });
+  }
+  Object.assign(task, {
+    res: res
+  });
+  set(tasks);
+  return tasks;
+};
 var updateTask = function updateTask(state, action) {
   var tasks = state;
   var task = tasks.find(function (task) {
@@ -42765,42 +42869,6 @@ try {
 
 /***/ }),
 
-/***/ "./node_modules/@babel/runtime/helpers/esm/arrayLikeToArray.js":
-/*!*********************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/arrayLikeToArray.js ***!
-  \*********************************************************************/
-/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": function() { return /* binding */ _arrayLikeToArray; }
-/* harmony export */ });
-function _arrayLikeToArray(arr, len) {
-  if (len == null || len > arr.length) len = arr.length;
-  for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
-  return arr2;
-}
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/esm/arrayWithHoles.js":
-/*!*******************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/arrayWithHoles.js ***!
-  \*******************************************************************/
-/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": function() { return /* binding */ _arrayWithHoles; }
-/* harmony export */ });
-function _arrayWithHoles(arr) {
-  if (Array.isArray(arr)) return arr;
-}
-
-/***/ }),
-
 /***/ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js":
 /*!*********************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js ***!
@@ -42875,89 +42943,6 @@ function _defineProperty(obj, key, value) {
 
 /***/ }),
 
-/***/ "./node_modules/@babel/runtime/helpers/esm/iterableToArrayLimit.js":
-/*!*************************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/iterableToArrayLimit.js ***!
-  \*************************************************************************/
-/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": function() { return /* binding */ _iterableToArrayLimit; }
-/* harmony export */ });
-function _iterableToArrayLimit(r, l) {
-  var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];
-  if (null != t) {
-    var e,
-      n,
-      i,
-      u,
-      a = [],
-      f = !0,
-      o = !1;
-    try {
-      if (i = (t = t.call(r)).next, 0 === l) {
-        if (Object(t) !== t) return;
-        f = !1;
-      } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0);
-    } catch (r) {
-      o = !0, n = r;
-    } finally {
-      try {
-        if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return;
-      } finally {
-        if (o) throw n;
-      }
-    }
-    return a;
-  }
-}
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/esm/nonIterableRest.js":
-/*!********************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/nonIterableRest.js ***!
-  \********************************************************************/
-/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": function() { return /* binding */ _nonIterableRest; }
-/* harmony export */ });
-function _nonIterableRest() {
-  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/esm/slicedToArray.js":
-/*!******************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/slicedToArray.js ***!
-  \******************************************************************/
-/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": function() { return /* binding */ _slicedToArray; }
-/* harmony export */ });
-/* harmony import */ var _arrayWithHoles_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./arrayWithHoles.js */ "./node_modules/@babel/runtime/helpers/esm/arrayWithHoles.js");
-/* harmony import */ var _iterableToArrayLimit_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./iterableToArrayLimit.js */ "./node_modules/@babel/runtime/helpers/esm/iterableToArrayLimit.js");
-/* harmony import */ var _unsupportedIterableToArray_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./unsupportedIterableToArray.js */ "./node_modules/@babel/runtime/helpers/esm/unsupportedIterableToArray.js");
-/* harmony import */ var _nonIterableRest_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./nonIterableRest.js */ "./node_modules/@babel/runtime/helpers/esm/nonIterableRest.js");
-
-
-
-
-function _slicedToArray(arr, i) {
-  return (0,_arrayWithHoles_js__WEBPACK_IMPORTED_MODULE_0__["default"])(arr) || (0,_iterableToArrayLimit_js__WEBPACK_IMPORTED_MODULE_1__["default"])(arr, i) || (0,_unsupportedIterableToArray_js__WEBPACK_IMPORTED_MODULE_2__["default"])(arr, i) || (0,_nonIterableRest_js__WEBPACK_IMPORTED_MODULE_3__["default"])();
-}
-
-/***/ }),
-
 /***/ "./node_modules/@babel/runtime/helpers/esm/toPrimitive.js":
 /*!****************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/esm/toPrimitive.js ***!
@@ -43025,30 +43010,6 @@ function _typeof(o) {
   } : function (o) {
     return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
   }, _typeof(o);
-}
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/esm/unsupportedIterableToArray.js":
-/*!*******************************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/unsupportedIterableToArray.js ***!
-  \*******************************************************************************/
-/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": function() { return /* binding */ _unsupportedIterableToArray; }
-/* harmony export */ });
-/* harmony import */ var _arrayLikeToArray_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./arrayLikeToArray.js */ "./node_modules/@babel/runtime/helpers/esm/arrayLikeToArray.js");
-
-function _unsupportedIterableToArray(o, minLen) {
-  if (!o) return;
-  if (typeof o === "string") return (0,_arrayLikeToArray_js__WEBPACK_IMPORTED_MODULE_0__["default"])(o, minLen);
-  var n = Object.prototype.toString.call(o).slice(8, -1);
-  if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return (0,_arrayLikeToArray_js__WEBPACK_IMPORTED_MODULE_0__["default"])(o, minLen);
 }
 
 /***/ }),

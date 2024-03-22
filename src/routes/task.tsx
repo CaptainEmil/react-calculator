@@ -4,7 +4,7 @@ import Nullable from "src/types/Nullable";
 import { getTask } from "../tasks";
 import { updateTask } from "../redux/slices/tasksSlice"
 import store from "../store";
-import Calculator from "src/components/Calculator/Calculator";
+import Calculator from "../components/Calculator/Calculator";
 
 
 
@@ -13,7 +13,7 @@ export async function action({ request, params }: ActionFunctionArgs<any>) {
 	let formData = await request.formData();
 	return store.dispatch(updateTask({
 		id: params.taskId,
-		isDone: formData.get("isDone") === "true",
+		// isDone: formData.get("isDone") === "true",
 	}
 	));
 }

@@ -36,7 +36,7 @@ export const calcTask: CaseReducer<TaskType[], PayloadAction<string>> = (state, 
 
 	if (!task) throw new Error("No task found for", { cause: action.payload });
 
-	if (task.num1 === undefined || task.num2 === undefined || task.oper === undefined) throw new Error("No num1,num2 or oper field found for", { cause: action.payload });
+	if (task.num1 === undefined || task.num2 === undefined || task.oper === undefined) return tasks;
 
 	let res: number;
 

@@ -1,14 +1,15 @@
 import { ReactNode } from "react";
 import TaskType from "src/types/Task";
-import { useTypedDispatch } from "src/store";
+import { useTypedDispatch } from "../../../store";
 import { updateTask } from "../../../redux/slices/tasksSlice";
 
 type ButtonProps = {
     task: TaskType;
     children: ReactNode;
+    oper?:string;
 }
 
-const Button = ({ task, children }: ButtonProps) => {
+const Button = ({ task, children,oper }: ButtonProps) => {
     const dispatch = useTypedDispatch();
 
     const handleClick: React.MouseEventHandler<HTMLButtonElement> | undefined = e => {

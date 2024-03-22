@@ -16,34 +16,14 @@ export function action() {
 
 
 const Root = () => {
-	const [filterType, setFiltertype] = useState('all');
-	const tasks=useTypedSelector((state)=>state.tasksReducer);
+	const tasks = useTypedSelector((state) => state.tasksReducer);
 	const navigation = useNavigation();
-
-
 
 	return (
 		<>
 			<div id="sidebar">
 				<h1>React Router Tasks</h1>
 				<div>
-					<Form id="search-form" role="search">
-						<button onClick={() => {
-							setFiltertype("done");
-						}}>Show done</button>
-						<br />
-						<button onClick={() => {
-							setFiltertype("undone");
-						}}>Show undone</button>
-						<br />
-						<button onClick={() => {
-							setFiltertype("all");
-						}}>Show all</button>
-						<div
-							className="sr-only"
-							aria-live="polite"
-						></div>
-					</Form>
 					<Form method="post">
 						<button type="submit">New</button>
 					</Form>
@@ -52,19 +32,6 @@ const Root = () => {
 					{tasks.length ? (
 						<ul>
 							{tasks
-								.filter((task) => {
-									switch (filterType) {
-										case "all":
-											return task;
-										case "done":
-											return task.isDone == true ? task : undefined;
-										case "undone":
-											return task.isDone == false ? task : undefined;
-										default:
-											return;
-									}
-
-								})
 								.map((task) => (
 									<li key={task.id}>
 										<NavLink
@@ -105,7 +72,6 @@ const Root = () => {
 											>
 												<button type="submit">Delete</button>
 											</Form>
-											<IsDone id={task.id ?? ''} />
 										</div>
 									</li>
 								))}
@@ -130,45 +96,3 @@ const Root = () => {
 }
 
 export default Root;
-
-type IsDoneProps = {
-	id: string
-}
-
-const IsDone = ({ id }: IsDoneProps) => {
-	const tasks=useTypedSelector((state)=>state.tasksReducer);
-	const task = getTask(tasks,id);
-	const dispatch = useDispatch();
-
-	const handleInput = async (e: React.ChangeEvent<HTMLInputElement>) => {
-		const input = e.currentTarget;
-
-		dispatch(updateTask({
-			id: input.id,
-			isDone: !task!.isDone,
-		}));
-
-
-	}
-
-	return (
-		<Form action={``}>
-			<input
-				id={task?.id}
-				type="checkbox"
-				name="isDone"
-				value={task?.isDone ? "true" : "false"}
-				defaultChecked={task?.isDone ? true : false}
-				onInput={handleInput}
-				aria-label={
-					task?.isDone
-						? "Remove from isDones"
-						: "Add to isDones"
-				}
-			>
-			</input>
-			<label id={task?.id + '-status-label'} htmlFor="isDone">Status: {task?.isDone ? "Done" : "Undone"}</label>
-		</Form>
-
-	);
-}
