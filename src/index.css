@@ -445,3 +445,11 @@ i {
 		color: grey;
 	}
 }
+
+#sidebar li{
+	display: flex;
+	gap: 5px;
+	& a{
+		flex-grow: 1;
+	}
+}
