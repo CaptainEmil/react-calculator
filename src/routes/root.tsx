@@ -22,12 +22,6 @@ const Root = () => {
 	return (
 		<>
 			<div id="sidebar">
-				<h1>React Router Tasks</h1>
-				<div>
-					<Form method="post">
-						<button type="submit">New</button>
-					</Form>
-				</div>
 				<nav>
 					{tasks.length ? (
 						<ul>
