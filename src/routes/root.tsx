@@ -42,9 +42,6 @@ const Root = () => {
 											{`${task.num1} ${task.oper} ${task.num2} `+ (task.res ? `= ${task.res}`:"")}
 										</NavLink>
 										<div className="button-container">
-											<Form action={`/${task.id}/edit`}>
-												<button type="submit">Edit</button>
-											</Form>
 											<Form
 												method="post"
 												action={`/${task.id}/destroy`}
