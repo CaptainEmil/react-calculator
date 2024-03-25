@@ -11,10 +11,10 @@ import Calculator from "../components/Calculator/Calculator";
 
 export async function action({ request, params }: ActionFunctionArgs<any>) {
 	
-	
 	let formData = await request.formData();
 	console.log(formData);
 	
+
 	return store.dispatch(updateTask({
 		id: params.taskId,
 		// isDone: formData.get("isDone") === "true",

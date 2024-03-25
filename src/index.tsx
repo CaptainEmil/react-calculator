@@ -2,7 +2,10 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
 	createBrowserRouter,
+	Navigate,
+	redirect,
 	RouterProvider,
+	useNavigate,
 } from "react-router-dom";
 import './index.css';
 import Root, {
@@ -18,7 +21,9 @@ import EditTask, {
 } from './routes/edit';
 import { action as destroyAction } from './routes/destroy';
 import { Provider } from 'react-redux';
-import store from './store';
+import store, { useTypedDispatch, useTypedSelector } from './store';
+import Calculator from './components/Calculator/Calculator';
+import { createTask } from './redux/slices/tasksSlice';
 
 
 const rootContainer = document.querySelector('#root');
@@ -26,10 +31,12 @@ const rootContainer = document.querySelector('#root');
 if (rootContainer === null) throw new Error('Can\'t find root container');
 
 export default function Index() {
+	const tasks=useTypedSelector((state)=>state.tasksReducer);
+	const dispatch=useTypedDispatch();
+	if(tasks===undefined) dispatch(createTask());
+	
 	return (
-		<p id="zero-state">
-			This is a Task Manager App.
-		</p>
+		<Navigate to={`/${tasks[0]!.id}`} />
 	);
 }
 
