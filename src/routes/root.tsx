@@ -27,8 +27,8 @@ const Root = () => {
 						<ul>
 							{tasks
 								.map((task) => {
-									if(!task.num1)return;
-									return(<li key={task.id}>
+									if (!task.num1) return;
+									return (<li key={task.id}>
 										<NavLink
 											to={`/${task.id}`}
 											className={({ isActive, isPending }) =>
@@ -39,7 +39,7 @@ const Root = () => {
 														: ""
 											}
 										>
-											{`${task.num1} ${task.oper} ${task.num2} `+ (task.res ? `= ${task.res}`:"")}
+											{`${task.num1 ?? ""} ${task.oper ?? ""} ${task.num2 ?? ""} ` + (task.res ? `= ${task.res}` : "")}
 										</NavLink>
 										<div className="button-container">
 											<Form
@@ -58,7 +58,8 @@ const Root = () => {
 												<button type="submit">Delete</button>
 											</Form>
 										</div>
-									</li>)}
+									</li>)
+								}
 								)}
 						</ul>
 					) : (
