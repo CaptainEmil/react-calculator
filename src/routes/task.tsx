@@ -1,8 +1,8 @@
-import { LoaderFunctionArgs, useLoaderData, ActionFunctionArgs } from "react-router-dom";
+import { LoaderFunctionArgs, useLoaderData, ActionFunctionArgs, redirect } from "react-router-dom";
 import TaskType from "src/types/Task";
 import Nullable from "src/types/Nullable";
 import { getTask } from "../tasks";
-import { calcTask } from "../redux/slices/tasksSlice";
+import { calcTask, createTask } from "../redux/slices/tasksSlice";
 import { updateTask } from "../redux/slices/tasksSlice"
 import store from "../store";
 import Calculator from "../components/Calculator/Calculator";
@@ -15,12 +15,16 @@ export async function action({ request, params }: ActionFunctionArgs<any>) {
 	let formData = await request.formData();
 
 	for (let i of formData) {
-		
+
 		let oper = i[1];
 		console.log(i[1]);
 		if (oper === "equals") {
-			store.dispatch(calcTask(params.taskId!));
+			return store.dispatch(calcTask(params.taskId!));
 		}
+		store.dispatch(createTask());
+		console.log(store.getState().tasksReducer);
+
+		return redirect(`/${store.getState().tasksReducer[0]!.id}`);
 	}
 
 
