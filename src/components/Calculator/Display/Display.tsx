@@ -8,7 +8,7 @@ type DisplayProps = {
 const Display = ({ task }: DisplayProps) => {
     const tasks=useTypedSelector((state)=>state.tasksReducer);
     const taskUpdated= getTask(tasks,task.id) as TaskType;
-    const expr = `${taskUpdated?.num1} ${taskUpdated?.oper} ${taskUpdated?.num2}`;
+    const expr = `${taskUpdated.num1 ?? ""} ${taskUpdated.oper ?? ""} ${taskUpdated.num2 ?? ""}`;
 
     return (
         <div className="display-container">
