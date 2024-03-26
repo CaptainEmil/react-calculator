@@ -55,7 +55,7 @@ const Root = () => {
 													}
 												}}
 											>
-												<button type="submit">Delete</button>
+												<button type="submit">🗑</button>
 											</Form>
 										</div>
 									</li>)

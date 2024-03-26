@@ -452,4 +452,7 @@ i {
 	& a{
 		flex-grow: 1;
 	}
+	& button{
+		font-size: 20px;
+	}
 }
