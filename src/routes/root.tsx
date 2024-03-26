@@ -19,6 +19,11 @@ const Root = () => {
 	const tasks = useTypedSelector((state) => state.tasksReducer);
 	const navigation = useNavigation();
 
+	const bigIntOpt: BigIntToLocaleStringOptions = {
+		notation: 'scientific',
+		maximumFractionDigits: 3
+	};
+
 	return (
 		<>
 			<div id="sidebar">
@@ -39,7 +44,7 @@ const Root = () => {
 														: ""
 											}
 										>
-											{`${task.num1 ?? ""} ${task.oper ?? ""} ${task.num2 ?? ""} ` + (task.res ? `= ${task.res}` : "")}
+											{`${task.num1 === undefined ? "" : task.num1.toLocaleString('en-US', bigIntOpt)} ${task.oper ?? ""} ${task.num2 === undefined ? "" : task.num2.toLocaleString('en-US', bigIntOpt)} ` + (task.res === undefined ? "" : `= ${task.res.toLocaleString('en-US', bigIntOpt)}`)}
 										</NavLink>
 										<div className="button-container">
 											<Form

@@ -6,6 +6,9 @@ const store = configureStore({
 	reducer: {
 		tasksReducer
 	},
+	middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+		serializableCheck: false
+	  }),
 });
 
 

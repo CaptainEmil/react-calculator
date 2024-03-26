@@ -1,11 +1,12 @@
 type TaskType = {
 	id?: string,
 	createdAt?: number,
-	num1?: number,
+	num1?: bigint,
 	oper?: string,
-	num2?: number,
+	calcOper?: string,
+	num2?: bigint,
 	name?: string,
-	res?: number,
+	res?: bigint,
 }
 
 export default TaskType;

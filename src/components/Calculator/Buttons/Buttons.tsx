@@ -33,7 +33,7 @@ const Buttons = ({ task }: ButtonsProps) => {
                 <Button task={task}>1</Button>
                 <Button task={task}>2</Button>
                 <Button task={task}>3</Button>
-                <Button task={task} oper="">×</Button>
+                <Button task={task} oper="*">×</Button>
             </div>
             <div className="line-container">
                 <Button task={task}>0</Button>

@@ -3,9 +3,15 @@ import TaskType from "./types/Task";
 import Nullable from "./types/Nullable";
 import { CaseReducer, PayloadAction } from "@reduxjs/toolkit";
 
+
 export const getTasks = (): TaskType[] => {
 	const tasksStr = localStorage.getItem('tasks');
-	let tasks = tasksStr === null ? [] : JSON.parse(tasksStr) as TaskType[];
+	let tasks = tasksStr === null ? [] : JSON.parse(tasksStr, (key, value) => {
+		if ((key === "num1"||key === "num2"||key === "res") && typeof value === "string" && value.match(/^\d+$/)) {
+			return BigInt(value);
+		}
+		return value;
+	}) as TaskType[];
 
 	return tasks.sort(sortBy("last", "createdAt"));
 }
@@ -38,9 +44,9 @@ export const calcTask: CaseReducer<TaskType[], PayloadAction<string>> = (state, 
 
 	if (task.num1 === undefined || task.num2 === undefined || task.oper === undefined) return tasks;
 
-	let res: number;
+	let res: bigint;
 
-	switch (task.oper) {
+	switch (task.calcOper) {
 		case "+":
 			res = task.num1 + task.num2;
 			break;
@@ -54,7 +60,7 @@ export const calcTask: CaseReducer<TaskType[], PayloadAction<string>> = (state, 
 			res = task.num1 / task.num2;
 			break;
 		default:
-			throw new Error("No such operation:", { cause: task.oper });
+			throw new Error("No such operation:", { cause: task.calcOper });
 	}
 
 	Object.assign(task, { res });
@@ -94,5 +100,5 @@ export const deleteTask: CaseReducer<TaskType[], PayloadAction<string>> = (state
 }
 
 export const set = (tasks: TaskType[]) => {
-	localStorage.setItem("tasks", JSON.stringify(tasks));
+	localStorage.setItem("tasks", JSON.stringify(tasks, (_, i) => typeof i === 'bigint' ? i.toString() : i));
 }
