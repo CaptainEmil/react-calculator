@@ -33,7 +33,7 @@ if (rootContainer === null) throw new Error('Can\'t find root container');
 export default function Index() {
 	const tasks=useTypedSelector((state)=>state.tasksReducer);
 	const dispatch=useTypedDispatch();
-	if(tasks===undefined) dispatch(createTask());
+	if(tasks[0]===undefined) dispatch(createTask());
 	
 	return (
 		<Navigate to={`/${tasks[0]!.id}`} />

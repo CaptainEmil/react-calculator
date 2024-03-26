@@ -11,7 +11,8 @@ import Calculator from "../components/Calculator/Calculator";
 
 
 export async function action({ request, params }: ActionFunctionArgs<any>) {
-
+	const tasks = store.getState().tasksReducer;
+	const task = getTask(tasks, params.taskId);
 	let formData = await request.formData();
 
 	for (let i of formData) {
@@ -21,10 +22,21 @@ export async function action({ request, params }: ActionFunctionArgs<any>) {
 		if (oper === "equals") {
 			return store.dispatch(calcTask(params.taskId!));
 		}
-		store.dispatch(createTask());
-		console.log(store.getState().tasksReducer);
 
-		return redirect(`/${store.getState().tasksReducer[0]!.id}`);
+		if (task?.num1 === undefined || task?.oper === undefined || task?.num2 === undefined || task?.res === undefined) {
+			store.dispatch(updateTask({
+				id: params.taskId,
+				num1: undefined,
+				oper: undefined,
+				num2: undefined,
+				res: undefined
+			}));
+			return redirect(``);
+		}
+
+		store.dispatch(createTask());
+
+		return redirect(`/${tasks[0]!.id}`);
 	}
 
 
