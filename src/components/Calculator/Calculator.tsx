@@ -6,6 +6,7 @@ type CalculatorProps = {
 }
 
 const Calculator = ({ task }: CalculatorProps) => {
+    console.log(task);
     return (
         <div className="calculator-container">
             <Display task={task}></Display>

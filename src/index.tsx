@@ -31,6 +31,7 @@ export default function Index() {
 	const tasks=useTypedSelector((state)=>state.tasksReducer);
 	const dispatch=useTypedDispatch();
 	if(tasks[0]===undefined) dispatch(createTask());
+	console.log(store.getState().tasksReducer[0]);
 	
 	return (
 		<Navigate to={`/${store.getState().tasksReducer[0]!.id}`} />

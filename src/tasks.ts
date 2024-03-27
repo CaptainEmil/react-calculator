@@ -7,7 +7,7 @@ import { CaseReducer, PayloadAction } from "@reduxjs/toolkit";
 export const getTasks = (): TaskType[] => {
 	const tasksStr = localStorage.getItem('tasks');
 	let tasks = tasksStr === null ? [] : JSON.parse(tasksStr, (key, value) => {
-		if ((key === "num1"||key === "num2"||key === "res") && typeof value === "string" && value.match(/^\d+$/)) {
+		if ((key === "num1" || key === "num2" || key === "res") && typeof value === "string" && value.match(/^\d+$/)) {
 			return BigInt(value);
 		}
 		return value;
@@ -18,6 +18,7 @@ export const getTasks = (): TaskType[] => {
 
 export const getTask = (tasks: TaskType[], id?: string): Nullable<TaskType> => {
 	let task = tasks.find(task => task.id === id);
+	console.log(id);
 
 	return task ?? null;
 }
