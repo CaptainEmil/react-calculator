@@ -52,8 +52,8 @@ const Button = ({ task, children, oper }: ButtonProps) => {
         }
 
         dispatch(createTask());
-        const newTask=store.getState().tasksReducer[0];
-        dispatch(updateTask({id:newTask?.id,num1:bigNum}));
+        const newTask = store.getState().tasksReducer[0];
+        dispatch(updateTask({ id: newTask?.id, num1: bigNum }));
 
         navigate(`/${newTask!.id}`);
     }

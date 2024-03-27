@@ -16,9 +16,6 @@ import Task, {
 	loader as taskLoader,
 	action as taskAction,
 } from './routes/task';
-import EditTask, {
-	action as editAction
-} from './routes/edit';
 import { action as destroyAction } from './routes/destroy';
 import { Provider } from 'react-redux';
 import store, { useTypedDispatch, useTypedSelector } from './store';
@@ -61,12 +58,6 @@ const router = createBrowserRouter([
 						element: <Task />,
 						loader: taskLoader,
 						action: taskAction,
-					},
-					{
-						path: "/:taskId/edit",
-						element: <EditTask />,
-						loader: taskLoader,
-						action: editAction
 					},
 					{
 						path: "/:taskId/destroy",
