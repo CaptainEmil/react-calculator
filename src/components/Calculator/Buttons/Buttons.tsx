@@ -45,8 +45,8 @@ const Buttons = ({ task }: ButtonsProps) => {
                         =
                     </button>
                 </Form>
-                <Button task={task}>+</Button>
-                <Button task={task} oper="">-</Button>
+                <Button task={task} oper="+">+</Button>
+                <Button task={task} oper="-">-</Button>
             </div>
         </>
 

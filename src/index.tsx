@@ -36,7 +36,7 @@ export default function Index() {
 	if(tasks[0]===undefined) dispatch(createTask());
 	
 	return (
-		<Navigate to={`/${tasks[0]!.id}`} />
+		<Navigate to={`/${store.getState().tasksReducer[0]!.id}`} />
 	);
 }
 

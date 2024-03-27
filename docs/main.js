@@ -4362,7 +4362,9 @@ function persistAppliedTransitions(_window, transitions) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../store */ "./src/store.ts");
 /* harmony import */ var _redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../redux/slices/tasksSlice */ "./src/redux/slices/tasksSlice.ts");
+/* harmony import */ var _tasks__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../tasks */ "./src/tasks.ts");
 /* provided dependency */ var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
 
 
 var Button = function Button(_ref) {
@@ -4370,27 +4372,35 @@ var Button = function Button(_ref) {
     children = _ref.children,
     oper = _ref.oper;
   var dispatch = (0,_store__WEBPACK_IMPORTED_MODULE_0__.useTypedDispatch)();
+  var tasks = (0,_store__WEBPACK_IMPORTED_MODULE_0__.useTypedSelector)(function (state) {
+    return state.tasksReducer;
+  });
+  var taskUpdated = (0,_tasks__WEBPACK_IMPORTED_MODULE_2__.getTask)(tasks, task.id);
   var handleClick = function handleClick(e) {
+    var _taskUpdated$num, _taskUpdated$num2;
     var text = e.currentTarget.textContent;
     var num = Number(text);
-    if (oper) {}
     if (Number.isNaN(num)) {
       dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_1__.updateTask)({
         id: task.id,
-        oper: text
+        oper: text,
+        calcOper: oper
       }));
       return;
     }
-    if (task.num1 === undefined) {
+    var bigNum = BigInt(text);
+    var bigNum1 = BigInt((_taskUpdated$num = taskUpdated.num1) !== null && _taskUpdated$num !== void 0 ? _taskUpdated$num : 0);
+    if (taskUpdated.oper === undefined) {
+      console.log(taskUpdated.num1);
       dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_1__.updateTask)({
         id: task.id,
-        num1: num
+        num1: (bigNum1 !== null && bigNum1 !== void 0 ? bigNum1 : 0n) * 10n + bigNum
       }));
       return;
     }
     dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_1__.updateTask)({
       id: task.id,
-      num2: num
+      num2: ((_taskUpdated$num2 = taskUpdated.num2) !== null && _taskUpdated$num2 !== void 0 ? _taskUpdated$num2 : 0n) * 10n + bigNum
     }));
   };
   return /*#__PURE__*/React.createElement("button", {
@@ -4450,7 +4460,7 @@ var Buttons = function Buttons(_ref) {
     task: task
   }, "3"), /*#__PURE__*/React.createElement(_Button__WEBPACK_IMPORTED_MODULE_0__["default"], {
     task: task,
-    oper: ""
+    oper: "*"
   }, "\xD7")), /*#__PURE__*/React.createElement("div", {
     className: "line-container"
   }, /*#__PURE__*/React.createElement(_Button__WEBPACK_IMPORTED_MODULE_0__["default"], {
@@ -4508,7 +4518,9 @@ var Calculator = function Calculator(_ref) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _tasks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../tasks */ "./src/tasks.ts");
 /* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../store */ "./src/store.ts");
+/* harmony import */ var _options_bigInt__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../options/bigInt */ "./src/options/bigInt.ts");
 /* provided dependency */ var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
 
 
 var Display = function Display(_ref) {
@@ -4517,14 +4529,24 @@ var Display = function Display(_ref) {
     return state.tasksReducer;
   });
   var taskUpdated = (0,_tasks__WEBPACK_IMPORTED_MODULE_0__.getTask)(tasks, task.id);
-  var expr = "".concat(taskUpdated === null || taskUpdated === void 0 ? void 0 : taskUpdated.num1, " ").concat(taskUpdated === null || taskUpdated === void 0 ? void 0 : taskUpdated.oper, " ").concat(taskUpdated === null || taskUpdated === void 0 ? void 0 : taskUpdated.num2);
+  var isEmpty = taskUpdated.num1 === undefined && taskUpdated.oper === undefined && taskUpdated.num2 === undefined && taskUpdated.res === undefined;
+  var expr;
+  if (!isEmpty) {
+    var _taskUpdated$oper;
+    var num1 = taskUpdated.num1 === undefined ? "" : taskUpdated.num1.toString().length > 5 ? taskUpdated.num1.toLocaleString('en-US', _options_bigInt__WEBPACK_IMPORTED_MODULE_2__["default"]) : taskUpdated.num1;
+    var oper = (_taskUpdated$oper = taskUpdated.oper) !== null && _taskUpdated$oper !== void 0 ? _taskUpdated$oper : "";
+    var num2 = taskUpdated.num2 === undefined ? "" : taskUpdated.num2.toString().length > 5 ? taskUpdated.num2.toLocaleString('en-US', _options_bigInt__WEBPACK_IMPORTED_MODULE_2__["default"]) : taskUpdated.num2;
+    expr = "".concat(num1, " ").concat(oper, " ").concat(num2);
+  } else {
+    expr = "0";
+  }
   return /*#__PURE__*/React.createElement("div", {
     className: "display-container"
   }, /*#__PURE__*/React.createElement("div", {
     id: "upper"
   }, expr), /*#__PURE__*/React.createElement("div", {
     id: "lower"
-  }, taskUpdated.res === undefined ? expr : taskUpdated.res));
+  }, taskUpdated.res === undefined ? expr : taskUpdated.res.toLocaleString('en-US', _options_bigInt__WEBPACK_IMPORTED_MODULE_2__["default"])));
 };
 /* harmony default export */ __webpack_exports__["default"] = (Display);
 
@@ -4549,6 +4571,22 @@ var ErrorPage = function ErrorPage() {
   }, /*#__PURE__*/React.createElement("h1", null, "Oops!"), /*#__PURE__*/React.createElement("p", null, "Sorry, an unexpected error has occurred."), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("i", null, error.statusText || error.message)));
 };
 /* harmony default export */ __webpack_exports__["default"] = (ErrorPage);
+
+/***/ }),
+
+/***/ "./src/options/bigInt.ts":
+/*!*******************************!*\
+  !*** ./src/options/bigInt.ts ***!
+  \*******************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+var bigIntOpt = {
+  notation: 'scientific',
+  maximumFractionDigits: 10
+};
+/* harmony default export */ __webpack_exports__["default"] = (bigIntOpt);
 
 /***/ }),
 
@@ -4733,9 +4771,14 @@ var Root = function Root() {
     return state.tasksReducer;
   });
   var navigation = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_3__.useNavigation)();
+  var bigIntOpt = {
+    notation: 'scientific',
+    maximumFractionDigits: 3
+  };
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     id: "sidebar"
   }, /*#__PURE__*/React.createElement("nav", null, tasks.length ? /*#__PURE__*/React.createElement("ul", null, tasks.map(function (task) {
+    var _task$oper;
     if (!task.num1) return;
     return /*#__PURE__*/React.createElement("li", {
       key: task.id
@@ -4746,7 +4789,7 @@ var Root = function Root() {
           isPending = _ref.isPending;
         return isActive ? "active" : isPending ? "pending" : "";
       }
-    }, "".concat(task.num1, " ").concat(task.oper, " ").concat(task.num2, " ") + (task.res ? "= ".concat(task.res) : "")), /*#__PURE__*/React.createElement("div", {
+    }, "".concat(task.num1 === undefined ? "" : task.num1.toLocaleString('en-US', bigIntOpt), " ").concat((_task$oper = task.oper) !== null && _task$oper !== void 0 ? _task$oper : "", " ").concat(task.num2 === undefined ? "" : task.num2.toLocaleString('en-US', bigIntOpt), " ") + (task.res === undefined ? "" : "= ".concat(task.res.toLocaleString('en-US', bigIntOpt)))), /*#__PURE__*/React.createElement("div", {
       className: "button-container"
     }, /*#__PURE__*/React.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Form, {
       method: "post",
@@ -4758,7 +4801,7 @@ var Root = function Root() {
       }
     }, /*#__PURE__*/React.createElement("button", {
       type: "submit"
-    }, "Delete"))));
+    }, "\uD83D\uDDD1"))));
   })) : /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("i", null, "No tasks")))), /*#__PURE__*/React.createElement("div", {
     id: "detail",
     className: navigation.state === "loading" ? "loading" : ""
@@ -4783,7 +4826,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/dist/index.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-router-dom */ "./node_modules/@remix-run/router/dist/router.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/dist/index.js");
 /* harmony import */ var _tasks__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../tasks */ "./src/tasks.ts");
 /* harmony import */ var _redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../redux/slices/tasksSlice */ "./src/redux/slices/tasksSlice.ts");
 /* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../store */ "./src/store.ts");
@@ -4805,39 +4849,73 @@ function action(_x) {
 }
 function _action() {
   _action = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default().mark(function _callee(_ref) {
-    var request, params, formData, _iterator, _step, i, oper;
+    var request, params, tasks, task, formData, _iterator, _step, i, oper;
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
           request = _ref.request, params = _ref.params;
-          _context.next = 3;
+          tasks = _store__WEBPACK_IMPORTED_MODULE_4__["default"].getState().tasksReducer;
+          task = (0,_tasks__WEBPACK_IMPORTED_MODULE_2__.getTask)(tasks, params.taskId);
+          _context.next = 5;
           return request.formData();
-        case 3:
+        case 5:
           formData = _context.sent;
           _iterator = _createForOfIteratorHelper(formData);
-          try {
-            for (_iterator.s(); !(_step = _iterator.n()).done;) {
-              i = _step.value;
-              oper = i[1];
-              console.log(i[1]);
-              if (oper === "equals") {
-                _store__WEBPACK_IMPORTED_MODULE_4__["default"].dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_3__.calcTask)(params.taskId));
-              }
-            }
-          } catch (err) {
-            _iterator.e(err);
-          } finally {
-            _iterator.f();
+          _context.prev = 7;
+          _iterator.s();
+        case 9:
+          if ((_step = _iterator.n()).done) {
+            _context.next = 22;
+            break;
           }
+          i = _step.value;
+          oper = i[1];
+          console.log(i[1]);
+          if (!(oper === "equals")) {
+            _context.next = 15;
+            break;
+          }
+          return _context.abrupt("return", _store__WEBPACK_IMPORTED_MODULE_4__["default"].dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_3__.calcTask)(params.taskId)));
+        case 15:
+          if (!((task === null || task === void 0 ? void 0 : task.num1) === undefined || (task === null || task === void 0 ? void 0 : task.oper) === undefined || (task === null || task === void 0 ? void 0 : task.num2) === undefined || (task === null || task === void 0 ? void 0 : task.res) === undefined)) {
+            _context.next = 18;
+            break;
+          }
+          _store__WEBPACK_IMPORTED_MODULE_4__["default"].dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_3__.updateTask)({
+            id: params.taskId,
+            num1: undefined,
+            oper: undefined,
+            num2: undefined,
+            res: undefined
+          }));
+          return _context.abrupt("return", (0,react_router_dom__WEBPACK_IMPORTED_MODULE_6__.redirect)(""));
+        case 18:
+          _store__WEBPACK_IMPORTED_MODULE_4__["default"].dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_3__.createTask)());
+          return _context.abrupt("return", (0,react_router_dom__WEBPACK_IMPORTED_MODULE_6__.redirect)("/".concat(tasks[0].id)));
+        case 20:
+          _context.next = 9;
+          break;
+        case 22:
+          _context.next = 27;
+          break;
+        case 24:
+          _context.prev = 24;
+          _context.t0 = _context["catch"](7);
+          _iterator.e(_context.t0);
+        case 27:
+          _context.prev = 27;
+          _iterator.f();
+          return _context.finish(27);
+        case 30:
           return _context.abrupt("return", _store__WEBPACK_IMPORTED_MODULE_4__["default"].dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_3__.updateTask)({
             id: params.taskId
             // isDone: formData.get("isDone") === "true",
           })));
-        case 7:
+        case 31:
         case "end":
           return _context.stop();
       }
-    }, _callee);
+    }, _callee, null, [[7, 24, 27, 30]]);
   }));
   return _action.apply(this, arguments);
 }
@@ -4856,7 +4934,7 @@ function loader(_ref2) {
   };
 }
 var Contact = function Contact() {
-  var _ref3 = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_6__.useLoaderData)(),
+  var _ref3 = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_7__.useLoaderData)(),
     task = _ref3.task;
   return /*#__PURE__*/React.createElement(_components_Calculator_Calculator__WEBPACK_IMPORTED_MODULE_5__["default"], {
     task: task
@@ -4898,6 +4976,11 @@ __webpack_require__.r(__webpack_exports__);
 var store = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_1__.configureStore)({
   reducer: {
     tasksReducer: _redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
+  middleware: function middleware(getDefaultMiddleware) {
+    return getDefaultMiddleware({
+      serializableCheck: false
+    });
   }
 });
 /* harmony default export */ __webpack_exports__["default"] = (store);
@@ -4934,7 +5017,12 @@ __webpack_require__.r(__webpack_exports__);
 
 var getTasks = function getTasks() {
   var tasksStr = localStorage.getItem('tasks');
-  var tasks = tasksStr === null ? [] : JSON.parse(tasksStr);
+  var tasks = tasksStr === null ? [] : JSON.parse(tasksStr, function (key, value) {
+    if ((key === "num1" || key === "num2" || key === "res") && typeof value === "string" && value.match(/^\d+$/)) {
+      return BigInt(value);
+    }
+    return value;
+  });
   return tasks.sort(sort_by__WEBPACK_IMPORTED_MODULE_0___default()("last", "createdAt"));
 };
 var getTask = function getTask(tasks, id) {
@@ -4965,7 +5053,7 @@ var calcTask = function calcTask(state, action) {
   });
   if (task.num1 === undefined || task.num2 === undefined || task.oper === undefined) return tasks;
   var res;
-  switch (task.oper) {
+  switch (task.calcOper) {
     case "+":
       res = task.num1 + task.num2;
       break;
@@ -4980,7 +5068,7 @@ var calcTask = function calcTask(state, action) {
       break;
     default:
       throw new Error("No such operation:", {
-        cause: task.oper
+        cause: task.calcOper
       });
   }
   Object.assign(task, {
@@ -5014,7 +5102,9 @@ var deleteTask = function deleteTask(state, action) {
   return tasks;
 };
 var set = function set(tasks) {
-  localStorage.setItem("tasks", JSON.stringify(tasks));
+  localStorage.setItem("tasks", JSON.stringify(tasks, function (_, i) {
+    return typeof i === 'bigint' ? i.toString() : i;
+  }));
 };
 
 /***/ }),
@@ -5047,7 +5137,7 @@ var ___CSS_LOADER_URL_REPLACEMENT_1___ = _node_modules_css_loader_dist_runtime_g
 var ___CSS_LOADER_URL_REPLACEMENT_2___ = _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default()(___CSS_LOADER_URL_IMPORT_2___);
 var ___CSS_LOADER_URL_REPLACEMENT_3___ = _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default()(___CSS_LOADER_URL_IMPORT_3___);
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ":root {\n  --button-size: 5em;\n  --calculator-font-size: 1.5em;\n  --calculator-button-gap: 5px;\n}\n\nhtml {\n  box-sizing: border-box;\n}\n\n*,\n*:before,\n*:after {\n  box-sizing: inherit;\n}\n\nbody {\n  font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"Roboto\", \"Oxygen\", \"Ubuntu\", \"Cantarell\", \"Fira Sans\", \"Droid Sans\", \"Helvetica Neue\", sans-serif;\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n}\n\ncode {\n  font-family: source-code-pro, Menlo, Monaco, Consolas, \"Courier New\", monospace;\n}\n\nhtml,\nbody {\n  height: 100%;\n  margin: 0;\n  line-height: 1.5;\n  color: #121212;\n}\n\ntextarea,\ninput,\nbutton {\n  font-size: 1rem;\n  font-family: inherit;\n  border: none;\n  border-radius: 8px;\n  padding: 0.5rem 0.75rem;\n  box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.2), 0 1px 2px hsla(0, 0%, 0%, 0.2);\n  background-color: white;\n  line-height: 1.5;\n  margin: 0;\n}\n\nbutton {\n  color: #3992ff;\n  font-weight: 500;\n}\n\ntextarea:hover,\ninput:hover,\nbutton:hover {\n  box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.6), 0 1px 2px hsla(0, 0%, 0%, 0.2);\n}\n\nbutton:active {\n  box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.4);\n  transform: translateY(1px);\n}\n\n#task h1 {\n  display: flex;\n  align-items: flex-start;\n  gap: 1rem;\n}\n\n#task h1 form {\n  display: flex;\n  align-items: center;\n  margin-top: 0.25rem;\n}\n\n#task h1 form button {\n  box-shadow: none;\n  font-size: 1.5rem;\n  font-weight: 400;\n  padding: 0;\n}\n\n#task h1 form button[value=true] {\n  color: #a4a4a4;\n}\n\n#task h1 form button[value=true]:hover,\n#task h1 form button[value=false] {\n  color: #eeb004;\n}\n\nform[action$=destroy] button {\n  color: #f44250;\n}\n\n.sr-only {\n  position: absolute;\n  width: 1px;\n  height: 1px;\n  padding: 0;\n  margin: -1px;\n  overflow: hidden;\n  clip: rect(0, 0, 0, 0);\n  white-space: nowrap;\n  border-width: 0;\n}\n\n#root {\n  display: flex;\n  height: 100%;\n  width: 100%;\n}\n\n#sidebar {\n  width: 22rem;\n  background-color: #f7f7f7;\n  border-right: solid 1px #e3e3e3;\n  display: flex;\n  flex-direction: column;\n}\n\n#sidebar > * {\n  padding-left: 2rem;\n  padding-right: 2rem;\n}\n\n#sidebar h1 {\n  font-size: 1rem;\n  font-weight: 500;\n  display: flex;\n  align-items: center;\n  margin: 0;\n  padding: 1rem 2rem;\n  border-top: 1px solid #e3e3e3;\n  order: 1;\n  line-height: 1;\n}\n\n#sidebar h1::before {\n  content: url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ");\n  margin-right: 0.5rem;\n  position: relative;\n  top: 1px;\n}\n\n#sidebar > div {\n  display: flex;\n  align-items: center;\n  gap: 0.5rem;\n  padding-top: 1rem;\n  padding-bottom: 1rem;\n  border-bottom: 1px solid #e3e3e3;\n}\n\n#sidebar > div form {\n  position: relative;\n}\n\n#sidebar > div form input[type=search] {\n  width: 100%;\n  padding-left: 2rem;\n  background-image: url(" + ___CSS_LOADER_URL_REPLACEMENT_1___ + ");\n  background-repeat: no-repeat;\n  background-position: 0.625rem 0.75rem;\n  background-size: 1rem;\n  position: relative;\n}\n\n#sidebar > div form input[type=search].loading {\n  background-image: none;\n}\n\n#search-spinner {\n  width: 1rem;\n  height: 1rem;\n  background-image: url(" + ___CSS_LOADER_URL_REPLACEMENT_2___ + ");\n  animation: spin 1s infinite linear;\n  position: absolute;\n  left: 0.625rem;\n  top: 0.75rem;\n}\n\n@keyframes spin {\n  from {\n    transform: rotate(0deg);\n  }\n  to {\n    transform: rotate(360deg);\n  }\n}\n#sidebar nav {\n  flex: 1;\n  overflow: auto;\n  padding-top: 1rem;\n}\n\n#sidebar nav a span {\n  float: right;\n  color: #eeb004;\n}\n\n#sidebar nav a.active span {\n  color: inherit;\n}\n\ni {\n  color: #818181;\n}\n\n#sidebar nav .active i {\n  color: inherit;\n}\n\n#sidebar ul {\n  padding: 0;\n  margin: 0;\n  list-style: none;\n}\n\n#sidebar li {\n  margin: 0.25rem 0;\n}\n\n#sidebar nav a {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  overflow: hidden;\n  white-space: pre;\n  padding: 0.5rem;\n  border-radius: 8px;\n  color: inherit;\n  text-decoration: none;\n  gap: 1rem;\n}\n\n#sidebar nav a:hover {\n  background: #e3e3e3;\n}\n\n#sidebar nav a.active {\n  background: hsl(224, 98%, 58%);\n  color: white;\n}\n\n#sidebar nav a.pending {\n  color: hsl(224, 98%, 58%);\n}\n\n#detail {\n  flex: 1;\n  padding: 2rem 4rem;\n  width: 100%;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}\n\n#detail.loading {\n  opacity: 0.25;\n  transition: opacity 200ms;\n  transition-delay: 200ms;\n}\n\n#task {\n  max-width: 40rem;\n  display: flex;\n}\n\n#task h1 {\n  font-size: 2rem;\n  font-weight: 700;\n  margin: 0;\n  line-height: 1.2;\n}\n\n#task h1 + p {\n  margin: 0;\n}\n\n#task h1 + p + p {\n  white-space: break-spaces;\n}\n\n#task h1:focus {\n  outline: none;\n  color: hsl(224, 98%, 58%);\n}\n\n#task a[href*=twitter] {\n  display: flex;\n  font-size: 1.5rem;\n  color: #3992ff;\n  text-decoration: none;\n}\n\n#task a[href*=twitter]:hover {\n  text-decoration: underline;\n}\n\n#task img {\n  width: 12rem;\n  height: 12rem;\n  background: #c8c8c8;\n  margin-right: 2rem;\n  border-radius: 1.5rem;\n  -o-object-fit: cover;\n     object-fit: cover;\n}\n\n#task h1 ~ div {\n  display: flex;\n  gap: 0.5rem;\n  margin: 1rem 0;\n}\n\n#task-form {\n  display: flex;\n  max-width: 40rem;\n  flex-direction: column;\n  gap: 1rem;\n}\n\n#task-form > p:first-child {\n  margin: 0;\n  padding: 0;\n}\n\n#task-form > p:first-child > :nth-child(2) {\n  margin-right: 1rem;\n}\n\n#task-form > p:first-child,\n#task-form label {\n  display: flex;\n}\n\n#task-form p:first-child span,\n#task-form label span {\n  width: 8rem;\n}\n\n#task-form p:first-child input,\n#task-form label input,\n#task-form label textarea {\n  flex-grow: 2;\n}\n\n#task-form-avatar {\n  margin-right: 2rem;\n}\n\n#task-form-avatar img {\n  width: 12rem;\n  height: 12rem;\n  background: hsla(0, 0%, 0%, 0.2);\n  border-radius: 1rem;\n}\n\n#task-form-avatar input {\n  box-sizing: border-box;\n  width: 100%;\n}\n\n#task-form p:last-child {\n  display: flex;\n  gap: 0.5rem;\n  margin: 0 0 0 8rem;\n}\n\n#task-form p:last-child button[type=button] {\n  color: inherit;\n}\n\n#zero-state {\n  margin: 2rem auto;\n  text-align: center;\n  color: #818181;\n}\n\n#zero-state a {\n  color: inherit;\n}\n\n#zero-state a:hover {\n  color: #121212;\n}\n\n#zero-state:before {\n  display: block;\n  margin-bottom: 0.5rem;\n  content: url(" + ___CSS_LOADER_URL_REPLACEMENT_3___ + ");\n}\n\n#error-page {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  width: 100%;\n}\n\n.button-container {\n  display: flex;\n  gap: 10px;\n}\n\n.calculator-container {\n  display: flex;\n  flex-direction: column;\n  gap: 5px;\n  width: -webkit-fit-content;\n  width: -moz-fit-content;\n  width: fit-content;\n  font-size: var(--calculator-font-size);\n}\n\n.line-container {\n  display: flex;\n  gap: var(--calculator-button-gap);\n}\n.line-container form {\n  width: -webkit-fit-content;\n  width: -moz-fit-content;\n  width: fit-content;\n}\n.line-container button {\n  width: var(--button-size);\n  height: var(--button-size);\n  font-size: inherit;\n}\n\n.display-container {\n  display: flex;\n  flex-direction: column;\n  align-items: flex-end;\n  width: calc(var(--button-size) * 4 + var(--calculator-button-gap) * 3);\n}\n.display-container #upper {\n  font-size: calc(var(--calculator-font-size) / 2);\n  color: grey;\n}\n\n#sidebar li {\n  display: flex;\n  gap: 5px;\n}\n#sidebar li a {\n  flex-grow: 1;\n}", "",{"version":3,"sources":["webpack://./src/index.css"],"names":[],"mappings":"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","sourcesContent":[":root {\n\t--button-size: 5em;\n\t--calculator-font-size: 1.5em;\n\t--calculator-button-gap: 5px;\n}\n\nhtml {\n\tbox-sizing: border-box;\n}\n\n*,\n*:before,\n*:after {\n\tbox-sizing: inherit;\n}\n\nbody {\n\tfont-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"Roboto\", \"Oxygen\",\n\t\t\"Ubuntu\", \"Cantarell\", \"Fira Sans\", \"Droid Sans\", \"Helvetica Neue\",\n\t\tsans-serif;\n\t-webkit-font-smoothing: antialiased;\n\t-moz-osx-font-smoothing: grayscale;\n}\n\ncode {\n\tfont-family: source-code-pro, Menlo, Monaco, Consolas, \"Courier New\",\n\t\tmonospace;\n}\n\nhtml,\nbody {\n\theight: 100%;\n\tmargin: 0;\n\tline-height: 1.5;\n\tcolor: #121212;\n}\n\ntextarea,\ninput,\nbutton {\n\tfont-size: 1rem;\n\tfont-family: inherit;\n\tborder: none;\n\tborder-radius: 8px;\n\tpadding: 0.5rem 0.75rem;\n\tbox-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.2), 0 1px 2px hsla(0, 0%, 0%, 0.2);\n\tbackground-color: white;\n\tline-height: 1.5;\n\tmargin: 0;\n}\n\nbutton {\n\tcolor: #3992ff;\n\tfont-weight: 500;\n}\n\ntextarea:hover,\ninput:hover,\nbutton:hover {\n\tbox-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.6), 0 1px 2px hsla(0, 0%, 0%, 0.2);\n}\n\nbutton:active {\n\tbox-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.4);\n\ttransform: translateY(1px);\n}\n\n#task h1 {\n\tdisplay: flex;\n\talign-items: flex-start;\n\tgap: 1rem;\n}\n\n#task h1 form {\n\tdisplay: flex;\n\talign-items: center;\n\tmargin-top: 0.25rem;\n}\n\n#task h1 form button {\n\tbox-shadow: none;\n\tfont-size: 1.5rem;\n\tfont-weight: 400;\n\tpadding: 0;\n}\n\n#task h1 form button[value=\"true\"] {\n\tcolor: #a4a4a4;\n}\n\n#task h1 form button[value=\"true\"]:hover,\n#task h1 form button[value=\"false\"] {\n\tcolor: #eeb004;\n}\n\nform[action$=\"destroy\"] button {\n\tcolor: #f44250;\n}\n\n.sr-only {\n\tposition: absolute;\n\twidth: 1px;\n\theight: 1px;\n\tpadding: 0;\n\tmargin: -1px;\n\toverflow: hidden;\n\tclip: rect(0, 0, 0, 0);\n\twhite-space: nowrap;\n\tborder-width: 0;\n}\n\n#root {\n\tdisplay: flex;\n\theight: 100%;\n\twidth: 100%;\n}\n\n#sidebar {\n\twidth: 22rem;\n\tbackground-color: #f7f7f7;\n\tborder-right: solid 1px #e3e3e3;\n\tdisplay: flex;\n\tflex-direction: column;\n}\n\n#sidebar>* {\n\tpadding-left: 2rem;\n\tpadding-right: 2rem;\n}\n\n#sidebar h1 {\n\tfont-size: 1rem;\n\tfont-weight: 500;\n\tdisplay: flex;\n\talign-items: center;\n\tmargin: 0;\n\tpadding: 1rem 2rem;\n\tborder-top: 1px solid #e3e3e3;\n\torder: 1;\n\tline-height: 1;\n}\n\n#sidebar h1::before {\n\tcontent: url(\"data:image/svg+xml,%3Csvg width='25' height='18' viewBox='0 0 25 18' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M19.4127 6.4904C18.6984 6.26581 18.3295 6.34153 17.5802 6.25965C16.4219 6.13331 15.9604 5.68062 15.7646 4.51554C15.6551 3.86516 15.7844 2.9129 15.5048 2.32334C14.9699 1.19921 13.7183 0.695046 12.461 0.982805C11.3994 1.22611 10.516 2.28708 10.4671 3.37612C10.4112 4.61957 11.1197 5.68054 12.3363 6.04667C12.9143 6.22097 13.5284 6.3087 14.132 6.35315C15.2391 6.43386 15.3241 7.04923 15.6236 7.55574C15.8124 7.87508 15.9954 8.18975 15.9954 9.14193C15.9954 10.0941 15.8112 10.4088 15.6236 10.7281C15.3241 11.2334 14.9547 11.5645 13.8477 11.6464C13.244 11.6908 12.6288 11.7786 12.0519 11.9528C10.8353 12.3201 10.1268 13.3799 10.1828 14.6234C10.2317 15.7124 11.115 16.7734 12.1766 17.0167C13.434 17.3056 14.6855 16.8003 15.2204 15.6762C15.5013 15.0866 15.6551 14.4187 15.7646 13.7683C15.9616 12.6032 16.423 12.1505 17.5802 12.0242C18.3295 11.9423 19.1049 12.0242 19.8071 11.6253C20.5491 11.0832 21.212 10.2696 21.212 9.14192C21.212 8.01428 20.4976 6.83197 19.4127 6.4904Z' fill='%23F44250'/%3E%3Cpath d='M7.59953 11.7459C6.12615 11.7459 4.92432 10.5547 4.92432 9.09441C4.92432 7.63407 6.12615 6.44287 7.59953 6.44287C9.0729 6.44287 10.2747 7.63407 10.2747 9.09441C10.2747 10.5536 9.07172 11.7459 7.59953 11.7459Z' fill='black'/%3E%3Cpath d='M2.64217 17.0965C1.18419 17.093 -0.0034949 15.8971 7.72743e-06 14.4356C0.00352588 12.9765 1.1994 11.7888 2.66089 11.7935C4.12004 11.797 5.30772 12.9929 5.30306 14.4544C5.29953 15.9123 4.10366 17.1 2.64217 17.0965Z' fill='black'/%3E%3Cpath d='M22.3677 17.0965C20.9051 17.1046 19.7046 15.9217 19.6963 14.4649C19.6882 13.0023 20.8712 11.8017 22.3279 11.7935C23.7906 11.7854 24.9911 12.9683 24.9993 14.4251C25.0075 15.8866 23.8245 17.0883 22.3677 17.0965Z' fill='black'/%3E%3C/svg%3E%0A\");\n\tmargin-right: 0.5rem;\n\tposition: relative;\n\ttop: 1px;\n}\n\n#sidebar>div {\n\tdisplay: flex;\n\talign-items: center;\n\tgap: 0.5rem;\n\tpadding-top: 1rem;\n\tpadding-bottom: 1rem;\n\tborder-bottom: 1px solid #e3e3e3;\n}\n\n#sidebar>div form {\n\tposition: relative;\n}\n\n#sidebar>div form input[type=\"search\"] {\n\twidth: 100%;\n\tpadding-left: 2rem;\n\tbackground-image: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='h-6 w-6' fill='none' viewBox='0 0 24 24' stroke='%23999' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z' /%3E%3C/svg%3E\");\n\tbackground-repeat: no-repeat;\n\tbackground-position: 0.625rem 0.75rem;\n\tbackground-size: 1rem;\n\tposition: relative;\n}\n\n#sidebar>div form input[type=\"search\"].loading {\n\tbackground-image: none;\n}\n\n#search-spinner {\n\twidth: 1rem;\n\theight: 1rem;\n\tbackground-image: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'%3E%3Cpath stroke='%23000' strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M20 4v5h-.582m0 0a8.001 8.001 0 00-15.356 2m15.356-2H15M4 20v-5h.581m0 0a8.003 8.003 0 0015.357-2M4.581 15H9' /%3E%3C/svg%3E\");\n\tanimation: spin 1s infinite linear;\n\tposition: absolute;\n\tleft: 0.625rem;\n\ttop: 0.75rem;\n}\n\n@keyframes spin {\n\tfrom {\n\t\ttransform: rotate(0deg);\n\t}\n\n\tto {\n\t\ttransform: rotate(360deg);\n\t}\n}\n\n#sidebar nav {\n\tflex: 1;\n\toverflow: auto;\n\tpadding-top: 1rem;\n}\n\n#sidebar nav a span {\n\tfloat: right;\n\tcolor: #eeb004;\n}\n\n#sidebar nav a.active span {\n\tcolor: inherit;\n}\n\ni {\n\tcolor: #818181;\n}\n\n#sidebar nav .active i {\n\tcolor: inherit;\n}\n\n#sidebar ul {\n\tpadding: 0;\n\tmargin: 0;\n\tlist-style: none;\n}\n\n#sidebar li {\n\tmargin: 0.25rem 0;\n}\n\n#sidebar nav a {\n\tdisplay: flex;\n\talign-items: center;\n\tjustify-content: space-between;\n\toverflow: hidden;\n\n\twhite-space: pre;\n\tpadding: 0.5rem;\n\tborder-radius: 8px;\n\tcolor: inherit;\n\ttext-decoration: none;\n\tgap: 1rem;\n}\n\n#sidebar nav a:hover {\n\tbackground: #e3e3e3;\n}\n\n#sidebar nav a.active {\n\tbackground: hsl(224, 98%, 58%);\n\tcolor: white;\n}\n\n#sidebar nav a.pending {\n\tcolor: hsl(224, 98%, 58%);\n}\n\n#detail {\n\tflex: 1;\n\tpadding: 2rem 4rem;\n\twidth: 100%;\n\tdisplay: flex;\n\tjustify-content: center;\n\talign-items: center;\n}\n\n#detail.loading {\n\topacity: 0.25;\n\ttransition: opacity 200ms;\n\ttransition-delay: 200ms;\n}\n\n#task {\n\tmax-width: 40rem;\n\tdisplay: flex;\n}\n\n#task h1 {\n\tfont-size: 2rem;\n\tfont-weight: 700;\n\tmargin: 0;\n\tline-height: 1.2;\n}\n\n#task h1+p {\n\tmargin: 0;\n}\n\n#task h1+p+p {\n\twhite-space: break-spaces;\n}\n\n#task h1:focus {\n\toutline: none;\n\tcolor: hsl(224, 98%, 58%);\n}\n\n#task a[href*=\"twitter\"] {\n\tdisplay: flex;\n\tfont-size: 1.5rem;\n\tcolor: #3992ff;\n\ttext-decoration: none;\n}\n\n#task a[href*=\"twitter\"]:hover {\n\ttext-decoration: underline;\n}\n\n#task img {\n\twidth: 12rem;\n\theight: 12rem;\n\tbackground: #c8c8c8;\n\tmargin-right: 2rem;\n\tborder-radius: 1.5rem;\n\tobject-fit: cover;\n}\n\n#task h1~div {\n\tdisplay: flex;\n\tgap: 0.5rem;\n\tmargin: 1rem 0;\n}\n\n#task-form {\n\tdisplay: flex;\n\tmax-width: 40rem;\n\tflex-direction: column;\n\tgap: 1rem;\n}\n\n#task-form>p:first-child {\n\tmargin: 0;\n\tpadding: 0;\n}\n\n#task-form>p:first-child> :nth-child(2) {\n\tmargin-right: 1rem;\n}\n\n#task-form>p:first-child,\n#task-form label {\n\tdisplay: flex;\n}\n\n#task-form p:first-child span,\n#task-form label span {\n\twidth: 8rem;\n}\n\n#task-form p:first-child input,\n#task-form label input,\n#task-form label textarea {\n\tflex-grow: 2;\n}\n\n#task-form-avatar {\n\tmargin-right: 2rem;\n}\n\n#task-form-avatar img {\n\twidth: 12rem;\n\theight: 12rem;\n\tbackground: hsla(0, 0%, 0%, 0.2);\n\tborder-radius: 1rem;\n}\n\n#task-form-avatar input {\n\tbox-sizing: border-box;\n\twidth: 100%;\n}\n\n#task-form p:last-child {\n\tdisplay: flex;\n\tgap: 0.5rem;\n\tmargin: 0 0 0 8rem;\n}\n\n#task-form p:last-child button[type=\"button\"] {\n\tcolor: inherit;\n}\n\n#zero-state {\n\tmargin: 2rem auto;\n\ttext-align: center;\n\tcolor: #818181;\n}\n\n#zero-state a {\n\tcolor: inherit;\n}\n\n#zero-state a:hover {\n\tcolor: #121212;\n}\n\n#zero-state:before {\n\tdisplay: block;\n\tmargin-bottom: 0.5rem;\n\tcontent: url(\"data:image/svg+xml,%3Csvg width='50' height='33' viewBox='0 0 50 33' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M38.8262 11.1744C37.3975 10.7252 36.6597 10.8766 35.1611 10.7128C32.8444 10.4602 31.9215 9.55475 31.5299 7.22456C31.3108 5.92377 31.5695 4.01923 31.0102 2.8401C29.9404 0.591789 27.4373 -0.416556 24.9225 0.158973C22.7992 0.645599 21.0326 2.76757 20.9347 4.94569C20.8228 7.43263 22.2399 9.5546 24.6731 10.2869C25.8291 10.6355 27.0574 10.8109 28.2646 10.8998C30.4788 11.0613 30.6489 12.292 31.2479 13.3051C31.6255 13.9438 31.9914 14.5731 31.9914 16.4775C31.9914 18.3819 31.6231 19.0112 31.2479 19.6499C30.6489 20.6606 29.9101 21.3227 27.696 21.4865C26.4887 21.5754 25.2581 21.7508 24.1044 22.0994C21.6712 22.834 20.2542 24.9537 20.366 27.4406C20.4639 29.6187 22.2306 31.7407 24.3538 32.2273C26.8686 32.8052 29.3717 31.7945 30.4415 29.5462C31.0032 28.3671 31.3108 27.0312 31.5299 25.7304C31.9238 23.4002 32.8467 22.4948 35.1611 22.2421C36.6597 22.0784 38.2107 22.2421 39.615 21.4443C41.099 20.36 42.4248 18.7328 42.4248 16.4775C42.4248 14.2222 40.9961 11.8575 38.8262 11.1744Z' fill='%23E3E3E3'/%3E%3Cpath d='M15.1991 21.6854C12.2523 21.6854 9.84863 19.303 9.84863 16.3823C9.84863 13.4615 12.2523 11.0791 15.1991 11.0791C18.1459 11.0791 20.5497 13.4615 20.5497 16.3823C20.5497 19.3006 18.1436 21.6854 15.1991 21.6854Z' fill='%23E3E3E3'/%3E%3Cpath d='M5.28442 32.3871C2.36841 32.38 -0.00698992 29.9882 1.54551e-05 27.0652C0.00705187 24.1469 2.39884 21.7715 5.32187 21.7808C8.24022 21.7878 10.6156 24.1796 10.6063 27.1027C10.5992 30.0187 8.20746 32.3941 5.28442 32.3871Z' fill='%23E3E3E3'/%3E%3Cpath d='M44.736 32.387C41.8107 32.4033 39.4096 30.0373 39.3932 27.1237C39.3769 24.1984 41.7428 21.7973 44.6564 21.7808C47.5817 21.7645 49.9828 24.1305 49.9993 27.0441C50.0156 29.9671 47.6496 32.3705 44.736 32.387Z' fill='%23E3E3E3'/%3E%3C/svg%3E%0A\");\n}\n\n#error-page {\n\tdisplay: flex;\n\tflex-direction: column;\n\talign-items: center;\n\tjustify-content: center;\n\twidth: 100%;\n}\n\n.button-container {\n\tdisplay: flex;\n\tgap: 10px;\n}\n\n.calculator-container {\n\tdisplay: flex;\n\tflex-direction: column;\n\tgap: 5px;\n\twidth: fit-content;\n\tfont-size: var(--calculator-font-size);\n}\n\n.line-container {\n\tdisplay: flex;\n\tgap: var(--calculator-button-gap);\n\n\t& form {\n\t\twidth: fit-content;\n\n\t}\n\n\t& button {\n\t\twidth: var(--button-size);\n\t\theight: var(--button-size);\n\t\tfont-size: inherit;\n\t}\n}\n\n.display-container {\n\tdisplay: flex;\n\tflex-direction: column;\n\talign-items: flex-end;\n\twidth: calc(var(--button-size)*4 + var(--calculator-button-gap)*3);\n\t& #upper{\n\t\tfont-size: calc(var(--calculator-font-size)/2);\n\t\tcolor: grey;\n\t}\n}\n\n#sidebar li{\n\tdisplay: flex;\n\tgap: 5px;\n\t& a{\n\t\tflex-grow: 1;\n\t}\n}"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, ":root {\n  --button-size: 5em;\n  --calculator-font-size: 1.5em;\n  --calculator-button-gap: 5px;\n}\n\nhtml {\n  box-sizing: border-box;\n}\n\n*,\n*:before,\n*:after {\n  box-sizing: inherit;\n}\n\nbody {\n  font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"Roboto\", \"Oxygen\", \"Ubuntu\", \"Cantarell\", \"Fira Sans\", \"Droid Sans\", \"Helvetica Neue\", sans-serif;\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n}\n\ncode {\n  font-family: source-code-pro, Menlo, Monaco, Consolas, \"Courier New\", monospace;\n}\n\nhtml,\nbody {\n  height: 100%;\n  margin: 0;\n  line-height: 1.5;\n  color: #121212;\n}\n\ntextarea,\ninput,\nbutton {\n  font-size: 1rem;\n  font-family: inherit;\n  border: none;\n  border-radius: 8px;\n  padding: 0.5rem 0.75rem;\n  box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.2), 0 1px 2px hsla(0, 0%, 0%, 0.2);\n  background-color: white;\n  line-height: 1.5;\n  margin: 0;\n}\n\nbutton {\n  color: #3992ff;\n  font-weight: 500;\n}\n\ntextarea:hover,\ninput:hover,\nbutton:hover {\n  box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.6), 0 1px 2px hsla(0, 0%, 0%, 0.2);\n}\n\nbutton:active {\n  box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.4);\n  transform: translateY(1px);\n}\n\n#task h1 {\n  display: flex;\n  align-items: flex-start;\n  gap: 1rem;\n}\n\n#task h1 form {\n  display: flex;\n  align-items: center;\n  margin-top: 0.25rem;\n}\n\n#task h1 form button {\n  box-shadow: none;\n  font-size: 1.5rem;\n  font-weight: 400;\n  padding: 0;\n}\n\n#task h1 form button[value=true] {\n  color: #a4a4a4;\n}\n\n#task h1 form button[value=true]:hover,\n#task h1 form button[value=false] {\n  color: #eeb004;\n}\n\nform[action$=destroy] button {\n  color: #f44250;\n}\n\n.sr-only {\n  position: absolute;\n  width: 1px;\n  height: 1px;\n  padding: 0;\n  margin: -1px;\n  overflow: hidden;\n  clip: rect(0, 0, 0, 0);\n  white-space: nowrap;\n  border-width: 0;\n}\n\n#root {\n  display: flex;\n  height: 100%;\n  width: 100%;\n}\n\n#sidebar {\n  width: 22rem;\n  background-color: #f7f7f7;\n  border-right: solid 1px #e3e3e3;\n  display: flex;\n  flex-direction: column;\n}\n\n#sidebar > * {\n  padding-left: 2rem;\n  padding-right: 2rem;\n}\n\n#sidebar h1 {\n  font-size: 1rem;\n  font-weight: 500;\n  display: flex;\n  align-items: center;\n  margin: 0;\n  padding: 1rem 2rem;\n  border-top: 1px solid #e3e3e3;\n  order: 1;\n  line-height: 1;\n}\n\n#sidebar h1::before {\n  content: url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ");\n  margin-right: 0.5rem;\n  position: relative;\n  top: 1px;\n}\n\n#sidebar > div {\n  display: flex;\n  align-items: center;\n  gap: 0.5rem;\n  padding-top: 1rem;\n  padding-bottom: 1rem;\n  border-bottom: 1px solid #e3e3e3;\n}\n\n#sidebar > div form {\n  position: relative;\n}\n\n#sidebar > div form input[type=search] {\n  width: 100%;\n  padding-left: 2rem;\n  background-image: url(" + ___CSS_LOADER_URL_REPLACEMENT_1___ + ");\n  background-repeat: no-repeat;\n  background-position: 0.625rem 0.75rem;\n  background-size: 1rem;\n  position: relative;\n}\n\n#sidebar > div form input[type=search].loading {\n  background-image: none;\n}\n\n#search-spinner {\n  width: 1rem;\n  height: 1rem;\n  background-image: url(" + ___CSS_LOADER_URL_REPLACEMENT_2___ + ");\n  animation: spin 1s infinite linear;\n  position: absolute;\n  left: 0.625rem;\n  top: 0.75rem;\n}\n\n@keyframes spin {\n  from {\n    transform: rotate(0deg);\n  }\n  to {\n    transform: rotate(360deg);\n  }\n}\n#sidebar nav {\n  flex: 1;\n  overflow: auto;\n  padding-top: 1rem;\n}\n\n#sidebar nav a span {\n  float: right;\n  color: #eeb004;\n}\n\n#sidebar nav a.active span {\n  color: inherit;\n}\n\ni {\n  color: #818181;\n}\n\n#sidebar nav .active i {\n  color: inherit;\n}\n\n#sidebar ul {\n  padding: 0;\n  margin: 0;\n  list-style: none;\n}\n\n#sidebar li {\n  margin: 0.25rem 0;\n}\n\n#sidebar nav a {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  overflow: hidden;\n  white-space: pre;\n  padding: 0.5rem;\n  border-radius: 8px;\n  color: inherit;\n  text-decoration: none;\n  gap: 1rem;\n}\n\n#sidebar nav a:hover {\n  background: #e3e3e3;\n}\n\n#sidebar nav a.active {\n  background: hsl(224, 98%, 58%);\n  color: white;\n}\n\n#sidebar nav a.pending {\n  color: hsl(224, 98%, 58%);\n}\n\n#detail {\n  flex: 1;\n  padding: 2rem 4rem;\n  width: 100%;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}\n\n#detail.loading {\n  opacity: 0.25;\n  transition: opacity 200ms;\n  transition-delay: 200ms;\n}\n\n#task {\n  max-width: 40rem;\n  display: flex;\n}\n\n#task h1 {\n  font-size: 2rem;\n  font-weight: 700;\n  margin: 0;\n  line-height: 1.2;\n}\n\n#task h1 + p {\n  margin: 0;\n}\n\n#task h1 + p + p {\n  white-space: break-spaces;\n}\n\n#task h1:focus {\n  outline: none;\n  color: hsl(224, 98%, 58%);\n}\n\n#task a[href*=twitter] {\n  display: flex;\n  font-size: 1.5rem;\n  color: #3992ff;\n  text-decoration: none;\n}\n\n#task a[href*=twitter]:hover {\n  text-decoration: underline;\n}\n\n#task img {\n  width: 12rem;\n  height: 12rem;\n  background: #c8c8c8;\n  margin-right: 2rem;\n  border-radius: 1.5rem;\n  -o-object-fit: cover;\n     object-fit: cover;\n}\n\n#task h1 ~ div {\n  display: flex;\n  gap: 0.5rem;\n  margin: 1rem 0;\n}\n\n#task-form {\n  display: flex;\n  max-width: 40rem;\n  flex-direction: column;\n  gap: 1rem;\n}\n\n#task-form > p:first-child {\n  margin: 0;\n  padding: 0;\n}\n\n#task-form > p:first-child > :nth-child(2) {\n  margin-right: 1rem;\n}\n\n#task-form > p:first-child,\n#task-form label {\n  display: flex;\n}\n\n#task-form p:first-child span,\n#task-form label span {\n  width: 8rem;\n}\n\n#task-form p:first-child input,\n#task-form label input,\n#task-form label textarea {\n  flex-grow: 2;\n}\n\n#task-form-avatar {\n  margin-right: 2rem;\n}\n\n#task-form-avatar img {\n  width: 12rem;\n  height: 12rem;\n  background: hsla(0, 0%, 0%, 0.2);\n  border-radius: 1rem;\n}\n\n#task-form-avatar input {\n  box-sizing: border-box;\n  width: 100%;\n}\n\n#task-form p:last-child {\n  display: flex;\n  gap: 0.5rem;\n  margin: 0 0 0 8rem;\n}\n\n#task-form p:last-child button[type=button] {\n  color: inherit;\n}\n\n#zero-state {\n  margin: 2rem auto;\n  text-align: center;\n  color: #818181;\n}\n\n#zero-state a {\n  color: inherit;\n}\n\n#zero-state a:hover {\n  color: #121212;\n}\n\n#zero-state:before {\n  display: block;\n  margin-bottom: 0.5rem;\n  content: url(" + ___CSS_LOADER_URL_REPLACEMENT_3___ + ");\n}\n\n#error-page {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  width: 100%;\n}\n\n.button-container {\n  display: flex;\n  gap: 10px;\n}\n\n.calculator-container {\n  display: flex;\n  flex-direction: column;\n  gap: 5px;\n  width: -webkit-fit-content;\n  width: -moz-fit-content;\n  width: fit-content;\n  font-size: var(--calculator-font-size);\n}\n\n.line-container {\n  display: flex;\n  gap: var(--calculator-button-gap);\n}\n.line-container form {\n  width: -webkit-fit-content;\n  width: -moz-fit-content;\n  width: fit-content;\n}\n.line-container button {\n  width: var(--button-size);\n  height: var(--button-size);\n  font-size: inherit;\n}\n\n.display-container {\n  display: flex;\n  flex-direction: column;\n  align-items: flex-end;\n  width: calc(var(--button-size) * 4 + var(--calculator-button-gap) * 3);\n}\n.display-container #upper {\n  font-size: calc(var(--calculator-font-size) / 2);\n  color: grey;\n}\n\n#sidebar li {\n  display: flex;\n  gap: 5px;\n}\n#sidebar li a {\n  flex-grow: 1;\n}\n#sidebar li button {\n  font-size: 20px;\n}", "",{"version":3,"sources":["webpack://./src/index.css"],"names":[],"mappings":"AAAA;EACC,kBAAA;EACA,6BAAA;EACA,4BAAA;AACD;;AAEA;EACC,sBAAA;AACD;;AAEA;;;EAGC,mBAAA;AACD;;AAEA;EACC,8JAAA;EAGA,mCAAA;EACA,kCAAA;AADD;;AAIA;EACC,+EAAA;AADD;;AAKA;;EAEC,YAAA;EACA,SAAA;EACA,gBAAA;EACA,cAAA;AAFD;;AAKA;;;EAGC,eAAA;EACA,oBAAA;EACA,YAAA;EACA,kBAAA;EACA,uBAAA;EACA,0EAAA;EACA,uBAAA;EACA,gBAAA;EACA,SAAA;AAFD;;AAKA;EACC,cAAA;EACA,gBAAA;AAFD;;AAKA;;;EAGC,0EAAA;AAFD;;AAKA;EACC,0CAAA;EACA,0BAAA;AAFD;;AAKA;EACC,aAAA;EACA,uBAAA;EACA,SAAA;AAFD;;AAKA;EACC,aAAA;EACA,mBAAA;EACA,mBAAA;AAFD;;AAKA;EACC,gBAAA;EACA,iBAAA;EACA,gBAAA;EACA,UAAA;AAFD;;AAKA;EACC,cAAA;AAFD;;AAKA;;EAEC,cAAA;AAFD;;AAKA;EACC,cAAA;AAFD;;AAKA;EACC,kBAAA;EACA,UAAA;EACA,WAAA;EACA,UAAA;EACA,YAAA;EACA,gBAAA;EACA,sBAAA;EACA,mBAAA;EACA,eAAA;AAFD;;AAKA;EACC,aAAA;EACA,YAAA;EACA,WAAA;AAFD;;AAKA;EACC,YAAA;EACA,yBAAA;EACA,+BAAA;EACA,aAAA;EACA,sBAAA;AAFD;;AAKA;EACC,kBAAA;EACA,mBAAA;AAFD;;AAKA;EACC,eAAA;EACA,gBAAA;EACA,aAAA;EACA,mBAAA;EACA,SAAA;EACA,kBAAA;EACA,6BAAA;EACA,QAAA;EACA,cAAA;AAFD;;AAKA;EACC,gDAAA;EACA,oBAAA;EACA,kBAAA;EACA,QAAA;AAFD;;AAKA;EACC,aAAA;EACA,mBAAA;EACA,WAAA;EACA,iBAAA;EACA,oBAAA;EACA,gCAAA;AAFD;;AAKA;EACC,kBAAA;AAFD;;AAKA;EACC,WAAA;EACA,kBAAA;EACA,yDAAA;EACA,4BAAA;EACA,qCAAA;EACA,qBAAA;EACA,kBAAA;AAFD;;AAKA;EACC,sBAAA;AAFD;;AAKA;EACC,WAAA;EACA,YAAA;EACA,yDAAA;EACA,kCAAA;EACA,kBAAA;EACA,cAAA;EACA,YAAA;AAFD;;AAKA;EACC;IACC,uBAAA;EAFA;EAKD;IACC,yBAAA;EAHA;AACF;AAMA;EACC,OAAA;EACA,cAAA;EACA,iBAAA;AAJD;;AAOA;EACC,YAAA;EACA,cAAA;AAJD;;AAOA;EACC,cAAA;AAJD;;AAOA;EACC,cAAA;AAJD;;AAOA;EACC,cAAA;AAJD;;AAOA;EACC,UAAA;EACA,SAAA;EACA,gBAAA;AAJD;;AAOA;EACC,iBAAA;AAJD;;AAOA;EACC,aAAA;EACA,mBAAA;EACA,8BAAA;EACA,gBAAA;EAEA,gBAAA;EACA,eAAA;EACA,kBAAA;EACA,cAAA;EACA,qBAAA;EACA,SAAA;AALD;;AAQA;EACC,mBAAA;AALD;;AAQA;EACC,8BAAA;EACA,YAAA;AALD;;AAQA;EACC,yBAAA;AALD;;AAQA;EACC,OAAA;EACA,kBAAA;EACA,WAAA;EACA,aAAA;EACA,uBAAA;EACA,mBAAA;AALD;;AAQA;EACC,aAAA;EACA,yBAAA;EACA,uBAAA;AALD;;AAQA;EACC,gBAAA;EACA,aAAA;AALD;;AAQA;EACC,eAAA;EACA,gBAAA;EACA,SAAA;EACA,gBAAA;AALD;;AAQA;EACC,SAAA;AALD;;AAQA;EACC,yBAAA;AALD;;AAQA;EACC,aAAA;EACA,yBAAA;AALD;;AAQA;EACC,aAAA;EACA,iBAAA;EACA,cAAA;EACA,qBAAA;AALD;;AAQA;EACC,0BAAA;AALD;;AAQA;EACC,YAAA;EACA,aAAA;EACA,mBAAA;EACA,kBAAA;EACA,qBAAA;EACA,oBAAA;KAAA,iBAAA;AALD;;AAQA;EACC,aAAA;EACA,WAAA;EACA,cAAA;AALD;;AAQA;EACC,aAAA;EACA,gBAAA;EACA,sBAAA;EACA,SAAA;AALD;;AAQA;EACC,SAAA;EACA,UAAA;AALD;;AAQA;EACC,kBAAA;AALD;;AAQA;;EAEC,aAAA;AALD;;AAQA;;EAEC,WAAA;AALD;;AAQA;;;EAGC,YAAA;AALD;;AAQA;EACC,kBAAA;AALD;;AAQA;EACC,YAAA;EACA,aAAA;EACA,gCAAA;EACA,mBAAA;AALD;;AAQA;EACC,sBAAA;EACA,WAAA;AALD;;AAQA;EACC,aAAA;EACA,WAAA;EACA,kBAAA;AALD;;AAQA;EACC,cAAA;AALD;;AAQA;EACC,iBAAA;EACA,kBAAA;EACA,cAAA;AALD;;AAQA;EACC,cAAA;AALD;;AAQA;EACC,cAAA;AALD;;AAQA;EACC,cAAA;EACA,qBAAA;EACA,gDAAA;AALD;;AAQA;EACC,aAAA;EACA,sBAAA;EACA,mBAAA;EACA,uBAAA;EACA,WAAA;AALD;;AAQA;EACC,aAAA;EACA,SAAA;AALD;;AAQA;EACC,aAAA;EACA,sBAAA;EACA,QAAA;EACA,0BAAA;EAAA,uBAAA;EAAA,kBAAA;EACA,sCAAA;AALD;;AAQA;EACC,aAAA;EACA,iCAAA;AALD;AAOC;EACC,0BAAA;EAAA,uBAAA;EAAA,kBAAA;AALF;AASC;EACC,yBAAA;EACA,0BAAA;EACA,kBAAA;AAPF;;AAWA;EACC,aAAA;EACA,sBAAA;EACA,qBAAA;EACA,sEAAA;AARD;AASC;EACC,gDAAA;EACA,WAAA;AAPF;;AAWA;EACC,aAAA;EACA,QAAA;AARD;AASC;EACC,YAAA;AAPF;AASC;EACC,eAAA;AAPF","sourcesContent":[":root {\n\t--button-size: 5em;\n\t--calculator-font-size: 1.5em;\n\t--calculator-button-gap: 5px;\n}\n\nhtml {\n\tbox-sizing: border-box;\n}\n\n*,\n*:before,\n*:after {\n\tbox-sizing: inherit;\n}\n\nbody {\n\tfont-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"Roboto\", \"Oxygen\",\n\t\t\"Ubuntu\", \"Cantarell\", \"Fira Sans\", \"Droid Sans\", \"Helvetica Neue\",\n\t\tsans-serif;\n\t-webkit-font-smoothing: antialiased;\n\t-moz-osx-font-smoothing: grayscale;\n}\n\ncode {\n\tfont-family: source-code-pro, Menlo, Monaco, Consolas, \"Courier New\",\n\t\tmonospace;\n}\n\nhtml,\nbody {\n\theight: 100%;\n\tmargin: 0;\n\tline-height: 1.5;\n\tcolor: #121212;\n}\n\ntextarea,\ninput,\nbutton {\n\tfont-size: 1rem;\n\tfont-family: inherit;\n\tborder: none;\n\tborder-radius: 8px;\n\tpadding: 0.5rem 0.75rem;\n\tbox-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.2), 0 1px 2px hsla(0, 0%, 0%, 0.2);\n\tbackground-color: white;\n\tline-height: 1.5;\n\tmargin: 0;\n}\n\nbutton {\n\tcolor: #3992ff;\n\tfont-weight: 500;\n}\n\ntextarea:hover,\ninput:hover,\nbutton:hover {\n\tbox-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.6), 0 1px 2px hsla(0, 0%, 0%, 0.2);\n}\n\nbutton:active {\n\tbox-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.4);\n\ttransform: translateY(1px);\n}\n\n#task h1 {\n\tdisplay: flex;\n\talign-items: flex-start;\n\tgap: 1rem;\n}\n\n#task h1 form {\n\tdisplay: flex;\n\talign-items: center;\n\tmargin-top: 0.25rem;\n}\n\n#task h1 form button {\n\tbox-shadow: none;\n\tfont-size: 1.5rem;\n\tfont-weight: 400;\n\tpadding: 0;\n}\n\n#task h1 form button[value=\"true\"] {\n\tcolor: #a4a4a4;\n}\n\n#task h1 form button[value=\"true\"]:hover,\n#task h1 form button[value=\"false\"] {\n\tcolor: #eeb004;\n}\n\nform[action$=\"destroy\"] button {\n\tcolor: #f44250;\n}\n\n.sr-only {\n\tposition: absolute;\n\twidth: 1px;\n\theight: 1px;\n\tpadding: 0;\n\tmargin: -1px;\n\toverflow: hidden;\n\tclip: rect(0, 0, 0, 0);\n\twhite-space: nowrap;\n\tborder-width: 0;\n}\n\n#root {\n\tdisplay: flex;\n\theight: 100%;\n\twidth: 100%;\n}\n\n#sidebar {\n\twidth: 22rem;\n\tbackground-color: #f7f7f7;\n\tborder-right: solid 1px #e3e3e3;\n\tdisplay: flex;\n\tflex-direction: column;\n}\n\n#sidebar>* {\n\tpadding-left: 2rem;\n\tpadding-right: 2rem;\n}\n\n#sidebar h1 {\n\tfont-size: 1rem;\n\tfont-weight: 500;\n\tdisplay: flex;\n\talign-items: center;\n\tmargin: 0;\n\tpadding: 1rem 2rem;\n\tborder-top: 1px solid #e3e3e3;\n\torder: 1;\n\tline-height: 1;\n}\n\n#sidebar h1::before {\n\tcontent: url(\"data:image/svg+xml,%3Csvg width='25' height='18' viewBox='0 0 25 18' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M19.4127 6.4904C18.6984 6.26581 18.3295 6.34153 17.5802 6.25965C16.4219 6.13331 15.9604 5.68062 15.7646 4.51554C15.6551 3.86516 15.7844 2.9129 15.5048 2.32334C14.9699 1.19921 13.7183 0.695046 12.461 0.982805C11.3994 1.22611 10.516 2.28708 10.4671 3.37612C10.4112 4.61957 11.1197 5.68054 12.3363 6.04667C12.9143 6.22097 13.5284 6.3087 14.132 6.35315C15.2391 6.43386 15.3241 7.04923 15.6236 7.55574C15.8124 7.87508 15.9954 8.18975 15.9954 9.14193C15.9954 10.0941 15.8112 10.4088 15.6236 10.7281C15.3241 11.2334 14.9547 11.5645 13.8477 11.6464C13.244 11.6908 12.6288 11.7786 12.0519 11.9528C10.8353 12.3201 10.1268 13.3799 10.1828 14.6234C10.2317 15.7124 11.115 16.7734 12.1766 17.0167C13.434 17.3056 14.6855 16.8003 15.2204 15.6762C15.5013 15.0866 15.6551 14.4187 15.7646 13.7683C15.9616 12.6032 16.423 12.1505 17.5802 12.0242C18.3295 11.9423 19.1049 12.0242 19.8071 11.6253C20.5491 11.0832 21.212 10.2696 21.212 9.14192C21.212 8.01428 20.4976 6.83197 19.4127 6.4904Z' fill='%23F44250'/%3E%3Cpath d='M7.59953 11.7459C6.12615 11.7459 4.92432 10.5547 4.92432 9.09441C4.92432 7.63407 6.12615 6.44287 7.59953 6.44287C9.0729 6.44287 10.2747 7.63407 10.2747 9.09441C10.2747 10.5536 9.07172 11.7459 7.59953 11.7459Z' fill='black'/%3E%3Cpath d='M2.64217 17.0965C1.18419 17.093 -0.0034949 15.8971 7.72743e-06 14.4356C0.00352588 12.9765 1.1994 11.7888 2.66089 11.7935C4.12004 11.797 5.30772 12.9929 5.30306 14.4544C5.29953 15.9123 4.10366 17.1 2.64217 17.0965Z' fill='black'/%3E%3Cpath d='M22.3677 17.0965C20.9051 17.1046 19.7046 15.9217 19.6963 14.4649C19.6882 13.0023 20.8712 11.8017 22.3279 11.7935C23.7906 11.7854 24.9911 12.9683 24.9993 14.4251C25.0075 15.8866 23.8245 17.0883 22.3677 17.0965Z' fill='black'/%3E%3C/svg%3E%0A\");\n\tmargin-right: 0.5rem;\n\tposition: relative;\n\ttop: 1px;\n}\n\n#sidebar>div {\n\tdisplay: flex;\n\talign-items: center;\n\tgap: 0.5rem;\n\tpadding-top: 1rem;\n\tpadding-bottom: 1rem;\n\tborder-bottom: 1px solid #e3e3e3;\n}\n\n#sidebar>div form {\n\tposition: relative;\n}\n\n#sidebar>div form input[type=\"search\"] {\n\twidth: 100%;\n\tpadding-left: 2rem;\n\tbackground-image: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='h-6 w-6' fill='none' viewBox='0 0 24 24' stroke='%23999' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z' /%3E%3C/svg%3E\");\n\tbackground-repeat: no-repeat;\n\tbackground-position: 0.625rem 0.75rem;\n\tbackground-size: 1rem;\n\tposition: relative;\n}\n\n#sidebar>div form input[type=\"search\"].loading {\n\tbackground-image: none;\n}\n\n#search-spinner {\n\twidth: 1rem;\n\theight: 1rem;\n\tbackground-image: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'%3E%3Cpath stroke='%23000' strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M20 4v5h-.582m0 0a8.001 8.001 0 00-15.356 2m15.356-2H15M4 20v-5h.581m0 0a8.003 8.003 0 0015.357-2M4.581 15H9' /%3E%3C/svg%3E\");\n\tanimation: spin 1s infinite linear;\n\tposition: absolute;\n\tleft: 0.625rem;\n\ttop: 0.75rem;\n}\n\n@keyframes spin {\n\tfrom {\n\t\ttransform: rotate(0deg);\n\t}\n\n\tto {\n\t\ttransform: rotate(360deg);\n\t}\n}\n\n#sidebar nav {\n\tflex: 1;\n\toverflow: auto;\n\tpadding-top: 1rem;\n}\n\n#sidebar nav a span {\n\tfloat: right;\n\tcolor: #eeb004;\n}\n\n#sidebar nav a.active span {\n\tcolor: inherit;\n}\n\ni {\n\tcolor: #818181;\n}\n\n#sidebar nav .active i {\n\tcolor: inherit;\n}\n\n#sidebar ul {\n\tpadding: 0;\n\tmargin: 0;\n\tlist-style: none;\n}\n\n#sidebar li {\n\tmargin: 0.25rem 0;\n}\n\n#sidebar nav a {\n\tdisplay: flex;\n\talign-items: center;\n\tjustify-content: space-between;\n\toverflow: hidden;\n\n\twhite-space: pre;\n\tpadding: 0.5rem;\n\tborder-radius: 8px;\n\tcolor: inherit;\n\ttext-decoration: none;\n\tgap: 1rem;\n}\n\n#sidebar nav a:hover {\n\tbackground: #e3e3e3;\n}\n\n#sidebar nav a.active {\n\tbackground: hsl(224, 98%, 58%);\n\tcolor: white;\n}\n\n#sidebar nav a.pending {\n\tcolor: hsl(224, 98%, 58%);\n}\n\n#detail {\n\tflex: 1;\n\tpadding: 2rem 4rem;\n\twidth: 100%;\n\tdisplay: flex;\n\tjustify-content: center;\n\talign-items: center;\n}\n\n#detail.loading {\n\topacity: 0.25;\n\ttransition: opacity 200ms;\n\ttransition-delay: 200ms;\n}\n\n#task {\n\tmax-width: 40rem;\n\tdisplay: flex;\n}\n\n#task h1 {\n\tfont-size: 2rem;\n\tfont-weight: 700;\n\tmargin: 0;\n\tline-height: 1.2;\n}\n\n#task h1+p {\n\tmargin: 0;\n}\n\n#task h1+p+p {\n\twhite-space: break-spaces;\n}\n\n#task h1:focus {\n\toutline: none;\n\tcolor: hsl(224, 98%, 58%);\n}\n\n#task a[href*=\"twitter\"] {\n\tdisplay: flex;\n\tfont-size: 1.5rem;\n\tcolor: #3992ff;\n\ttext-decoration: none;\n}\n\n#task a[href*=\"twitter\"]:hover {\n\ttext-decoration: underline;\n}\n\n#task img {\n\twidth: 12rem;\n\theight: 12rem;\n\tbackground: #c8c8c8;\n\tmargin-right: 2rem;\n\tborder-radius: 1.5rem;\n\tobject-fit: cover;\n}\n\n#task h1~div {\n\tdisplay: flex;\n\tgap: 0.5rem;\n\tmargin: 1rem 0;\n}\n\n#task-form {\n\tdisplay: flex;\n\tmax-width: 40rem;\n\tflex-direction: column;\n\tgap: 1rem;\n}\n\n#task-form>p:first-child {\n\tmargin: 0;\n\tpadding: 0;\n}\n\n#task-form>p:first-child> :nth-child(2) {\n\tmargin-right: 1rem;\n}\n\n#task-form>p:first-child,\n#task-form label {\n\tdisplay: flex;\n}\n\n#task-form p:first-child span,\n#task-form label span {\n\twidth: 8rem;\n}\n\n#task-form p:first-child input,\n#task-form label input,\n#task-form label textarea {\n\tflex-grow: 2;\n}\n\n#task-form-avatar {\n\tmargin-right: 2rem;\n}\n\n#task-form-avatar img {\n\twidth: 12rem;\n\theight: 12rem;\n\tbackground: hsla(0, 0%, 0%, 0.2);\n\tborder-radius: 1rem;\n}\n\n#task-form-avatar input {\n\tbox-sizing: border-box;\n\twidth: 100%;\n}\n\n#task-form p:last-child {\n\tdisplay: flex;\n\tgap: 0.5rem;\n\tmargin: 0 0 0 8rem;\n}\n\n#task-form p:last-child button[type=\"button\"] {\n\tcolor: inherit;\n}\n\n#zero-state {\n\tmargin: 2rem auto;\n\ttext-align: center;\n\tcolor: #818181;\n}\n\n#zero-state a {\n\tcolor: inherit;\n}\n\n#zero-state a:hover {\n\tcolor: #121212;\n}\n\n#zero-state:before {\n\tdisplay: block;\n\tmargin-bottom: 0.5rem;\n\tcontent: url(\"data:image/svg+xml,%3Csvg width='50' height='33' viewBox='0 0 50 33' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M38.8262 11.1744C37.3975 10.7252 36.6597 10.8766 35.1611 10.7128C32.8444 10.4602 31.9215 9.55475 31.5299 7.22456C31.3108 5.92377 31.5695 4.01923 31.0102 2.8401C29.9404 0.591789 27.4373 -0.416556 24.9225 0.158973C22.7992 0.645599 21.0326 2.76757 20.9347 4.94569C20.8228 7.43263 22.2399 9.5546 24.6731 10.2869C25.8291 10.6355 27.0574 10.8109 28.2646 10.8998C30.4788 11.0613 30.6489 12.292 31.2479 13.3051C31.6255 13.9438 31.9914 14.5731 31.9914 16.4775C31.9914 18.3819 31.6231 19.0112 31.2479 19.6499C30.6489 20.6606 29.9101 21.3227 27.696 21.4865C26.4887 21.5754 25.2581 21.7508 24.1044 22.0994C21.6712 22.834 20.2542 24.9537 20.366 27.4406C20.4639 29.6187 22.2306 31.7407 24.3538 32.2273C26.8686 32.8052 29.3717 31.7945 30.4415 29.5462C31.0032 28.3671 31.3108 27.0312 31.5299 25.7304C31.9238 23.4002 32.8467 22.4948 35.1611 22.2421C36.6597 22.0784 38.2107 22.2421 39.615 21.4443C41.099 20.36 42.4248 18.7328 42.4248 16.4775C42.4248 14.2222 40.9961 11.8575 38.8262 11.1744Z' fill='%23E3E3E3'/%3E%3Cpath d='M15.1991 21.6854C12.2523 21.6854 9.84863 19.303 9.84863 16.3823C9.84863 13.4615 12.2523 11.0791 15.1991 11.0791C18.1459 11.0791 20.5497 13.4615 20.5497 16.3823C20.5497 19.3006 18.1436 21.6854 15.1991 21.6854Z' fill='%23E3E3E3'/%3E%3Cpath d='M5.28442 32.3871C2.36841 32.38 -0.00698992 29.9882 1.54551e-05 27.0652C0.00705187 24.1469 2.39884 21.7715 5.32187 21.7808C8.24022 21.7878 10.6156 24.1796 10.6063 27.1027C10.5992 30.0187 8.20746 32.3941 5.28442 32.3871Z' fill='%23E3E3E3'/%3E%3Cpath d='M44.736 32.387C41.8107 32.4033 39.4096 30.0373 39.3932 27.1237C39.3769 24.1984 41.7428 21.7973 44.6564 21.7808C47.5817 21.7645 49.9828 24.1305 49.9993 27.0441C50.0156 29.9671 47.6496 32.3705 44.736 32.387Z' fill='%23E3E3E3'/%3E%3C/svg%3E%0A\");\n}\n\n#error-page {\n\tdisplay: flex;\n\tflex-direction: column;\n\talign-items: center;\n\tjustify-content: center;\n\twidth: 100%;\n}\n\n.button-container {\n\tdisplay: flex;\n\tgap: 10px;\n}\n\n.calculator-container {\n\tdisplay: flex;\n\tflex-direction: column;\n\tgap: 5px;\n\twidth: fit-content;\n\tfont-size: var(--calculator-font-size);\n}\n\n.line-container {\n\tdisplay: flex;\n\tgap: var(--calculator-button-gap);\n\n\t& form {\n\t\twidth: fit-content;\n\n\t}\n\n\t& button {\n\t\twidth: var(--button-size);\n\t\theight: var(--button-size);\n\t\tfont-size: inherit;\n\t}\n}\n\n.display-container {\n\tdisplay: flex;\n\tflex-direction: column;\n\talign-items: flex-end;\n\twidth: calc(var(--button-size)*4 + var(--calculator-button-gap)*3);\n\t& #upper{\n\t\tfont-size: calc(var(--calculator-font-size)/2);\n\t\tcolor: grey;\n\t}\n}\n\n#sidebar li{\n\tdisplay: flex;\n\tgap: 5px;\n\t& a{\n\t\tflex-grow: 1;\n\t}\n\t& button{\n\t\tfont-size: 20px;\n\t}\n}"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ __webpack_exports__["default"] = (___CSS_LOADER_EXPORT___);
 
@@ -49093,7 +49183,7 @@ function Index() {
     return state.tasksReducer;
   });
   var dispatch = (0,_store__WEBPACK_IMPORTED_MODULE_8__.useTypedDispatch)();
-  if (tasks === undefined) dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_9__.createTask)());
+  if (tasks[0] === undefined) dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_9__.createTask)());
   return /*#__PURE__*/React.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_10__.Navigate, {
     to: "/".concat(tasks[0].id)
   });
