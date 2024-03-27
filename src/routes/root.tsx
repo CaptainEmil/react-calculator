@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import store, { useTypedSelector } from "../store";
 import { getTask } from "../tasks";
+import Sidebar from "../components/Sidebar/Sidebar";
 
 
 export function action() {
@@ -26,54 +27,7 @@ const Root = () => {
 
 	return (
 		<>
-			<div id="sidebar">
-				<nav>
-					{tasks.length ? (
-						<ul>
-							{tasks
-								.map((task) => {
-									if (task.res===undefined) return;
-									return (<li key={task.id}>
-										<NavLink
-											to={`/${task.id}`}
-											className={({ isActive, isPending }) =>
-												isActive
-													? "active"
-													: isPending
-														? "pending"
-														: ""
-											}
-										>
-											{`${task.num1 === undefined ? "" : task.num1.toString().length > 5 ? task.num1.toLocaleString('en-US', bigIntOpt) : task.num1.toString()} ${task.oper ?? ""} ${task.num2 === undefined ? "" : task.num2.toString().length > 5 ? task.num2.toLocaleString('en-US', bigIntOpt) : task.num2.toString()} ` + (task.res === undefined ? "" : `= ${task.res.toString().length > 5 ? task.res.toLocaleString('en-US', bigIntOpt) : task.res.toString()}`)}
-										</NavLink>
-										<div className="button-container">
-											<Form
-												method="post"
-												action={`/${task.id}/destroy`}
-												onSubmit={(event) => {
-													if (
-														!window.confirm(
-															"Please confirm you want to delete this record."
-														)
-													) {
-														event.preventDefault();
-													}
-												}}
-											>
-												<button type="submit">🗑</button>
-											</Form>
-										</div>
-									</li>)
-								}
-								)}
-						</ul>
-					) : (
-						<p>
-							<i>No tasks</i>
-						</p>
-					)}
-				</nav>
-			</div>
+			<Sidebar />
 			<div
 				id="detail"
 				className={
