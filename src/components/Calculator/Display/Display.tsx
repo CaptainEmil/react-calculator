@@ -28,7 +28,11 @@ const Display = ({ task }: DisplayProps) => {
     return (
         <div className="display-container">
             <div id="upper">{expr}</div>
-            <div id="lower">{taskUpdated.res === undefined ? expr : taskUpdated.res.toLocaleString('en-US', bigIntOpt)}</div>
+            <div id="lower">{
+                taskUpdated.res === undefined ? expr
+                    : taskUpdated.res.toString().length > 5 ? taskUpdated.res.toLocaleString('en-US', bigIntOpt)
+                        : taskUpdated.res.toString()}
+            </div>
         </div>
     )
 }

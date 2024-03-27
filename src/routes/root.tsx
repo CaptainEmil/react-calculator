@@ -44,7 +44,7 @@ const Root = () => {
 														: ""
 											}
 										>
-											{`${task.num1 === undefined ? "" : task.num1.toLocaleString('en-US', bigIntOpt)} ${task.oper ?? ""} ${task.num2 === undefined ? "" : task.num2.toLocaleString('en-US', bigIntOpt)} ` + (task.res === undefined ? "" : `= ${task.res.toLocaleString('en-US', bigIntOpt)}`)}
+											{`${task.num1 === undefined ? "" : task.num1.toString().length > 5 ? task.num1.toLocaleString('en-US', bigIntOpt) : task.num1.toString()} ${task.oper ?? ""} ${task.num2 === undefined ? "" : task.num2.toString().length > 5 ? task.num2.toLocaleString('en-US', bigIntOpt) : task.num2.toString()} ` + (task.res === undefined ? "" : `= ${task.res.toString().length > 5 ? task.res.toLocaleString('en-US', bigIntOpt) : task.res.toString()}`)}
 										</NavLink>
 										<div className="button-container">
 											<Form
