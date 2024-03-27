@@ -36,7 +36,7 @@ export async function action({ request, params }: ActionFunctionArgs<any>) {
 
 		store.dispatch(createTask());
 
-		return redirect(`/${tasks[0]!.id}`);
+		return redirect(`/${store.getState().tasksReducer[0]!.id}`);
 	}
 
 

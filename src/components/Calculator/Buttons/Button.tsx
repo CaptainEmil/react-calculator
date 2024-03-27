@@ -38,15 +38,24 @@ const Button = ({ task, children, oper }: ButtonProps) => {
         }
 
         const bigNum = BigInt(text!);
-        const bigNum1 = BigInt(taskUpdated.num1 ?? 0);
 
-        if (taskUpdated.oper === undefined) {
-            console.log(taskUpdated.num1);
-            dispatch(updateTask({ id: task.id, num1: (bigNum1 ?? 0n) * 10n + bigNum }));
-            return;
+        if (taskUpdated.res === undefined) {
+            const bigNum1 = BigInt(taskUpdated.num1 ?? 0);
+
+            if (taskUpdated.oper === undefined) {
+                console.log(taskUpdated.num1);
+                dispatch(updateTask({ id: task.id, num1: (bigNum1 ?? 0n) * 10n + bigNum }));
+                return;
+            }
+
+            dispatch(updateTask({ id: task.id, num2: (taskUpdated.num2 ?? 0n) * 10n + bigNum }));
         }
 
-        dispatch(updateTask({ id: task.id, num2: (taskUpdated.num2 ?? 0n) * 10n + bigNum }));
+        dispatch(createTask());
+        const newTask=store.getState().tasksReducer[0];
+        dispatch(updateTask({id:newTask?.id,num1:bigNum}));
+
+        navigate(`/${newTask!.id}`);
     }
 
     return (
