@@ -49,6 +49,7 @@ const Button = ({ task, children, oper }: ButtonProps) => {
             }
 
             dispatch(updateTask({ id: task.id, num2: (taskUpdated.num2 ?? 0n) * 10n + bigNum }));
+            return;
         }
 
         dispatch(createTask());
