@@ -32,7 +32,7 @@ const Root = () => {
 						<ul>
 							{tasks
 								.map((task) => {
-									if (!task.num1) return;
+									if (task.res===undefined) return;
 									return (<li key={task.id}>
 										<NavLink
 											to={`/${task.id}`}

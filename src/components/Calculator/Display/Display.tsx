@@ -2,15 +2,18 @@ import { getTask } from "../../../tasks";
 import { useTypedDispatch, useTypedSelector } from "../../../store";
 import TaskType from "src/types/Task";
 import bigIntOpt from "../../../options/bigInt";
+import { createTask } from "../../../redux/slices/tasksSlice";
 type DisplayProps = {
     task: TaskType
 }
 
 const Display = ({ task }: DisplayProps) => {
-
+    const dispatch=useTypedDispatch();
     const tasks = useTypedSelector((state) => state.tasksReducer);
     const taskUpdated = getTask(tasks, task.id) as TaskType;
-    if (taskUpdated === null) return;
+    if (taskUpdated === null) {
+        dispatch(createTask());
+    }
     const isEmpty = taskUpdated.num1 === undefined && taskUpdated.oper === undefined && taskUpdated.num2 === undefined && taskUpdated.res === undefined;
     let expr;
 
