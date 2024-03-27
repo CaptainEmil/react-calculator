@@ -1,5 +1,9 @@
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
+import { 
+	StrictMode 
+} from 'react';
+import { 
+	createRoot 
+} from 'react-dom/client';
 import {
 	createBrowserRouter,
 	Navigate,
@@ -14,11 +18,19 @@ import Task, {
 	loader as taskLoader,
 	action as taskAction,
 } from './routes/task';
-import { action as destroyAction } from './routes/destroy';
-import { Provider } from 'react-redux';
-import store, { useTypedDispatch, useTypedSelector } from './store';
-import { createTask } from './redux/slices/tasksSlice';
-
+import { 
+	action as destroyAction 
+} from './routes/destroy';
+import { 
+	Provider 
+} from 'react-redux';
+import store, { 
+	useTypedDispatch, 
+	useTypedSelector 
+} from './store';
+import { 
+	createTask 
+} from './redux/slices/tasksSlice';
 
 const rootContainer = document.querySelector('#root');
 
@@ -28,7 +40,7 @@ export default function Index() {
 	const tasks=useTypedSelector((state)=>state.tasksReducer);
 	const dispatch=useTypedDispatch();
 	if(tasks[0]===undefined) dispatch(createTask());
-	console.log(store.getState().tasksReducer[0]);
+
 	
 	return (
 		<Navigate to={`/${store.getState().tasksReducer[0]!.id}`} />
@@ -36,15 +48,11 @@ export default function Index() {
 }
 
 
-
-
-
 const router = createBrowserRouter([
 	{
 		path: "/",
 		element: <Root />,
 		errorElement: <ErrorPage />,
-		// loader: rootLoader,
 		action: rootAction,
 		children: [
 			{

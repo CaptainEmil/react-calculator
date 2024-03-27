@@ -18,7 +18,7 @@ export async function action({ request, params }: ActionFunctionArgs<any>) {
 	for (let i of formData) {
 
 		let oper = i[1];
-		console.log(i[1]);
+
 		if (oper === "equals") {
 			return store.dispatch(calcTask(params.taskId!));
 		}

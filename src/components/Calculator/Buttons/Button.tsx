@@ -27,11 +27,9 @@ const Button = ({ task, children, oper }: ButtonProps) => {
                 return;
             }
 
-
             dispatch(createTask());
             const newTask = store.getState().tasksReducer[0];
             dispatch(updateTask({ id: newTask!.id, oper: text!, calcOper: oper, num1: taskUpdated.res }));
-            console.log(newTask);
 
             navigate(`/${newTask!.id}`);
             return;
@@ -43,7 +41,6 @@ const Button = ({ task, children, oper }: ButtonProps) => {
             const bigNum1 = BigInt(taskUpdated.num1 ?? 0);
 
             if (taskUpdated.oper === undefined) {
-                console.log(taskUpdated.num1);
                 dispatch(updateTask({ id: task.id, num1: (bigNum1 ?? 0n) * 10n + bigNum }));
                 return;
             }

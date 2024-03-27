@@ -8,17 +8,18 @@ type DisplayProps = {
 }
 
 const Display = ({ task }: DisplayProps) => {
-    const dispatch=useTypedDispatch();
+    const dispatch = useTypedDispatch();
     const tasks = useTypedSelector((state) => state.tasksReducer);
     const taskUpdated = getTask(tasks, task.id) as TaskType;
+
     if (taskUpdated === null) {
         dispatch(createTask());
     }
+
     const isEmpty = taskUpdated.num1 === undefined && taskUpdated.oper === undefined && taskUpdated.num2 === undefined && taskUpdated.res === undefined;
     let expr;
 
     if (!isEmpty) {
-
 
         const num1 = taskUpdated.num1 === undefined ? "" : taskUpdated.num1.toString().length > 5 ? taskUpdated.num1!.toLocaleString('en-US', bigIntOpt) : taskUpdated.num1;
         const oper = taskUpdated.oper ?? "";

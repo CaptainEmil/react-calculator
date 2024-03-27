@@ -18,7 +18,6 @@ export const getTasks = (): TaskType[] => {
 
 export const getTask = (tasks: TaskType[], id?: string): Nullable<TaskType> => {
 	let task = tasks.find(task => task.id === id);
-	console.log(id);
 
 	return task ?? null;
 }
