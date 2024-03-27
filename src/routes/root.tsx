@@ -1,9 +1,6 @@
-import { Form, Outlet, redirect, NavLink, useNavigation } from "react-router-dom";
-import { createTask, updateTask } from "../redux/slices/tasksSlice";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import store, { useTypedSelector } from "../store";
-import { getTask } from "../tasks";
+import { Outlet, redirect, useNavigation } from "react-router-dom";
+import { createTask } from "../redux/slices/tasksSlice";
+import store from "../store";
 import Sidebar from "../components/Sidebar/Sidebar";
 
 
@@ -17,13 +14,7 @@ export function action() {
 
 
 const Root = () => {
-	const tasks = useTypedSelector((state) => state.tasksReducer);
 	const navigation = useNavigation();
-
-	const bigIntOpt: BigIntToLocaleStringOptions = {
-		notation: 'scientific',
-		maximumFractionDigits: 3
-	};
 
 	return (
 		<>

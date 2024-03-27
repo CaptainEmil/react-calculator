@@ -1,6 +1,6 @@
 import { ActionFunctionArgs, redirect } from "react-router-dom";
-import { createTask, deleteTask } from "../redux/slices/tasksSlice";
-import store, { useTypedDispatch } from "../store";
+import { deleteTask } from "../redux/slices/tasksSlice";
+import store from "../store";
 
 
 export function action({ params }: ActionFunctionArgs) {

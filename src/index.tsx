@@ -3,9 +3,7 @@ import { createRoot } from 'react-dom/client';
 import {
 	createBrowserRouter,
 	Navigate,
-	redirect,
 	RouterProvider,
-	useNavigate,
 } from "react-router-dom";
 import './index.css';
 import Root, {
@@ -19,7 +17,6 @@ import Task, {
 import { action as destroyAction } from './routes/destroy';
 import { Provider } from 'react-redux';
 import store, { useTypedDispatch, useTypedSelector } from './store';
-import Calculator from './components/Calculator/Calculator';
 import { createTask } from './redux/slices/tasksSlice';
 
 

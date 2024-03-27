@@ -3,7 +3,7 @@ import TaskType from "src/types/Task";
 import store, { useTypedDispatch, useTypedSelector } from "../../../store";
 import { createTask, updateTask } from "../../../redux/slices/tasksSlice";
 import { getTask } from "../../../tasks";
-import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 type ButtonProps = {
     task: TaskType;
