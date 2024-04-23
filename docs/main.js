@@ -4787,10 +4787,11 @@ function action() {
   _store__WEBPACK_IMPORTED_MODULE_1__["default"].dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_0__.createTask)());
   var tasks = _store__WEBPACK_IMPORTED_MODULE_1__["default"].getState().tasksReducer;
   var task = tasks[tasks.length - 1];
-  return (0,react_router_dom__WEBPACK_IMPORTED_MODULE_3__.redirect)("/".concat(task.id, "/edit"));
+  return (0,react_router_dom__WEBPACK_IMPORTED_MODULE_3__.redirect)("/calc/".concat(task.id, "/edit"));
 }
 var Root = function Root() {
   var navigation = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_4__.useNavigation)();
+  console.log(1);
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(_components_Sidebar_Sidebar__WEBPACK_IMPORTED_MODULE_2__["default"], null), /*#__PURE__*/React.createElement("div", {
     id: "detail",
     className: navigation.state === "loading" ? "loading" : ""
@@ -4924,8 +4925,15 @@ function loader(_ref2) {
 var Contact = function Contact() {
   var _ref3 = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_7__.useLoaderData)(),
     task = _ref3.task;
+  var tasks = (0,_store__WEBPACK_IMPORTED_MODULE_4__.useTypedSelector)(function (state) {
+    return state.tasksReducer;
+  });
+  var taskUpdated = (0,_tasks__WEBPACK_IMPORTED_MODULE_2__.getTask)(tasks, task.id);
+  if (taskUpdated === null) {
+    (0,react_router_dom__WEBPACK_IMPORTED_MODULE_6__.redirect)('/');
+  }
   return /*#__PURE__*/React.createElement(_components_Calculator_Calculator__WEBPACK_IMPORTED_MODULE_5__["default"], {
-    task: task
+    task: taskUpdated
   });
 };
 /* harmony default export */ __webpack_exports__["default"] = (Contact);
@@ -5011,7 +5019,7 @@ var getTasks = function getTasks() {
     }
     return value;
   });
-  return tasks.sort(sort_by__WEBPACK_IMPORTED_MODULE_0___default()("last", "createdAt"));
+  return tasks.sort(sort_by__WEBPACK_IMPORTED_MODULE_0___default()("-createdAt"));
 };
 var getTask = function getTask(tasks, id) {
   var task = tasks.find(function (task) {
@@ -49070,26 +49078,25 @@ function Index() {
   var dispatch = (0,_store__WEBPACK_IMPORTED_MODULE_7__.useTypedDispatch)();
   if (tasks[0] === undefined) dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_8__.createTask)());
   return /*#__PURE__*/React.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_9__.Navigate, {
-    to: "/".concat(_store__WEBPACK_IMPORTED_MODULE_7__["default"].getState().tasksReducer[0].id)
+    to: "/calc/".concat(_store__WEBPACK_IMPORTED_MODULE_7__["default"].getState().tasksReducer[0].id)
   });
 }
 var router = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_10__.createBrowserRouter)([{
   path: "/",
-  element: /*#__PURE__*/React.createElement(_routes_root__WEBPACK_IMPORTED_MODULE_3__["default"], null),
+  element: /*#__PURE__*/React.createElement(Index, null),
   errorElement: /*#__PURE__*/React.createElement(_error_page__WEBPACK_IMPORTED_MODULE_4__["default"], null),
-  action: _routes_root__WEBPACK_IMPORTED_MODULE_3__.action,
   children: [{
+    path: "/calc",
+    element: /*#__PURE__*/React.createElement(_routes_root__WEBPACK_IMPORTED_MODULE_3__["default"], null),
     errorElement: /*#__PURE__*/React.createElement(_error_page__WEBPACK_IMPORTED_MODULE_4__["default"], null),
+    action: _routes_root__WEBPACK_IMPORTED_MODULE_3__.action,
     children: [{
-      index: true,
-      element: /*#__PURE__*/React.createElement(Index, null)
-    }, {
-      path: "/:taskId",
+      path: "/calc/:taskId",
       element: /*#__PURE__*/React.createElement(_routes_task__WEBPACK_IMPORTED_MODULE_5__["default"], null),
       loader: _routes_task__WEBPACK_IMPORTED_MODULE_5__.loader,
       action: _routes_task__WEBPACK_IMPORTED_MODULE_5__.action
     }, {
-      path: "/:taskId/destroy",
+      path: "/calc/:taskId/destroy",
       action: _routes_destroy__WEBPACK_IMPORTED_MODULE_6__.action,
       errorElement: /*#__PURE__*/React.createElement("div", null, "Oops! There was an error.")
     }]

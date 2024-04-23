@@ -4,7 +4,7 @@ import Nullable from "src/types/Nullable";
 import { getTask } from "../tasks";
 import { calcTask, createTask } from "../redux/slices/tasksSlice";
 import { updateTask } from "../redux/slices/tasksSlice"
-import store from "../store";
+import store, { useTypedSelector } from "../store";
 import Calculator from "../components/Calculator/Calculator";
 
 
@@ -62,7 +62,11 @@ export function loader({ params }: LoaderFunctionArgs): { task: Nullable<TaskTyp
 
 const Contact = () => {
 	const { task } = useLoaderData() as { task: Nullable<TaskType> };
-
+	const tasks = useTypedSelector((state) => state.tasksReducer);
+	const taskUpdated = getTask(tasks, task!.id);
+	if(taskUpdated===null){
+		return;
+	}
 	return (
 		<Calculator task={task!}></Calculator>
 	);

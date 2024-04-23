@@ -1,8 +1,8 @@
-import { 
-	StrictMode 
+import {
+	StrictMode
 } from 'react';
-import { 
-	createRoot 
+import {
+	createRoot
 } from 'react-dom/client';
 import {
 	createBrowserRouter,
@@ -18,18 +18,18 @@ import Task, {
 	loader as taskLoader,
 	action as taskAction,
 } from './routes/task';
-import { 
-	action as destroyAction 
+import {
+	action as destroyAction
 } from './routes/destroy';
-import { 
-	Provider 
+import {
+	Provider
 } from 'react-redux';
-import store, { 
-	useTypedDispatch, 
-	useTypedSelector 
+import store, {
+	useTypedDispatch,
+	useTypedSelector
 } from './store';
-import { 
-	createTask 
+import {
+	createTask
 } from './redux/slices/tasksSlice';
 
 const rootContainer = document.querySelector('#root');
@@ -37,11 +37,10 @@ const rootContainer = document.querySelector('#root');
 if (rootContainer === null) throw new Error('Can\'t find root container');
 
 export default function Index() {
-	const tasks=useTypedSelector((state)=>state.tasksReducer);
-	const dispatch=useTypedDispatch();
-	if(tasks[0]===undefined) dispatch(createTask());
+	const tasks = useTypedSelector((state) => state.tasksReducer);
+	const dispatch = useTypedDispatch();
+	if (tasks[0] === undefined) dispatch(createTask());
 
-	
 	return (
 		<Navigate to={`/${store.getState().tasksReducer[0]!.id}`} />
 	);
@@ -55,23 +54,19 @@ const router = createBrowserRouter([
 		errorElement: <ErrorPage />,
 		action: rootAction,
 		children: [
+			{ index: true, element: <Index /> },
 			{
-				errorElement: <ErrorPage />,
-				children: [
-					{ index: true, element: <Index /> },
-					{
-						path: "/:taskId",
-						element: <Task />,
-						loader: taskLoader,
-						action: taskAction,
-					},
-					{
-						path: "/:taskId/destroy",
-						action: destroyAction,
-						errorElement: <div>Oops! There was an error.</div>,
-					}
-				],
+				path: "/:taskId",
+				element: <Task />,
+				loader: taskLoader,
+				action: taskAction,
 			},
+			{
+				path: "/:taskId/destroy",
+				action: destroyAction,
+				errorElement: <div>Oops! There was an error.</div>,
+			}
+
 		]
 	}
 ]);
