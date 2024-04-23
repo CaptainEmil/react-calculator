@@ -15,10 +15,7 @@ const Buttons = ({ task }: ButtonsProps) => {
                 <Button task={task}>8</Button>
                 <Button task={task}>9</Button>
                 <Form method="post">
-                    <button
-                        name="oper"
-                        value="clear"
-                    >
+                    <button name="oper" value="clear">
                         C
                     </button>
                 </Form>
@@ -38,10 +35,7 @@ const Buttons = ({ task }: ButtonsProps) => {
             <div className="line-container">
                 <Button task={task}>0</Button>
                 <Form method="post">
-                    <button
-                        name="oper"
-                        value="equals"
-                    >
+                    <button name="oper" value="equals">
                         =
                     </button>
                 </Form>
