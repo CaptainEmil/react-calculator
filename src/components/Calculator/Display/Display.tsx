@@ -21,9 +21,9 @@ const Display = ({ task }: DisplayProps) => {
 
     if (!isEmpty) {
 
-        const num1 = taskUpdated.num1 === undefined ? "" : taskUpdated.num1.toString().length > 5 ? taskUpdated.num1!.toLocaleString('en-US', bigIntOpt) : taskUpdated.num1;
+        const num1 = taskUpdated.num1 === undefined ? "" : taskUpdated.num1.toString();
         const oper = taskUpdated.oper ?? "";
-        const num2 = taskUpdated.num2 === undefined ? "" : taskUpdated.num2.toString().length > 5 ? taskUpdated.num2!.toLocaleString('en-US', bigIntOpt) : taskUpdated.num2;
+        const num2 = taskUpdated.num2 === undefined ? "" : taskUpdated.num2.toString();
 
         expr = `${num1} ${oper} ${num2}`;
     }
@@ -36,8 +36,8 @@ const Display = ({ task }: DisplayProps) => {
             <div id="upper">{expr}</div>
             <div id="lower">{
                 taskUpdated.res === undefined ? expr
-                    : taskUpdated.res.toString().length > 5 ? taskUpdated.res.toLocaleString('en-US', bigIntOpt)
-                        : taskUpdated.res.toString()}
+                    : taskUpdated.res.toString()
+            }
             </div>
         </div>
     )

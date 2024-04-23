@@ -4,6 +4,7 @@ import store, { useTypedDispatch, useTypedSelector } from "../../../store";
 import { createTask, updateTask } from "../../../redux/slices/tasksSlice";
 import { getTask } from "../../../tasks";
 import { useNavigate } from "react-router-dom";
+import BigDecimal from "../../../bigDecimal";
 
 type ButtonProps = {
     task: TaskType;
@@ -35,23 +36,23 @@ const Button = ({ task, children, oper }: ButtonProps) => {
             return;
         }
 
-        const bigNum = BigInt(text!);
+        const newNum = Number(text!);
 
         if (taskUpdated.res === undefined) {
-            const bigNum1 = BigInt(taskUpdated.num1 ?? 0);
-
+            const bigDec1 = taskUpdated.num1 ?? new BigDecimal("0");
+            const bigDec2 = taskUpdated.num2 ?? new BigDecimal("0");
             if (taskUpdated.oper === undefined) {
-                dispatch(updateTask({ id: task.id, num1: (bigNum1 ?? 0n) * 10n + bigNum }));
+                dispatch(updateTask({ id: task.id, num1: new BigDecimal(bigDec1.toString() + newNum) }));
                 return;
             }
 
-            dispatch(updateTask({ id: task.id, num2: (taskUpdated.num2 ?? 0n) * 10n + bigNum }));
+            dispatch(updateTask({ id: task.id, num2: new BigDecimal(bigDec2.toString() + newNum) }));
             return;
         }
 
         dispatch(createTask());
         const newTask = store.getState().tasksReducer[0];
-        dispatch(updateTask({ id: newTask?.id, num1: bigNum }));
+        dispatch(updateTask({ id: newTask?.id, num1: new BigDecimal(newNum.toString()) }));
 
         navigate(`/${newTask!.id}`);
     }

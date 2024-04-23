@@ -2,13 +2,14 @@ import sortBy from "sort-by";
 import TaskType from "./types/Task";
 import Nullable from "./types/Nullable";
 import { CaseReducer, PayloadAction } from "@reduxjs/toolkit";
+import BigDecimal from "./bigDecimal";
 
 
 export const getTasks = (): TaskType[] => {
 	const tasksStr = localStorage.getItem('tasks');
 	let tasks = tasksStr === null ? [] : JSON.parse(tasksStr, (key, value) => {
 		if ((key === "num1" || key === "num2" || key === "res") && typeof value === "string" && value.match(/^\d+$/)) {
-			return BigInt(value);
+			return new BigDecimal(value);
 		}
 		return value;
 	}) as TaskType[];
@@ -44,20 +45,20 @@ export const calcTask: CaseReducer<TaskType[], PayloadAction<string>> = (state, 
 
 	if (task.num1 === undefined || task.num2 === undefined || task.oper === undefined) return tasks;
 
-	let res: bigint;
+	let res: BigDecimal;
 
 	switch (task.calcOper) {
 		case "+":
-			res = task.num1 + task.num2;
+			res = BigDecimal.sum(task.num1, task.num2);
 			break;
 		case "-":
-			res = task.num1 - task.num2;
+			res = BigDecimal.diff(task.num1, task.num2);
 			break;
 		case "*":
-			res = task.num1 * task.num2;
+			res = BigDecimal.prod(task.num1, task.num2);
 			break;
 		case "/":
-			res = task.num1 / task.num2;
+			res = BigDecimal.div(task.num1, task.num2);
 			break;
 		default:
 			throw new Error("No such operation:", { cause: task.calcOper });
@@ -100,5 +101,5 @@ export const deleteTask: CaseReducer<TaskType[], PayloadAction<string>> = (state
 }
 
 export const set = (tasks: TaskType[]) => {
-	localStorage.setItem("tasks", JSON.stringify(tasks, (_, i) => typeof i === 'bigint' ? i.toString() : i));
+	localStorage.setItem("tasks", JSON.stringify(tasks, (key, value) => (key === "num1" || key === "num2" || key === "res") && typeof value === "object" ? value.toString() : value))
 }
