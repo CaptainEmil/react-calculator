@@ -13,7 +13,7 @@ export const getTasks = (): TaskType[] => {
 		return value;
 	}) as TaskType[];
 
-	return tasks.sort(sortBy("last", "createdAt"));
+	return tasks.sort(sortBy("-createdAt"));
 }
 
 export const getTask = (tasks: TaskType[], id?: string): Nullable<TaskType> => {
