@@ -2,7 +2,7 @@ import sortBy from "sort-by";
 import TaskType from "./types/Task";
 import Nullable from "./types/Nullable";
 import { CaseReducer, PayloadAction } from "@reduxjs/toolkit";
-import BigDecimal from "./bigDecimal";
+import BigDecimal from "./BigDecimal";
 
 
 export const getTasks = (): TaskType[] => {

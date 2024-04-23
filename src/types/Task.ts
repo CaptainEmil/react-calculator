@@ -1,4 +1,4 @@
-import BigDecimal from "src/bigDecimal";
+import BigDecimal from "src/BigDecimal";
 type TaskType = {
 	id?: string,
 	createdAt?: number,
