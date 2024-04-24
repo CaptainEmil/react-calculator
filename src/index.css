@@ -419,6 +419,10 @@ i {
 	font-size: var(--calculator-font-size);
 }
 
+#ans {
+	margin-left: auto;
+}
+
 .line-container {
 	display: flex;
 	gap: var(--calculator-button-gap);

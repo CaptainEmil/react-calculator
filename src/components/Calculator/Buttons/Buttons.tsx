@@ -13,11 +13,7 @@ const Buttons = ({ task }: ButtonsProps) => {
             <div className="buttons-container">
                 <div className="buttons-left">
                     <div className="line-container">
-                        <Form method="post">
-                            <button name="oper" value="clear">
-                                C
-                            </button>
-                        </Form>
+                        <Button task={task} id="ans" oper="ans">Ans</Button>
                     </div>
                     <div className="line-container">
 

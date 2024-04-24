@@ -10,9 +10,10 @@ type ButtonProps = {
     task: TaskType;
     children: ReactNode;
     oper?: string;
+    id?: string;
 }
 
-const Button = ({ task, children, oper }: ButtonProps) => {
+const Button = ({ task, children, oper, id }: ButtonProps) => {
     const dispatch = useTypedDispatch();
     const tasks = useTypedSelector((state) => state.tasksReducer);
     const taskUpdated = getTask(tasks, task.id) as TaskType;
@@ -58,7 +59,7 @@ const Button = ({ task, children, oper }: ButtonProps) => {
     }
 
     return (
-        <button onClick={handleClick}>{children}</button>
+        <button onClick={handleClick} id={id ?? undefined}>{children}</button>
     )
 }
 
