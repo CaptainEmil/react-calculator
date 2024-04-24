@@ -1,6 +1,6 @@
 :root {
-	--button-size: 3em;
-	--calculator-font-size: 1.5em;
+	--button-size: 5rem;
+	--calculator-font-size: 1.5rem;
 	--calculator-button-gap: 5px;
 }
 
@@ -417,10 +417,10 @@ i {
 	gap: 5px;
 	width: fit-content;
 	font-size: var(--calculator-font-size);
-}
 
-#ans {
-	margin-left: auto;
+	& sup{
+		font-size: calc(var(--calculator-font-size) / 2);
+	}
 }
 
 .line-container {
@@ -437,6 +437,12 @@ i {
 		width: var(--button-size);
 		height: var(--button-size)/2;
 		font-size: inherit;
+	}
+}
+
+.buttons-left {
+	& .line-container {
+		justify-content: flex-end;
 	}
 }
 
@@ -463,4 +469,8 @@ i {
 	& button {
 		font-size: 20px;
 	}
+}
+
+.buttons-hidden{
+	display: none;
 }
