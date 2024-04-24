@@ -37,7 +37,6 @@ const ButtonsLeft = ({ task }: ButtonsLeftProps) => {
             <div className={"buttons-left-alt" + (showAlt ? "" : " buttons-hidden")}>
                 <div className="line-container">
                     <button className="alt" onClick={handleClick}>Alt</button>
-                    <Button task={task} id="ans" oper="ans">Ans</Button>
                 </div>
                 <div className="line-container">
                     <Button task={task} oper="sin">sin</Button>
