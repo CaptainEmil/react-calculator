@@ -11,9 +11,9 @@ const ButtonsRight = ({ task }: ButtonsRightProps) => {
         <>
             <div className="buttons-right">
                 <div className="line-container">
-                    <Button task={task} oper="fact">x!</Button>
                     <Button task={task} oper="pi">π</Button>
                     <Button task={task} oper="e">e</Button>
+                    <Button task={task} id="ans" oper="ans">Ans</Button>
                     <Form method="post">
                         <button name="oper" value="clear">
                             C
