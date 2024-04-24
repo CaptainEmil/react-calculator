@@ -450,7 +450,7 @@ i {
 	display: flex;
 	flex-direction: column;
 	align-items: flex-end;
-	width: calc(var(--button-size)*4 + var(--calculator-button-gap)*3);
+	width: calc(var(--button-size)*6 + var(--calculator-button-gap)*6);
 
 	& #upper {
 		font-size: calc(var(--calculator-font-size)/2);

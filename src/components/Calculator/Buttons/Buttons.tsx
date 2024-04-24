@@ -39,7 +39,7 @@ const Buttons = ({ task }: ButtonsProps) => {
                 </div>
                 <div className={"buttons-left-alt" + (showAlt ? "" : " buttons-hidden")}>
                     <div className="line-container">
-                    <button className="alt" onClick={handleClick}>Alt</button>
+                        <button className="alt" onClick={handleClick}>Alt</button>
                         <Button task={task} id="ans" oper="ans">Ans</Button>
                     </div>
                     <div className="line-container">
@@ -61,13 +61,14 @@ const Buttons = ({ task }: ButtonsProps) => {
                 </div>
                 <div className="buttons-right">
                     <div className="line-container">
+                        <Button task={task} oper="fact">x!</Button>
+                        <Button task={task} oper="pi">π</Button>
+                        <Button task={task} oper="e">e</Button>
                         <Form method="post">
                             <button name="oper" value="clear">
                                 C
                             </button>
                         </Form>
-                        <Button task={task} oper="pi">π</Button>
-                        <Button task={task} oper="e">e</Button>
                     </div>
                     <div className="line-container">
 
