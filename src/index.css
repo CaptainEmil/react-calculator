@@ -1,5 +1,5 @@
 :root {
-	--button-size: 5em;
+	--button-size: 3em;
 	--calculator-font-size: 1.5em;
 	--calculator-button-gap: 5px;
 }
@@ -406,7 +406,7 @@ i {
 	width: 100%;
 }
 
-.button-container {
+.buttons-container {
 	display: flex;
 	gap: 10px;
 }
@@ -429,8 +429,9 @@ i {
 	}
 
 	& button {
+		margin: 5px 0;
 		width: var(--button-size);
-		height: var(--button-size);
+		height: var(--button-size)/2;
 		font-size: inherit;
 	}
 }
@@ -440,19 +441,22 @@ i {
 	flex-direction: column;
 	align-items: flex-end;
 	width: calc(var(--button-size)*4 + var(--calculator-button-gap)*3);
-	& #upper{
+
+	& #upper {
 		font-size: calc(var(--calculator-font-size)/2);
 		color: grey;
 	}
 }
 
-#sidebar li{
+#sidebar li {
 	display: flex;
 	gap: 5px;
-	& a{
+
+	& a {
 		flex-grow: 1;
 	}
-	& button{
+
+	& button {
 		font-size: 20px;
 	}
 }

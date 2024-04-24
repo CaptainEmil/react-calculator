@@ -4352,6 +4352,620 @@ function persistAppliedTransitions(_window, transitions) {
 
 /***/ }),
 
+/***/ "./src/BigDecimal.ts":
+/*!***************************!*\
+  !*** ./src/BigDecimal.ts ***!
+  \***************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": function() { return /* binding */ BigDecimal; }
+/* harmony export */ });
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
+
+
+var BigDecimal = /*#__PURE__*/function () {
+  function BigDecimal(num1, num2) {
+    var _num, _num2;
+    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, BigDecimal);
+    this.isNegative = num1.toString().includes('-');
+    this.zerosBefNum2 = 0;
+    if (num2 === undefined && (typeof num1 === "string" || typeof num1 === "number")) {
+      var numArr = num1.toString().split(".");
+      if (numArr[1] !== undefined && numArr[1].split('')[0] === '0' && numArr[1].split('').length > 1) {
+        // console.log(numArr[1].replace(/[1-9]+\d*/g, ''));
+
+        this.zerosBefNum2 = numArr[1].replace(/[1-9]+\d*/, '').length;
+      }
+      this.num1 = BigDecimal.bigIntAbs(BigInt(numArr[0] === "-" ? 0 : numArr[0]));
+      this.num2 = BigDecimal.bigIntAbs(BigInt(numArr[1] === undefined ? 0 : numArr[1].replace(/0+$/, '')));
+      return;
+    }
+    num2 = (_num = num2) === null || _num === void 0 ? void 0 : _num.toString().replace(/0+$/, '');
+    if (typeof num2 === "string" && num2.split('').length > 1 && num2.split('')[0] === '0') {
+      this.zerosBefNum2 = num2.replace(/[1-9]+\d*/, '').length;
+    }
+    this.num1 = BigDecimal.bigIntAbs(BigInt(num1));
+    this.num2 = BigDecimal.bigIntAbs(BigInt((_num2 = num2) !== null && _num2 !== void 0 ? _num2 : 0));
+  }
+  (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(BigDecimal, [{
+    key: "toFixed",
+    value: function toFixed(n) {
+      // console.log(this.toString());
+
+      return new BigDecimal(this.toString().slice(0, n));
+    }
+  }, {
+    key: "toString",
+    value: function toString() {
+      var num1Str = this.num1.toString();
+      var num2Str = this.num2.toString();
+      return "".concat(this.isNegative ? "-" : "").concat(num1Str).concat(num2Str.replace("0", "").length === 0 ? "" : '.' + "0".repeat(this.zerosBefNum2) + num2Str.replace(/0+$/, ''));
+    }
+  }], [{
+    key: "bigIntAbs",
+    value: function bigIntAbs(bigInt) {
+      return bigInt < 0n ? -bigInt : bigInt;
+    }
+  }, {
+    key: "bigDecJoin",
+    value: function bigDecJoin(bigDec1, bigDec2) {
+      var bigDec1Num2Len = bigDec1.num2.toString().replace(/0+$/, '').length + bigDec1.zerosBefNum2;
+      var bigDec2Num2Len = bigDec2.num2.toString().replace(/0+$/, '').length + bigDec2.zerosBefNum2;
+      var maxLen = Math.max(bigDec1Num2Len, bigDec2Num2Len);
+      // console.log(bigDec1.zerosBefNum2, bigDec2.zerosBefNum2, maxLen);
+
+      var bigDec1Num2Str = ("0".repeat(bigDec1.zerosBefNum2) + bigDec1.num2.toString().replace(/0+$/, '')).padEnd(maxLen, '0');
+      var bigDec2Num2Str = ("0".repeat(bigDec2.zerosBefNum2) + bigDec2.num2.toString().replace(/0+$/, '')).padEnd(maxLen, '0');
+      // console.log(bigDec1Num2Str, bigDec2Num2Str);
+      var bigDec1Join = BigInt((bigDec1.isNegative ? "-" : "") + bigDec1.num1.toString() + bigDec1Num2Str);
+      var bigDec2Join = BigInt((bigDec2.isNegative ? "-" : "") + bigDec2.num1.toString() + bigDec2Num2Str);
+      // console.log(bigDec1Join, bigDec2Join);
+
+      return {
+        bigDecJoinArr: [bigDec1Join, bigDec2Join],
+        maxLen: maxLen,
+        bigDec1Num2Len: bigDec1Num2Len,
+        bigDec2Num2Len: bigDec2Num2Len
+      };
+    }
+  }, {
+    key: "sum",
+    value: function sum(bigDec1, bigDec2) {
+      var _BigDecimal$bigDecJoi = BigDecimal.bigDecJoin(bigDec1, bigDec2),
+        bigDecJoinArr = _BigDecimal$bigDecJoi.bigDecJoinArr,
+        maxLen = _BigDecimal$bigDecJoi.maxLen;
+      ;
+      var bigDec1Join = bigDecJoinArr[0];
+      var bigDec2Join = bigDecJoinArr[1];
+      var resBigInt = bigDec1Join + bigDec2Join;
+      // console.log(bigDec1Join,bigDec2Join,resBigInt,maxLen);
+
+      var resArr = resBigInt.toString().split('');
+      resArr.splice(resBigInt.toString().length - maxLen, 0, '.');
+      return new BigDecimal(resArr.join(''));
+    }
+  }, {
+    key: "diff",
+    value: function diff(bigDec1, bigDec2) {
+      var _BigDecimal$bigDecJoi2 = BigDecimal.bigDecJoin(bigDec1, bigDec2),
+        bigDecJoinArr = _BigDecimal$bigDecJoi2.bigDecJoinArr,
+        maxLen = _BigDecimal$bigDecJoi2.maxLen;
+      ;
+      var bigDec1Join = bigDecJoinArr[0];
+      var bigDec2Join = bigDecJoinArr[1];
+
+      // console.log(bigDec1Join, bigDec2Join);
+
+      var resBigInt = bigDec1Join - bigDec2Join;
+      var isNegative = resBigInt < 0n;
+      resBigInt = BigDecimal.bigIntAbs(resBigInt);
+      // console.log(resBigInt);
+
+      // console.log(resBigInt.toString().length - maxLen, maxLen);
+
+      var resArr = resBigInt.toString().split('');
+      for (var i = resBigInt.toString().length - maxLen; i < 0; ++i) {
+        resArr.splice(0, 0, '0');
+      }
+      // console.log(resArr);
+
+      resArr.splice(Math.max(resBigInt.toString().length - maxLen, 0), 0, '.');
+      resArr.splice(0, 0, isNegative ? '-' : "");
+      return new BigDecimal(resArr.join(''));
+    }
+  }, {
+    key: "prod",
+    value: function prod(bigDec1, bigDec2) {
+      if (bigDec1.toString() === "1" || bigDec2.toString() === "1") return bigDec1.toString() === "1" ? bigDec2 : bigDec1;
+      var _BigDecimal$bigDecJoi3 = BigDecimal.bigDecJoin(bigDec1, bigDec2),
+        bigDecJoinArr = _BigDecimal$bigDecJoi3.bigDecJoinArr;
+      ;
+      var bigDec1Join = bigDec1.num2 === 0n ? bigDec1.num1 : BigInt(bigDecJoinArr[0].toString().replace(/0+$/, ''));
+      var bigDec2Join = bigDec2.num2 === 0n ? bigDec2.num1 : BigInt(bigDecJoinArr[1].toString().replace(/0+$/, ''));
+      var resBigInt = bigDec1Join * bigDec2Join;
+      // console.log(bigDec1Join, bigDec2Join, resBigInt);
+
+      var resArr = resBigInt.toString().split('');
+      if (bigDec1.num2 !== 0n || bigDec2.num2 !== 0n) {
+        var dotIndex = resBigInt.toString().length - ((bigDec1.num2 === 0n ? 0 : bigDec1.num2.toString().length + bigDec1.zerosBefNum2) + (bigDec2.num2 === 0n ? 0 : bigDec2.num2.toString().length + bigDec2.zerosBefNum2));
+        // console.log(resBigInt.toString().length, bigDec1.num2 === 0n ? 0 : bigDec1.num2.toString().length, bigDec2.num2 === 0n ? 0 : bigDec2.num2.toString().length);
+
+        // console.log(dotIndex);
+
+        while (dotIndex < 0) {
+          resArr.splice(0, 0, '0');
+          dotIndex++;
+        }
+        // console.log(resArr.join(''));
+        resArr.splice(dotIndex, 0, '.');
+
+        // console.log(resArr.join(''));
+      }
+      return new BigDecimal(resArr.join(''));
+    }
+  }, {
+    key: "div",
+    value: function div(bigDec1, bigDec2) {
+      var _BigDecimal$bigDecJoi4 = BigDecimal.bigDecJoin(bigDec1, bigDec2),
+        bigDecJoinArr = _BigDecimal$bigDecJoi4.bigDecJoinArr;
+      ;
+      var bigDec1Join = BigDecimal.bigIntAbs(bigDecJoinArr[0]);
+      var bigDec2Join = BigDecimal.bigIntAbs(BigInt(bigDec2.zerosBefNum2 > 0 ? bigDecJoinArr[1].toString().replace(/0+$/, "") : bigDecJoinArr[1]));
+      // console.log(bigDec1Join, bigDec2Join);
+
+      var isNegative = bigDec2.isNegative !== bigDec1.isNegative;
+      var resBefDot = bigDec1Join / bigDec2Join;
+      var resBefDotLen = resBefDot === 0n ? 0 : resBefDot.toString().length;
+      var resAfDot = 0n;
+      var zerosBefNum2 = 0;
+      for (var i = 0; i <= 10 + resBefDotLen && bigDec1Join > 0; ++i) {
+        // console.log(bigDec1Join + "/" + bigDec2Join + "=" + (bigDec1Join / bigDec2Join));
+
+        if (i >= 1) {
+          // console.log(i, bigDec1Join / bigDec2Join);
+
+          resAfDot = resAfDot * 10n + bigDec1Join / bigDec2Join;
+          if (resAfDot === 0n) zerosBefNum2++;
+        }
+        // console.log(bigDec1Join % bigDec2Join * 10n);
+
+        bigDec1Join = bigDec1Join % bigDec2Join * 10n;
+      }
+
+      // console.log(resBefDot, resAfDot);
+
+      var resArr = ((resBefDot === 0n ? "" : resBefDot.toString()) + "0".repeat(zerosBefNum2) + resAfDot.toString()).split('');
+      resArr.splice(resBefDotLen, 0, '.');
+      return new BigDecimal((isNegative ? "-" : "") + (resAfDot === 0n ? resBefDot : resArr.join('')));
+    }
+  }, {
+    key: "floor",
+    value: function floor(bigDec) {
+      return new BigDecimal(bigDec.num1.toString());
+    }
+  }, {
+    key: "ceil",
+    value: function ceil(bigDec) {
+      return new BigDecimal((bigDec.num1 + (bigDec.num2 === 0n ? 0n : 1n)).toString());
+    }
+  }, {
+    key: "mod",
+    value: function mod(bigDec, quot) {
+      return BigDecimal.diff(bigDec, BigDecimal.prod(BigDecimal.floor(BigDecimal.div(bigDec, quot)), quot));
+    }
+  }, {
+    key: "fac",
+    value: function fac(bigDec) {
+      var fact = 1n;
+      for (var i = 2n; i <= bigDec.num1; i++) {
+        fact *= i;
+      }
+      return fact;
+    }
+  }, {
+    key: "bigIntNthRoot",
+    value: function bigIntNthRoot(base, root) {
+      var s = base + 1n;
+      var k1 = root - 1n;
+      var u = base;
+      while (u < s) {
+        s = u;
+        u = (u * k1 + base / Math.pow(u, k1)) / root;
+      }
+      return s;
+    }
+  }, {
+    key: "nthRoot",
+    value: function nthRoot(bigDec, root) {
+      var arr = [new BigDecimal(BigDecimal.bigIntNthRoot(bigDec.num1, root).toString())];
+      for (var i = 1; i < 10; ++i) {
+        var pow = BigDecimal.intPow(arr[i - 1], root - 1n).toFixed(50);
+        var div1 = BigDecimal.div(bigDec, pow).toFixed(50);
+        var diff = BigDecimal.diff(div1, arr[i - 1]).toFixed(50);
+        var div2 = BigDecimal.div(diff, new BigDecimal(root.toString())).toFixed(50);
+        var sum = BigDecimal.sum(arr[i - 1], div2).toFixed(50);
+        // console.log(`${arr[i - 1]!}^${root - 1n}=${pow.toString()}`);
+
+        // console.log(`${bigDec.toString()}/(${arr[i - 1]}^${root - 1n})=${div1.toString()}`);
+        // console.log(`${div1.toString()}-${arr[i - 1]}=${diff.toString()}`);
+        // console.log(`${diff.toString()}/${new BigDecimal(root.toString())}=${div2.toString()}`);
+        // console.log(`${arr[i - 1]!}+${div2.toString()}=${sum.toString()}`);
+
+        // console.log("----------------");
+
+        arr[i] = sum;
+      }
+      // arr.forEach(i => console.log(i.toString()));
+
+      return arr[arr.length - 1];
+    }
+  }, {
+    key: "intPow",
+    value: function intPow(bigDec, n) {
+      // console.log(bigDec.toString(), n);
+
+      if (n == 0n) return new BigDecimal("1");
+      if (n % 2n == 0n) return BigDecimal.intPow(BigDecimal.prod(bigDec, bigDec), n / 2n);
+      return BigDecimal.prod(bigDec, BigDecimal.intPow(bigDec, n - 1n)).toFixed(100);
+    }
+  }, {
+    key: "pow",
+    value: function pow(bigDec, _pow) {
+      var num1Pow = BigDecimal.intPow(bigDec, _pow.num1);
+      // console.log(1);
+      var denumPow = _pow.num2 === 0n ? new BigDecimal("1") : BigDecimal.nthRoot(bigDec, BigInt("1" + "0".repeat(_pow.num2.toString().length))).toFixed(50);
+      // console.log(2);
+      var num2Pow = _pow.num2 === 0n ? new BigDecimal("1") : BigDecimal.intPow(denumPow, _pow.num2).toFixed(50);
+      // console.log(3);
+      // console.log(num1Pow.toString(), denumPow.toString(), num2Pow.toString());
+      var prod = BigDecimal.prod(num1Pow, num2Pow);
+      return _pow.isNegative ? BigDecimal.div(new BigDecimal("1"), prod) : prod;
+    }
+
+    // static ln(bigDec: BigDecimal) {
+    //     const arr = [BigDecimal.div(bigDec, BigDecimal.diff(bigDec, new BigDecimal(1)))];
+    //     for (let i = 1; i <= 11; ++i) {
+    //         console.log(i);
+
+    //         const powOf2 = new BigDecimal((2 ** -i).toString()).toFixed(30);
+    //         console.log(powOf2.toString());
+    //         const powOfx = BigDecimal.pow(bigDec, powOf2).toFixed(30);
+    //         console.log(powOfx.toString());
+    //         const numerator = BigDecimal.prod(powOf2, powOfx);
+    //         const denumenator = BigDecimal.sum(new BigDecimal("1"), powOfx);
+    //         arr[i] = BigDecimal.div(numerator, denumenator);
+    //         console.log("----------------");
+    //     }
+    //     let res = arr[0] as BigDecimal;
+    //     for (let i = 1; i < arr.length; ++i) {
+    //         res = BigDecimal.diff(res, arr[i]!);
+    //     }
+
+    //     return BigDecimal.div(new BigDecimal("1"), res);
+    // }
+
+    // FUNCTION BELOW WORKS ONLY FOR NUMBERS LESS THAN OR EQUAL TO 2 AND GREATER THAN 0
+    // static ln(bigDec: BigDecimal) {
+    //     const arr = [];
+
+    //     for (let i = 1; i < 10; ++i) {
+    //         arr[i] = BigDecimal.div(BigDecimal.pow(BigDecimal.diff(bigDec, new BigDecimal("1")), new BigDecimal(i.toString())), new BigDecimal(i.toString()));
+    //         arr[i]!.isNegative = !((i + 1) % 2 === 0);
+    //     }
+
+    //     let res = arr[1] as BigDecimal;
+    //     arr.forEach((i) => console.log(i?.toString()));
+
+    //     for (let i = 2; i < arr.length; ++i) {
+    //         res = BigDecimal.sum(res, arr[i]!);
+    //     }
+
+    //     return res;
+    // }
+
+    // static ln(bigDec: BigDecimal) {
+    //     const arr = [];
+
+    //     const divOfZ = BigDecimal.div(BigDecimal.diff(bigDec, new BigDecimal("1")), BigDecimal.sum(bigDec, new BigDecimal("1"))).toFixed(20);
+    //     for (let i = 0; i < 250; ++i) {
+    //         if (i % 100 === 0) console.log(i);
+    //         const sumOfI = new BigDecimal((2 * i + 1).toString()).toFixed(50);
+    //         arr[i] = BigDecimal.div(BigDecimal.pow(divOfZ, sumOfI).toFixed(50), sumOfI).toFixed(50);
+
+    //         // console.log(`2*${i}+1=${2 * i + 1}`);
+    //         // console.log(`${BigDecimal.diff(bigDec, new BigDecimal("1")).toString()}/${BigDecimal.sum(bigDec, new BigDecimal("1")).toString()}=${divOfZ.toString()}`);
+    //         // console.log(`${divOfZ.toString()}^${sumOfI.toString()}=${BigDecimal.pow(divOfZ, sumOfI).toFixed(20).toString()}`);
+    //         // console.log(`${BigDecimal.pow(divOfZ, sumOfI).toFixed(10).toString()}/${sumOfI.toString()}=${arr[i]!.toString()}`);
+
+    //         // console.log("----------------");
+
+    //     }
+
+    //     let res = arr[0] as BigDecimal;
+    //     // arr.forEach((i) => console.log(i?.toString()));
+
+    //     for (let i = 1; i < arr.length; ++i) {
+    //         // let prevRes=Object.assign({}, res);
+
+    //         res = BigDecimal.sum(res, arr[i]!);
+
+    //         // console.log(`${prevRes.toString()}+${arr[i]!.toString()}=${res.toString()}`);
+    //     }
+
+    //     res = BigDecimal.prod(res, new BigDecimal("2"));
+
+    //     return res;
+    // }
+  }, {
+    key: "ln",
+    value: function ln(bigDec) {
+      var cnt = 0;
+      while (Number(bigDec.toFixed(15).toString()) > Math.E) {
+        bigDec = BigDecimal.div(bigDec, BigDecimal.E());
+        cnt++;
+      }
+      var num = Number(bigDec.toString().slice(0, 15));
+      return new BigDecimal((Math.log(num) + cnt).toString());
+    }
+  }, {
+    key: "log",
+    value: function log(bigDec) {
+      var base = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : new BigDecimal(10);
+      return BigDecimal.div(BigDecimal.ln(bigDec), BigDecimal.ln(base));
+    }
+
+    // FUNCTION BELOW WORKS ONLY WITH NUMBERS CLOSE TO 0
+    // static sin(bigDec: BigDecimal) {
+    //     function fac(num: number) {
+    //         let result = new BigDecimal(num.toString());
+    //         if (num === 0 || num === 1)
+    //             return new BigDecimal("1");
+    //         while (num > 1) {
+    //             num--;
+    //             result = BigDecimal.prod(result, new BigDecimal(num.toString()));
+    //         }
+    //         return result;
+    //     }
+
+    //     const arr = [];
+
+    //     for (let i = 0; i < 10; ++i) {
+    //         const neg = new BigDecimal(((-1) ** i).toString());
+    //         const numerator = BigDecimal.pow(bigDec, new BigDecimal(2 * i + 1));
+    //         const denumenator = fac(2 * i + 1);
+    //         const res = BigDecimal.div(numerator, denumenator);
+    //         arr[i] = BigDecimal.prod(neg, res);
+    //     }
+
+    //     let res = arr[0] as BigDecimal;
+
+    //     for (let i = 1; i < arr.length; ++i) {
+    //         // let prevRes=Object.assign({}, res);
+
+    //         res = BigDecimal.sum(res, arr[i]!);
+
+    //         // console.log(`${prevRes.toString()}+${arr[i]!.toString()}=${res.toString()}`);
+    //     }
+
+    //     return res;
+    // }
+  }, {
+    key: "sin",
+    value: function sin(bigDec) {
+      var mod = BigDecimal.mod(bigDec, BigDecimal.prod(new BigDecimal(2), BigDecimal.PI()));
+      var num = Number(mod.toString().slice(0, 15));
+      return new BigDecimal(Math.sin(num).toString());
+    }
+  }, {
+    key: "cos",
+    value: function cos(bigDec) {
+      var mod = BigDecimal.mod(bigDec, BigDecimal.prod(new BigDecimal(2), BigDecimal.PI()));
+      var num = Number(mod.toString().slice(0, 15));
+      return new BigDecimal(Math.cos(num).toString());
+    }
+  }, {
+    key: "tan",
+    value: function tan(bigDec) {
+      var mod = BigDecimal.mod(bigDec, BigDecimal.prod(new BigDecimal(2), BigDecimal.PI()));
+      var num = Number(mod.toString().slice(0, 15));
+      return new BigDecimal(Math.tan(num).toString());
+    }
+  }, {
+    key: "PI",
+    value: function PI() {
+      return new BigDecimal(Math.PI.toString());
+    }
+  }, {
+    key: "E",
+    value: function E() {
+      return new BigDecimal(Math.E.toString());
+    }
+  }]);
+  return BigDecimal;
+}(); // const num1 = new BigDecimal("100000000000000");
+// // const num1 = new BigDecimal("354.05");
+// const num2 = new BigDecimal("2");
+// const cases: Array<
+//     {
+//         args: Array<number[]>
+//         res: {
+//             sum: string,
+//             diff: string,
+//             prod: string,
+//             div: string
+//         }
+//     }
+// > = [
+//         {
+//             args: [
+//                 [100],
+//                 [100]
+//             ],
+//             res: {
+//                 sum: "200",
+//                 diff: "0",
+//                 prod: "10000",
+//                 div: "1"
+//             }
+//         },
+//         {
+//             args: [
+//                 [0, 1],
+//                 [0, 1]
+//             ],
+//             res: {
+//                 sum: "0.2",
+//                 diff: "0",
+//                 prod: "0.01",
+//                 div: "1"
+//             }
+//         },
+//         {
+//             args: [
+//                 [100, 1],
+//                 [100, 1]
+//             ],
+//             res: {
+//                 sum: "200.2",
+//                 diff: "0",
+//                 prod: "10020.01",
+//                 div: "1"
+//             }
+//         },
+//         {
+//             args: [
+//                 [300, 4],
+//                 [100, 2]
+//             ],
+//             res: {
+//                 sum: "400.6",
+//                 diff: "200.2",
+//                 prod: "30100.08",
+//                 div: "2.99800399201"
+//             }
+//         },
+//         {
+//             args: [
+//                 [100, 2],
+//                 [300, 4]
+//             ],
+//             res: {
+//                 sum: "400.6",
+//                 diff: "-200.2",
+//                 prod: "30100.08",
+//                 div: "0.3335552596"
+//             }
+//         },
+//         {
+//             args: [
+//                 [100, 10000000000],
+//                 [100, 100000000000]
+//             ],
+//             res: {
+//                 sum: "200.2",
+//                 diff: "0",
+//                 prod: "10020.01",
+//                 div: "1"
+//             }
+//         },
+//         {
+//             args: [
+//                 [100, 1000000],
+//                 [100, 1000001]
+//             ],
+//             res: {
+//                 sum: "200.2000001",
+//                 diff: "-0.0000001",
+//                 prod: "10020.01001001",
+//                 div: "0.999999999"
+//             }
+//         },
+//         {
+//             args: [
+//                 [-100, 2],
+//                 [300, 4]
+//             ],
+//             res: {
+//                 sum: "200.2",
+//                 diff: "-400.6",
+//                 prod: "-30100.08",
+//                 div: "-0.3335552596"
+//             }
+//         },
+//         {
+//             args: [
+//                 [-100, 2],
+//                 [-300, 4]
+//             ],
+//             res: {
+//                 sum: "-400.6",
+//                 diff: "200.2",
+//                 prod: "30100.08",
+//                 div: "0.3335552596"
+//             }
+//         },
+//         {
+//             args: [
+//                 [100, 2],
+//                 [-300, 4]
+//             ],
+//             res: {
+//                 sum: "-200.2",
+//                 diff: "400.6",
+//                 prod: "-30100.08",
+//                 div: "-0.3335552596"
+//             }
+//         },
+//         {
+//             args: [
+//                 [3000, 4],
+//                 [100, 2]
+//             ],
+//             res: {
+//                 sum: "3100.6",
+//                 diff: "2900.2",
+//                 prod: "300640.08",
+//                 div: "29.944111776447"
+//             }
+//         },
+//         {
+//             args: [
+//                 [3, 0],
+//                 [2, 0]
+//             ],
+//             res: {
+//                 sum: "5",
+//                 diff: "1",
+//                 prod: "6",
+//                 div: "1.5"
+//             }
+//         },
+//     ]
+// for (let i of cases) {
+//     const num1 = new BigDecimal(i.args[0]![0]!, i.args[0]![1]!);
+//     const num2 = new BigDecimal(i.args[1]![0]!, i.args[1]![1]!);
+//     const res = {
+//         sum: BigDecimal.sum(num1, num2).toString(),
+//         diff: BigDecimal.diff(num1, num2).toString(),
+//         prod: BigDecimal.prod(num1, num2).toString(),
+//         div: BigDecimal.div(num1, num2).toString(),
+//     }
+//     for (let j in res) {
+//         if (res[j as keyof typeof i.res] !== i.res[j as keyof typeof i.res]) console.log(...i.args + ` did not pass ${j}. Expected Result: ${i.res[j as keyof typeof i.res]} Got Result: ${res[j as keyof typeof i.res]}`);
+//     }
+// }
+// console.log(BigDecimal.sqrt(num1).toString());
+// console.log(BigDecimal.prod(num1, num2).toString());
+// console.log(BigDecimal.sin(new BigDecimal("0.1")).toString());
+// console.log(BigDecimal.log(num1).toString());
+
+
+/***/ }),
+
 /***/ "./src/components/Calculator/Buttons/Button.tsx":
 /*!******************************************************!*\
   !*** ./src/components/Calculator/Buttons/Button.tsx ***!
@@ -4363,8 +4977,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../store */ "./src/store.ts");
 /* harmony import */ var _redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../redux/slices/tasksSlice */ "./src/redux/slices/tasksSlice.ts");
 /* harmony import */ var _tasks__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../tasks */ "./src/tasks.ts");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/dist/index.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/dist/index.js");
+/* harmony import */ var _BigDecimal__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../BigDecimal */ "./src/BigDecimal.ts");
 /* provided dependency */ var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
 
 
 
@@ -4378,7 +4994,7 @@ var Button = function Button(_ref) {
     return state.tasksReducer;
   });
   var taskUpdated = (0,_tasks__WEBPACK_IMPORTED_MODULE_2__.getTask)(tasks, task.id);
-  var navigate = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_3__.useNavigate)();
+  var navigate = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_4__.useNavigate)();
   var handleClick = function handleClick(e) {
     var text = e.currentTarget.textContent;
     var num = Number(text);
@@ -4402,20 +5018,21 @@ var Button = function Button(_ref) {
       navigate("/".concat(_newTask.id));
       return;
     }
-    var bigNum = BigInt(text);
+    var newNum = Number(text);
     if (taskUpdated.res === undefined) {
       var _taskUpdated$num, _taskUpdated$num2;
-      var bigNum1 = BigInt((_taskUpdated$num = taskUpdated.num1) !== null && _taskUpdated$num !== void 0 ? _taskUpdated$num : 0);
+      var bigDec1 = (_taskUpdated$num = taskUpdated.num1) !== null && _taskUpdated$num !== void 0 ? _taskUpdated$num : new _BigDecimal__WEBPACK_IMPORTED_MODULE_3__["default"]("0");
+      var bigDec2 = (_taskUpdated$num2 = taskUpdated.num2) !== null && _taskUpdated$num2 !== void 0 ? _taskUpdated$num2 : new _BigDecimal__WEBPACK_IMPORTED_MODULE_3__["default"]("0");
       if (taskUpdated.oper === undefined) {
         dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_1__.updateTask)({
           id: task.id,
-          num1: (bigNum1 !== null && bigNum1 !== void 0 ? bigNum1 : 0n) * 10n + bigNum
+          num1: new _BigDecimal__WEBPACK_IMPORTED_MODULE_3__["default"](bigDec1.toString() + newNum)
         }));
         return;
       }
       dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_1__.updateTask)({
         id: task.id,
-        num2: ((_taskUpdated$num2 = taskUpdated.num2) !== null && _taskUpdated$num2 !== void 0 ? _taskUpdated$num2 : 0n) * 10n + bigNum
+        num2: new _BigDecimal__WEBPACK_IMPORTED_MODULE_3__["default"](bigDec2.toString() + newNum)
       }));
       return;
     }
@@ -4423,7 +5040,7 @@ var Button = function Button(_ref) {
     var newTask = _store__WEBPACK_IMPORTED_MODULE_0__["default"].getState().tasksReducer[0];
     dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_1__.updateTask)({
       id: newTask === null || newTask === void 0 ? void 0 : newTask.id,
-      num1: bigNum
+      num1: new _BigDecimal__WEBPACK_IMPORTED_MODULE_3__["default"](newNum.toString())
     }));
     navigate("/".concat(newTask.id));
   };
@@ -4543,10 +5160,8 @@ var Calculator = function Calculator(_ref) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _tasks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../tasks */ "./src/tasks.ts");
 /* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../store */ "./src/store.ts");
-/* harmony import */ var _options_bigInt__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../options/bigInt */ "./src/options/bigInt.ts");
-/* harmony import */ var _redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../redux/slices/tasksSlice */ "./src/redux/slices/tasksSlice.ts");
+/* harmony import */ var _redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../redux/slices/tasksSlice */ "./src/redux/slices/tasksSlice.ts");
 /* provided dependency */ var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-
 
 
 
@@ -4558,15 +5173,15 @@ var Display = function Display(_ref) {
   });
   var taskUpdated = (0,_tasks__WEBPACK_IMPORTED_MODULE_0__.getTask)(tasks, task.id);
   if (taskUpdated === null) {
-    dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_3__.createTask)());
+    dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_2__.createTask)());
   }
   var isEmpty = taskUpdated.num1 === undefined && taskUpdated.oper === undefined && taskUpdated.num2 === undefined && taskUpdated.res === undefined;
   var expr;
   if (!isEmpty) {
     var _taskUpdated$oper;
-    var num1 = taskUpdated.num1 === undefined ? "" : taskUpdated.num1.toString().length > 5 ? taskUpdated.num1.toLocaleString('en-US', _options_bigInt__WEBPACK_IMPORTED_MODULE_2__["default"]) : taskUpdated.num1;
+    var num1 = taskUpdated.num1 === undefined ? "" : taskUpdated.num1.toString();
     var oper = (_taskUpdated$oper = taskUpdated.oper) !== null && _taskUpdated$oper !== void 0 ? _taskUpdated$oper : "";
-    var num2 = taskUpdated.num2 === undefined ? "" : taskUpdated.num2.toString().length > 5 ? taskUpdated.num2.toLocaleString('en-US', _options_bigInt__WEBPACK_IMPORTED_MODULE_2__["default"]) : taskUpdated.num2;
+    var num2 = taskUpdated.num2 === undefined ? "" : taskUpdated.num2.toString();
     expr = "".concat(num1, " ").concat(oper, " ").concat(num2);
   } else {
     expr = "0";
@@ -4577,7 +5192,7 @@ var Display = function Display(_ref) {
     id: "upper"
   }, expr), /*#__PURE__*/React.createElement("div", {
     id: "lower"
-  }, taskUpdated.res === undefined ? expr : taskUpdated.res.toString().length > 5 ? taskUpdated.res.toLocaleString('en-US', _options_bigInt__WEBPACK_IMPORTED_MODULE_2__["default"]) : taskUpdated.res.toString()));
+  }, taskUpdated.res === undefined ? expr : taskUpdated.res.toString()));
 };
 /* harmony default export */ __webpack_exports__["default"] = (Display);
 
@@ -4641,7 +5256,7 @@ var TasksList = function TasksList() {
           isPending = _ref.isPending;
         return isActive ? "active" : isPending ? "pending" : "";
       }
-    }, "".concat(task.num1 === undefined ? "" : task.num1.toString().length > 5 ? task.num1.toLocaleString('en-US', bigIntOpt) : task.num1.toString(), " ").concat((_task$oper = task.oper) !== null && _task$oper !== void 0 ? _task$oper : "", " ").concat(task.num2 === undefined ? "" : task.num2.toString().length > 5 ? task.num2.toLocaleString('en-US', bigIntOpt) : task.num2.toString(), " ") + (task.res === undefined ? "" : "= ".concat(task.res.toString().length > 5 ? task.res.toLocaleString('en-US', bigIntOpt) : task.res.toString()))), /*#__PURE__*/React.createElement("div", {
+    }, "".concat(task.num1 === undefined ? "" : task.num1.toString(), " ").concat((_task$oper = task.oper) !== null && _task$oper !== void 0 ? _task$oper : "", " ").concat(task.num2 === undefined ? "" : task.num2.toString(), " ") + (task.res === undefined ? "" : "= ".concat(task.res.toString()))), /*#__PURE__*/React.createElement("div", {
       className: "button-container"
     }, /*#__PURE__*/React.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__.Form, {
       method: "post",
@@ -4679,22 +5294,6 @@ var ErrorPage = function ErrorPage() {
   }, /*#__PURE__*/React.createElement("h1", null, "Oops!"), /*#__PURE__*/React.createElement("p", null, "Sorry, an unexpected error has occurred."), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("i", null, error.statusText || error.message)));
 };
 /* harmony default export */ __webpack_exports__["default"] = (ErrorPage);
-
-/***/ }),
-
-/***/ "./src/options/bigInt.ts":
-/*!*******************************!*\
-  !*** ./src/options/bigInt.ts ***!
-  \*******************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-var bigIntOpt = {
-  notation: 'scientific',
-  maximumFractionDigits: 10
-};
-/* harmony default export */ __webpack_exports__["default"] = (bigIntOpt);
 
 /***/ }),
 
@@ -4787,11 +5386,10 @@ function action() {
   _store__WEBPACK_IMPORTED_MODULE_1__["default"].dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_0__.createTask)());
   var tasks = _store__WEBPACK_IMPORTED_MODULE_1__["default"].getState().tasksReducer;
   var task = tasks[tasks.length - 1];
-  return (0,react_router_dom__WEBPACK_IMPORTED_MODULE_3__.redirect)("/calc/".concat(task.id, "/edit"));
+  return (0,react_router_dom__WEBPACK_IMPORTED_MODULE_3__.redirect)("/".concat(task.id, "/edit"));
 }
 var Root = function Root() {
   var navigation = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_4__.useNavigation)();
-  console.log(1);
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(_components_Sidebar_Sidebar__WEBPACK_IMPORTED_MODULE_2__["default"], null), /*#__PURE__*/React.createElement("div", {
     id: "detail",
     className: navigation.state === "loading" ? "loading" : ""
@@ -4930,10 +5528,10 @@ var Contact = function Contact() {
   });
   var taskUpdated = (0,_tasks__WEBPACK_IMPORTED_MODULE_2__.getTask)(tasks, task.id);
   if (taskUpdated === null) {
-    (0,react_router_dom__WEBPACK_IMPORTED_MODULE_6__.redirect)('/');
+    return;
   }
   return /*#__PURE__*/React.createElement(_components_Calculator_Calculator__WEBPACK_IMPORTED_MODULE_5__["default"], {
-    task: taskUpdated
+    task: task
   });
 };
 /* harmony default export */ __webpack_exports__["default"] = (Contact);
@@ -5008,18 +5606,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   set: function() { return /* binding */ set; },
 /* harmony export */   updateTask: function() { return /* binding */ updateTask; }
 /* harmony export */ });
-/* harmony import */ var sort_by__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! sort-by */ "./node_modules/sort-by/index.js");
-/* harmony import */ var sort_by__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(sort_by__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/typeof */ "./node_modules/@babel/runtime/helpers/esm/typeof.js");
+/* harmony import */ var sort_by__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! sort-by */ "./node_modules/sort-by/index.js");
+/* harmony import */ var sort_by__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(sort_by__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _BigDecimal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./BigDecimal */ "./src/BigDecimal.ts");
+
+
 
 var getTasks = function getTasks() {
   var tasksStr = localStorage.getItem('tasks');
   var tasks = tasksStr === null ? [] : JSON.parse(tasksStr, function (key, value) {
     if ((key === "num1" || key === "num2" || key === "res") && typeof value === "string" && value.match(/^\d+$/)) {
-      return BigInt(value);
+      return new _BigDecimal__WEBPACK_IMPORTED_MODULE_2__["default"](value);
     }
     return value;
   });
-  return tasks.sort(sort_by__WEBPACK_IMPORTED_MODULE_0___default()("-createdAt"));
+  return tasks.sort(sort_by__WEBPACK_IMPORTED_MODULE_1___default()("-createdAt"));
 };
 var getTask = function getTask(tasks, id) {
   var task = tasks.find(function (task) {
@@ -5051,16 +5653,16 @@ var calcTask = function calcTask(state, action) {
   var res;
   switch (task.calcOper) {
     case "+":
-      res = task.num1 + task.num2;
+      res = _BigDecimal__WEBPACK_IMPORTED_MODULE_2__["default"].sum(task.num1, task.num2);
       break;
     case "-":
-      res = task.num1 - task.num2;
+      res = _BigDecimal__WEBPACK_IMPORTED_MODULE_2__["default"].diff(task.num1, task.num2);
       break;
     case "*":
-      res = task.num1 * task.num2;
+      res = _BigDecimal__WEBPACK_IMPORTED_MODULE_2__["default"].prod(task.num1, task.num2);
       break;
     case "/":
-      res = task.num1 / task.num2;
+      res = _BigDecimal__WEBPACK_IMPORTED_MODULE_2__["default"].div(task.num1, task.num2);
       break;
     default:
       throw new Error("No such operation:", {
@@ -5098,8 +5700,8 @@ var deleteTask = function deleteTask(state, action) {
   return tasks;
 };
 var set = function set(tasks) {
-  localStorage.setItem("tasks", JSON.stringify(tasks, function (_, i) {
-    return typeof i === 'bigint' ? i.toString() : i;
+  localStorage.setItem("tasks", JSON.stringify(tasks, function (key, value) {
+    return (key === "num1" || key === "num2" || key === "res") && (0,_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__["default"])(value) === "object" ? value.toString() : value;
   }));
 };
 
@@ -43030,6 +43632,129 @@ function _asyncToGenerator(fn) {
 
 /***/ }),
 
+/***/ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/classCallCheck.js ***!
+  \*******************************************************************/
+/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": function() { return /* binding */ _classCallCheck; }
+/* harmony export */ });
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/createClass.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/createClass.js ***!
+  \****************************************************************/
+/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": function() { return /* binding */ _createClass; }
+/* harmony export */ });
+/* harmony import */ var _toPropertyKey_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./toPropertyKey.js */ "./node_modules/@babel/runtime/helpers/esm/toPropertyKey.js");
+
+function _defineProperties(target, props) {
+  for (var i = 0; i < props.length; i++) {
+    var descriptor = props[i];
+    descriptor.enumerable = descriptor.enumerable || false;
+    descriptor.configurable = true;
+    if ("value" in descriptor) descriptor.writable = true;
+    Object.defineProperty(target, (0,_toPropertyKey_js__WEBPACK_IMPORTED_MODULE_0__["default"])(descriptor.key), descriptor);
+  }
+}
+function _createClass(Constructor, protoProps, staticProps) {
+  if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+  if (staticProps) _defineProperties(Constructor, staticProps);
+  Object.defineProperty(Constructor, "prototype", {
+    writable: false
+  });
+  return Constructor;
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/toPrimitive.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/toPrimitive.js ***!
+  \****************************************************************/
+/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": function() { return /* binding */ toPrimitive; }
+/* harmony export */ });
+/* harmony import */ var _typeof_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./typeof.js */ "./node_modules/@babel/runtime/helpers/esm/typeof.js");
+
+function toPrimitive(t, r) {
+  if ("object" != (0,_typeof_js__WEBPACK_IMPORTED_MODULE_0__["default"])(t) || !t) return t;
+  var e = t[Symbol.toPrimitive];
+  if (void 0 !== e) {
+    var i = e.call(t, r || "default");
+    if ("object" != (0,_typeof_js__WEBPACK_IMPORTED_MODULE_0__["default"])(i)) return i;
+    throw new TypeError("@@toPrimitive must return a primitive value.");
+  }
+  return ("string" === r ? String : Number)(t);
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/toPropertyKey.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/toPropertyKey.js ***!
+  \******************************************************************/
+/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": function() { return /* binding */ toPropertyKey; }
+/* harmony export */ });
+/* harmony import */ var _typeof_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./typeof.js */ "./node_modules/@babel/runtime/helpers/esm/typeof.js");
+/* harmony import */ var _toPrimitive_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./toPrimitive.js */ "./node_modules/@babel/runtime/helpers/esm/toPrimitive.js");
+
+
+function toPropertyKey(t) {
+  var i = (0,_toPrimitive_js__WEBPACK_IMPORTED_MODULE_1__["default"])(t, "string");
+  return "symbol" == (0,_typeof_js__WEBPACK_IMPORTED_MODULE_0__["default"])(i) ? i : String(i);
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/typeof.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/typeof.js ***!
+  \***********************************************************/
+/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": function() { return /* binding */ _typeof; }
+/* harmony export */ });
+function _typeof(o) {
+  "@babel/helpers - typeof";
+
+  return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {
+    return typeof o;
+  } : function (o) {
+    return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
+  }, _typeof(o);
+}
+
+/***/ }),
+
 /***/ "./node_modules/@reduxjs/toolkit/dist/redux-toolkit.modern.mjs":
 /*!*********************************************************************!*\
   !*** ./node_modules/@reduxjs/toolkit/dist/redux-toolkit.modern.mjs ***!
@@ -49078,28 +49803,26 @@ function Index() {
   var dispatch = (0,_store__WEBPACK_IMPORTED_MODULE_7__.useTypedDispatch)();
   if (tasks[0] === undefined) dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_8__.createTask)());
   return /*#__PURE__*/React.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_9__.Navigate, {
-    to: "/calc/".concat(_store__WEBPACK_IMPORTED_MODULE_7__["default"].getState().tasksReducer[0].id)
+    to: "/".concat(_store__WEBPACK_IMPORTED_MODULE_7__["default"].getState().tasksReducer[0].id)
   });
 }
 var router = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_10__.createBrowserRouter)([{
   path: "/",
-  element: /*#__PURE__*/React.createElement(Index, null),
+  element: /*#__PURE__*/React.createElement(_routes_root__WEBPACK_IMPORTED_MODULE_3__["default"], null),
   errorElement: /*#__PURE__*/React.createElement(_error_page__WEBPACK_IMPORTED_MODULE_4__["default"], null),
+  action: _routes_root__WEBPACK_IMPORTED_MODULE_3__.action,
   children: [{
-    path: "/calc",
-    element: /*#__PURE__*/React.createElement(_routes_root__WEBPACK_IMPORTED_MODULE_3__["default"], null),
-    errorElement: /*#__PURE__*/React.createElement(_error_page__WEBPACK_IMPORTED_MODULE_4__["default"], null),
-    action: _routes_root__WEBPACK_IMPORTED_MODULE_3__.action,
-    children: [{
-      path: "/calc/:taskId",
-      element: /*#__PURE__*/React.createElement(_routes_task__WEBPACK_IMPORTED_MODULE_5__["default"], null),
-      loader: _routes_task__WEBPACK_IMPORTED_MODULE_5__.loader,
-      action: _routes_task__WEBPACK_IMPORTED_MODULE_5__.action
-    }, {
-      path: "/calc/:taskId/destroy",
-      action: _routes_destroy__WEBPACK_IMPORTED_MODULE_6__.action,
-      errorElement: /*#__PURE__*/React.createElement("div", null, "Oops! There was an error.")
-    }]
+    index: true,
+    element: /*#__PURE__*/React.createElement(Index, null)
+  }, {
+    path: "/:taskId",
+    element: /*#__PURE__*/React.createElement(_routes_task__WEBPACK_IMPORTED_MODULE_5__["default"], null),
+    loader: _routes_task__WEBPACK_IMPORTED_MODULE_5__.loader,
+    action: _routes_task__WEBPACK_IMPORTED_MODULE_5__.action
+  }, {
+    path: "/:taskId/destroy",
+    action: _routes_destroy__WEBPACK_IMPORTED_MODULE_6__.action,
+    errorElement: /*#__PURE__*/React.createElement("div", null, "Oops! There was an error.")
   }]
 }]);
 var root = (0,react_dom_client__WEBPACK_IMPORTED_MODULE_1__.createRoot)(rootContainer);
