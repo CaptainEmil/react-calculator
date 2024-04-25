@@ -6,6 +6,7 @@ import { calcTask, createTask } from "../redux/slices/tasksSlice";
 import { updateTask } from "../redux/slices/tasksSlice"
 import store, { useTypedSelector } from "../store";
 import Calculator from "../components/Calculator/Calculator";
+import { setFlags } from "../redux/slices/dotFlagsSlice";
 
 
 
@@ -29,8 +30,10 @@ export async function action({ request, params }: ActionFunctionArgs<any>) {
 				num1: undefined,
 				oper: undefined,
 				num2: undefined,
-				res: undefined
+				res: undefined,
+				isDecimal: undefined
 			}));
+			store.dispatch(setFlags([false,false]));
 			return redirect(``);
 		}
 
@@ -64,7 +67,7 @@ const Contact = () => {
 	const { task } = useLoaderData() as { task: Nullable<TaskType> };
 	const tasks = useTypedSelector((state) => state.tasksReducer);
 	const taskUpdated = getTask(tasks, task!.id);
-	if(taskUpdated===null){
+	if (taskUpdated === null) {
 		return;
 	}
 	return (

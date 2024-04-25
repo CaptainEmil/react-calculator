@@ -2,11 +2,13 @@ import { configureStore } from "@reduxjs/toolkit";
 import tasksReducer from './redux/slices/tasksSlice';
 import { useDispatch, useSelector } from "react-redux";
 import zerosCntReducer from "./redux/slices/zerosCntSlice";
+import dotFlagsReducer from "./redux/slices/dotFlagsSlice";
 
 const store = configureStore({
 	reducer: {
 		tasksReducer,
-		zerosCntReducer
+		zerosCntReducer,
+		dotFlagsReducer
 	},
 	middleware: (getDefaultMiddleware) => getDefaultMiddleware({
 		serializableCheck: false

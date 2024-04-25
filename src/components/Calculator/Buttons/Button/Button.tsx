@@ -7,21 +7,21 @@ import { useNavigate } from "react-router-dom";
 import BigDecimal from "../../../../BigDecimal";
 import singleOpers from "../../../../options/singleOpers";
 import { increment1, increment2, reset } from "../../../../redux/slices/zerosCntSlice";
+import { setFlags } from "../../../../redux/slices/dotFlagsSlice";
 
 type ButtonProps = {
     task: TaskType;
     children: ReactNode;
     oper?: string;
     id?: string;
-    dotFlags: boolean[];
-    setDotFlags: React.Dispatch<React.SetStateAction<boolean[]>>;
 }
 
-const Button = ({ task, children, oper, id, dotFlags, setDotFlags }: ButtonProps) => {
+const Button = ({ task, children, oper, id }: ButtonProps) => {
     const dispatch = useTypedDispatch();
     const tasks = useTypedSelector((state) => state.tasksReducer);
     const taskUpdated = getTask(tasks, task.id) as TaskType;
     const zerosCnt = useTypedSelector((state) => state.zerosCntReducer);
+    const dotFlags = useTypedSelector((state) => state.dotFlagsReducer);
     const navigate = useNavigate();
 
     const handleClick: React.MouseEventHandler<HTMLButtonElement> | undefined = e => {
@@ -29,13 +29,13 @@ const Button = ({ task, children, oper, id, dotFlags, setDotFlags }: ButtonProps
 
         if (oper === ".") {
             if (taskUpdated.num2 !== undefined && !taskUpdated.num2.toString().includes(".")) {
-                setDotFlags([false, true]);
+                dispatch(setFlags([false, true]));
                 return;
             }
 
             if (!(taskUpdated.num1 ?? 0).toString().includes(".")) {
                 console.log(111, dotFlags[0]);
-                setDotFlags([true, false]);
+                dispatch(setFlags([true, false]));
             }
             return;
         }
@@ -65,20 +65,24 @@ const Button = ({ task, children, oper, id, dotFlags, setDotFlags }: ButtonProps
             const bigDec2 = taskUpdated.num2 ?? new BigDecimal("0");
 
             if (taskUpdated.oper === undefined || singleOpers.includes(taskUpdated.calcOper!)) {
-                if ((dotFlags[0] || (taskUpdated.isDecimal !== undefined && taskUpdated.isDecimal[0])) && newNum === 0) {
+                console.log(new BigDecimal(bigDec1.toString() + (dotFlags[0] ? "." : "") + "0".repeat(zerosCnt[0]!) + newNum).toString());
+                console.log(taskUpdated.isDecimal);
+
+                if ((dotFlags[0] || (taskUpdated.isDecimal && taskUpdated.isDecimal[0])) && newNum === 0) {
                     dispatch(updateTask({
-                        id: task.id, isDecimal: [true, taskUpdated.isDecimal === undefined ? false : taskUpdated.isDecimal[1]!]
-                    }))
+                        id: task.id, isDecimal: [true, taskUpdated.isDecimal === undefined ? false : taskUpdated.isDecimal[0]!]
+                    }));
                     dispatch(increment1());
                     return;
                 }
+
                 dispatch(updateTask({ id: task.id, num1: new BigDecimal(bigDec1.toString() + (dotFlags[0] ? "." : "") + "0".repeat(zerosCnt[0]!) + newNum) }));
-                setDotFlags([false, false]);
+                dispatch(setFlags([false, false]));
                 dispatch(reset());
                 return;
             }
             console.log(bigDec2.toString(), newNum, bigDec2.toString() + newNum);
-            if (dotFlags[1] && newNum === 0) {
+            if ((dotFlags[1] || (taskUpdated.isDecimal && taskUpdated.isDecimal[1])) && newNum === 0) {
                 dispatch(updateTask({
                     id: task.id, isDecimal: [taskUpdated.isDecimal === undefined ? false : taskUpdated.isDecimal[0]!, true]
                 }))
@@ -86,7 +90,7 @@ const Button = ({ task, children, oper, id, dotFlags, setDotFlags }: ButtonProps
                 return;
             }
             dispatch(updateTask({ id: task.id, num2: new BigDecimal(bigDec2.toString() + (dotFlags[1] ? "." : "") + "0".repeat(zerosCnt[1]!) + newNum) }));
-            setDotFlags([false, false]);
+            dispatch(setFlags([false, false]));
             dispatch(reset());
             return;
         }

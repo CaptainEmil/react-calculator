@@ -8,12 +8,11 @@ type ButtonsProps = {
 }
 
 const Buttons = ({ task }: ButtonsProps) => {
-    const [dotFlags, setDotFlags] = useState([false, false]);
     return (
         <>
             <div className="buttons-container">
-                <ButtonsLeft task={task} dotFlags={dotFlags} setDotFlags={setDotFlags}></ButtonsLeft>
-                <ButtonsRight task={task} dotFlags={dotFlags} setDotFlags={setDotFlags}></ButtonsRight>
+                <ButtonsLeft task={task}></ButtonsLeft>
+                <ButtonsRight task={task}></ButtonsRight>
             </div>
         </>
 
