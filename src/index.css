@@ -1,5 +1,6 @@
 :root {
 	--button-size: 5vw;
+	--button-min-width: 55px;
 	--calculator-font-size: 1.5rem;
 	--calculator-button-gap: 5px;
 }
@@ -479,29 +480,43 @@ i {
 		margin: 5px 0;
 		width: var(--button-size);
 		height: var(--button-size)/2;
-		min-width: 60px;
+		min-width: var(--button-min-width);
 		max-width: 110px;
 		font-size: inherit;
 	}
 }
 
-.buttons-left,.buttons-left-alt {
+.buttons-left,
+.buttons-left-alt {
 	& .line-container {
 		justify-content: flex-end;
 	}
 }
 
 .display-container {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-end;
+	text-align: end;
 	width: calc(var(--button-size)*6 + var(--calculator-button-gap)*6);
-	min-width: calc(60px*6 + var(--calculator-button-gap)*6);
+	min-width: calc(var(--button-min-width)*6 + var(--calculator-button-gap)*6);
 	max-width: calc(110px*6 + var(--calculator-button-gap)*6);
+	word-wrap: break-word;
+	text-wrap: wrap;
 
 	& #upper {
+		min-width: inherit;
+		max-width: inherit;
+		width: inherit;
 		font-size: calc(var(--calculator-font-size)/2);
 		color: grey;
+		max-height: 100px;
+		overflow: auto;
+	}
+
+	& #lower {
+		min-width: inherit;
+		max-width: inherit;
+		width: inherit;
+		max-height: 200px;
+		overflow: auto;
 	}
 }
 

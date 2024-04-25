@@ -6,8 +6,8 @@ type TaskType = {
 	oper?: string,
 	calcOper?: string,
 	num2?: BigDecimal,
-	isDecimal?: boolean,
 	res?: BigDecimal,
+	isDecimal?: boolean[],
 }
 
 export default TaskType;

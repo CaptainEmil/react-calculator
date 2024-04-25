@@ -1,14 +1,16 @@
 import { configureStore } from "@reduxjs/toolkit";
 import tasksReducer from './redux/slices/tasksSlice';
 import { useDispatch, useSelector } from "react-redux";
+import zerosCntReducer from "./redux/slices/zerosCntSlice";
 
 const store = configureStore({
 	reducer: {
-		tasksReducer
+		tasksReducer,
+		zerosCntReducer
 	},
 	middleware: (getDefaultMiddleware) => getDefaultMiddleware({
 		serializableCheck: false
-	  }),
+	}),
 });
 
 

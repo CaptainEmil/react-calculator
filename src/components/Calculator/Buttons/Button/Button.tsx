@@ -5,25 +5,46 @@ import { createTask, updateTask } from "../../../../redux/slices/tasksSlice";
 import { getTask } from "../../../../tasks";
 import { useNavigate } from "react-router-dom";
 import BigDecimal from "../../../../BigDecimal";
+import singleOpers from "../../../../options/singleOpers";
+import { increment1, increment2, reset } from "../../../../redux/slices/zerosCntSlice";
 
 type ButtonProps = {
     task: TaskType;
     children: ReactNode;
     oper?: string;
     id?: string;
+    dotFlags: boolean[];
+    setDotFlags: React.Dispatch<React.SetStateAction<boolean[]>>;
 }
 
-const Button = ({ task, children, oper, id }: ButtonProps) => {
+const Button = ({ task, children, oper, id, dotFlags, setDotFlags }: ButtonProps) => {
     const dispatch = useTypedDispatch();
     const tasks = useTypedSelector((state) => state.tasksReducer);
     const taskUpdated = getTask(tasks, task.id) as TaskType;
+    const zerosCnt = useTypedSelector((state) => state.zerosCntReducer);
     const navigate = useNavigate();
 
     const handleClick: React.MouseEventHandler<HTMLButtonElement> | undefined = e => {
         const text = e.currentTarget.textContent;
-        const num = Number(text!);
 
-        if (Number.isNaN(num)) {
+        if (oper === ".") {
+            if (taskUpdated.num2 !== undefined && !taskUpdated.num2.toString().includes(".")) {
+                setDotFlags([false, true]);
+                return;
+            }
+
+            if (!(taskUpdated.num1 ?? 0).toString().includes(".")) {
+                console.log(111, dotFlags[0]);
+                setDotFlags([true, false]);
+            }
+            return;
+        }
+
+        if (oper !== undefined) {
+
+            if (taskUpdated.num1 === undefined) {
+                dispatch(updateTask({ id: task.id, oper: text!, num1: new BigDecimal("0"), calcOper: oper }));
+            }
             if (taskUpdated.res === undefined) {
                 dispatch(updateTask({ id: task.id, oper: text!, calcOper: oper }));
                 return;
@@ -42,12 +63,31 @@ const Button = ({ task, children, oper, id }: ButtonProps) => {
         if (taskUpdated.res === undefined) {
             const bigDec1 = taskUpdated.num1 ?? new BigDecimal("0");
             const bigDec2 = taskUpdated.num2 ?? new BigDecimal("0");
-            if (taskUpdated.oper === undefined) {
-                dispatch(updateTask({ id: task.id, num1: new BigDecimal(bigDec1.toString() + newNum) }));
+
+            if (taskUpdated.oper === undefined || singleOpers.includes(taskUpdated.calcOper!)) {
+                if (dotFlags[0] && newNum === 0) {
+                    dispatch(updateTask({
+                        id: task.id, isDecimal: [true, taskUpdated.isDecimal === undefined ? false : taskUpdated.isDecimal[1]!]
+                    }))
+                    dispatch(increment1());
+                    return;
+                }
+                dispatch(updateTask({ id: task.id, num1: new BigDecimal(bigDec1.toString() + (dotFlags[0] ? "." : "") + "0".repeat(zerosCnt[0]!) + newNum) }));
+                setDotFlags([false, false]);
+                dispatch(reset());
                 return;
             }
-
-            dispatch(updateTask({ id: task.id, num2: new BigDecimal(bigDec2.toString() + newNum) }));
+            console.log(bigDec2.toString(), newNum, bigDec2.toString() + newNum);
+            if (dotFlags[1] && newNum === 0) {
+                dispatch(updateTask({
+                    id: task.id, isDecimal: [taskUpdated.isDecimal === undefined ? false : taskUpdated.isDecimal[0]!, true]
+                }))
+                dispatch(increment2());
+                return;
+            }
+            dispatch(updateTask({ id: task.id, num2: new BigDecimal(bigDec2.toString() + (dotFlags[1] ? "." : "") + "0".repeat(zerosCnt[1]!) + newNum) }));
+            setDotFlags([false, false]);
+            dispatch(reset());
             return;
         }
 
