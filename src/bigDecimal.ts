@@ -145,7 +145,7 @@ export default class BigDecimal {
         let resAfDot = 0n;
         let zerosBefNum2 = 0;
 
-        for (let i = 0; i <= 10 + resBefDotLen && bigDec1Join > 0; ++i) {
+        for (let i = 0; i <= 100 + resBefDotLen && bigDec1Join > 0; ++i) {
             // console.log(bigDec1Join + "/" + bigDec2Join + "=" + (bigDec1Join / bigDec2Join));
 
             if (i >= 1) {
