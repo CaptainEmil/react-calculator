@@ -9,6 +9,7 @@ type DisplayProps = {
 const Display = ({ task }: DisplayProps) => {
     const dispatch = useTypedDispatch();
     const tasks = useTypedSelector((state) => state.tasksReducer);
+    const dotFlags = useTypedSelector((state) => state.dotFlagsReducer);
     const taskUpdated = getTask(tasks, task.id) as TaskType;
     const zerosCnt = useTypedSelector((state) => state.zerosCntReducer);
     if (taskUpdated === null) {
@@ -20,14 +21,14 @@ const Display = ({ task }: DisplayProps) => {
 
     if (!isEmpty) {
 
-        const num1 = taskUpdated.num1 === undefined ? "" : taskUpdated.num1.toString() + (zerosCnt[0]! ? taskUpdated.num1.toString().includes(".") ? "" : "." : "") + "0".repeat(zerosCnt[0]!);
+        const num1 = taskUpdated.num1 === undefined ? "" : taskUpdated.num1.toString() + (dotFlags[0] && !taskUpdated.num1.toString().includes(".") ? "." : "") + "0".repeat(zerosCnt[0]!);
         const oper = taskUpdated.oper ?? "";
-        const num2 = taskUpdated.num2 === undefined ? "" : taskUpdated.num2.toString() + (zerosCnt[1]! ? taskUpdated.num2.toString().includes(".") ? "" : "." : "") + "0".repeat(zerosCnt[1]!);
+        const num2 = taskUpdated.num2 === undefined ? "" : taskUpdated.num2.toString() + (dotFlags[1] && !taskUpdated.num2.toString().includes(".") ? "." : "") + "0".repeat(zerosCnt[1]!);
 
         expr = `${num1} ${oper} ${num2}`;
     }
     else {
-        expr = "0";
+        expr = "0" + (dotFlags[0] ? "." : "");
     }
 
     return (

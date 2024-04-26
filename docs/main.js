@@ -4977,11 +4977,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../store */ "./src/store.ts");
 /* harmony import */ var _redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../redux/slices/tasksSlice */ "./src/redux/slices/tasksSlice.ts");
 /* harmony import */ var _tasks__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../tasks */ "./src/tasks.ts");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/dist/index.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/dist/index.js");
 /* harmony import */ var _BigDecimal__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../BigDecimal */ "./src/BigDecimal.ts");
 /* harmony import */ var _options_singleOpers__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../options/singleOpers */ "./src/options/singleOpers.ts");
 /* harmony import */ var _redux_slices_zerosCntSlice__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../redux/slices/zerosCntSlice */ "./src/redux/slices/zerosCntSlice.ts");
+/* harmony import */ var _redux_slices_dotFlagsSlice__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../redux/slices/dotFlagsSlice */ "./src/redux/slices/dotFlagsSlice.ts");
 /* provided dependency */ var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
 
 
 
@@ -4993,9 +4995,7 @@ var Button = function Button(_ref) {
   var task = _ref.task,
     children = _ref.children,
     oper = _ref.oper,
-    id = _ref.id,
-    dotFlags = _ref.dotFlags,
-    setDotFlags = _ref.setDotFlags;
+    id = _ref.id;
   var dispatch = (0,_store__WEBPACK_IMPORTED_MODULE_0__.useTypedDispatch)();
   var tasks = (0,_store__WEBPACK_IMPORTED_MODULE_0__.useTypedSelector)(function (state) {
     return state.tasksReducer;
@@ -5004,18 +5004,21 @@ var Button = function Button(_ref) {
   var zerosCnt = (0,_store__WEBPACK_IMPORTED_MODULE_0__.useTypedSelector)(function (state) {
     return state.zerosCntReducer;
   });
-  var navigate = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_6__.useNavigate)();
+  var dotFlags = (0,_store__WEBPACK_IMPORTED_MODULE_0__.useTypedSelector)(function (state) {
+    return state.dotFlagsReducer;
+  });
+  var navigate = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_7__.useNavigate)();
   var handleClick = function handleClick(e) {
     var text = e.currentTarget.textContent;
     if (oper === ".") {
       var _taskUpdated$num;
       if (taskUpdated.num2 !== undefined && !taskUpdated.num2.toString().includes(".")) {
-        setDotFlags([false, true]);
+        dispatch((0,_redux_slices_dotFlagsSlice__WEBPACK_IMPORTED_MODULE_6__.setFlags)([false, true]));
         return;
       }
       if (!((_taskUpdated$num = taskUpdated.num1) !== null && _taskUpdated$num !== void 0 ? _taskUpdated$num : 0).toString().includes(".")) {
         console.log(111, dotFlags[0]);
-        setDotFlags([true, false]);
+        dispatch((0,_redux_slices_dotFlagsSlice__WEBPACK_IMPORTED_MODULE_6__.setFlags)([true, false]));
       }
       return;
     }
@@ -5053,7 +5056,9 @@ var Button = function Button(_ref) {
       var bigDec1 = (_taskUpdated$num2 = taskUpdated.num1) !== null && _taskUpdated$num2 !== void 0 ? _taskUpdated$num2 : new _BigDecimal__WEBPACK_IMPORTED_MODULE_3__["default"]("0");
       var bigDec2 = (_taskUpdated$num3 = taskUpdated.num2) !== null && _taskUpdated$num3 !== void 0 ? _taskUpdated$num3 : new _BigDecimal__WEBPACK_IMPORTED_MODULE_3__["default"]("0");
       if (taskUpdated.oper === undefined || _options_singleOpers__WEBPACK_IMPORTED_MODULE_4__["default"].includes(taskUpdated.calcOper)) {
-        if ((dotFlags[0] || taskUpdated.isDecimal !== undefined && taskUpdated.isDecimal[0]) && newNum === 0) {
+        console.log(new _BigDecimal__WEBPACK_IMPORTED_MODULE_3__["default"](bigDec1.toString() + (dotFlags[0] ? "." : "") + "0".repeat(zerosCnt[0]) + newNum).toString());
+        console.log(taskUpdated.isDecimal);
+        if ((dotFlags[0] || taskUpdated.isDecimal && taskUpdated.isDecimal[0]) && newNum === 0) {
           dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_1__.updateTask)({
             id: task.id,
             isDecimal: [true, taskUpdated.isDecimal === undefined ? false : taskUpdated.isDecimal[0]]
@@ -5061,18 +5066,16 @@ var Button = function Button(_ref) {
           dispatch((0,_redux_slices_zerosCntSlice__WEBPACK_IMPORTED_MODULE_5__.increment1)());
           return;
         }
-        if ((dotFlags[0] || taskUpdated.isDecimal !== undefined && taskUpdated.isDecimal[0]) && newNum === 0) {
-          dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_1__.updateTask)({
-            id: task.id,
-            num1: new _BigDecimal__WEBPACK_IMPORTED_MODULE_3__["default"](bigDec1.toString() + (dotFlags[0] ? "." : "") + "0".repeat(zerosCnt[0]) + newNum)
-          }));
-        }
-        setDotFlags([false, false]);
+        dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_1__.updateTask)({
+          id: task.id,
+          num1: new _BigDecimal__WEBPACK_IMPORTED_MODULE_3__["default"](bigDec1.toString() + (dotFlags[0] ? "." : "") + "0".repeat(zerosCnt[0]) + newNum)
+        }));
+        dispatch((0,_redux_slices_dotFlagsSlice__WEBPACK_IMPORTED_MODULE_6__.setFlags)([false, false]));
         dispatch((0,_redux_slices_zerosCntSlice__WEBPACK_IMPORTED_MODULE_5__.reset)());
         return;
       }
       console.log(bigDec2.toString(), newNum, bigDec2.toString() + newNum);
-      if (dotFlags[1] && newNum === 0) {
+      if ((dotFlags[1] || taskUpdated.isDecimal && taskUpdated.isDecimal[1]) && newNum === 0) {
         dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_1__.updateTask)({
           id: task.id,
           isDecimal: [taskUpdated.isDecimal === undefined ? false : taskUpdated.isDecimal[0], true]
@@ -5084,7 +5087,7 @@ var Button = function Button(_ref) {
         id: task.id,
         num2: new _BigDecimal__WEBPACK_IMPORTED_MODULE_3__["default"](bigDec2.toString() + (dotFlags[1] ? "." : "") + "0".repeat(zerosCnt[1]) + newNum)
       }));
-      setDotFlags([false, false]);
+      dispatch((0,_redux_slices_dotFlagsSlice__WEBPACK_IMPORTED_MODULE_6__.setFlags)([false, false]));
       dispatch((0,_redux_slices_zerosCntSlice__WEBPACK_IMPORTED_MODULE_5__.reset)());
       return;
     }
@@ -5113,32 +5116,19 @@ var Button = function Button(_ref) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "./node_modules/@babel/runtime/helpers/esm/slicedToArray.js");
-/* harmony import */ var _ButtonsLeft_ButtonsLeft__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ButtonsLeft/ButtonsLeft */ "./src/components/Calculator/Buttons/ButtonsLeft/ButtonsLeft.tsx");
-/* harmony import */ var _ButtonsRight_ButtonsRight__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ButtonsRight/ButtonsRight */ "./src/components/Calculator/Buttons/ButtonsRight/ButtonsRight.tsx");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _ButtonsLeft_ButtonsLeft__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ButtonsLeft/ButtonsLeft */ "./src/components/Calculator/Buttons/ButtonsLeft/ButtonsLeft.tsx");
+/* harmony import */ var _ButtonsRight_ButtonsRight__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ButtonsRight/ButtonsRight */ "./src/components/Calculator/Buttons/ButtonsRight/ButtonsRight.tsx");
 /* provided dependency */ var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-
-
 
 
 var Buttons = function Buttons(_ref) {
   var task = _ref.task;
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)([false, false]),
-    _useState2 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__["default"])(_useState, 2),
-    dotFlags = _useState2[0],
-    setDotFlags = _useState2[1];
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     className: "buttons-container"
-  }, /*#__PURE__*/React.createElement(_ButtonsLeft_ButtonsLeft__WEBPACK_IMPORTED_MODULE_1__["default"], {
-    task: task,
-    dotFlags: dotFlags,
-    setDotFlags: setDotFlags
-  }), /*#__PURE__*/React.createElement(_ButtonsRight_ButtonsRight__WEBPACK_IMPORTED_MODULE_2__["default"], {
-    task: task,
-    dotFlags: dotFlags,
-    setDotFlags: setDotFlags
+  }, /*#__PURE__*/React.createElement(_ButtonsLeft_ButtonsLeft__WEBPACK_IMPORTED_MODULE_0__["default"], {
+    task: task
+  }), /*#__PURE__*/React.createElement(_ButtonsRight_ButtonsRight__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    task: task
   })));
 };
 /* harmony default export */ __webpack_exports__["default"] = (Buttons);
@@ -5162,9 +5152,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var ButtonsLeft = function ButtonsLeft(_ref) {
-  var task = _ref.task,
-    dotFlags = _ref.dotFlags,
-    setDotFlags = _ref.setDotFlags;
+  var task = _ref.task;
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false),
     _useState2 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__["default"])(_useState, 2),
     showAlt = _useState2[0],
@@ -5185,50 +5173,34 @@ var ButtonsLeft = function ButtonsLeft(_ref) {
     className: "line-container"
   }, /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_2__["default"], {
     task: task,
-    oper: "sin",
-    dotFlags: dotFlags,
-    setDotFlags: setDotFlags
+    oper: "sin"
   }, "sin"), /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_2__["default"], {
     task: task,
-    oper: "ln",
-    dotFlags: dotFlags,
-    setDotFlags: setDotFlags
+    oper: "ln"
   }, "ln")), /*#__PURE__*/React.createElement("div", {
     className: "line-container"
   }, /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_2__["default"], {
     task: task,
-    oper: "cos",
-    dotFlags: dotFlags,
-    setDotFlags: setDotFlags
+    oper: "cos"
   }, "cos"), /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_2__["default"], {
     task: task,
-    oper: "log",
-    dotFlags: dotFlags,
-    setDotFlags: setDotFlags
+    oper: "log"
   }, "log")), /*#__PURE__*/React.createElement("div", {
     className: "line-container"
   }, /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_2__["default"], {
     task: task,
-    oper: "tan",
-    dotFlags: dotFlags,
-    setDotFlags: setDotFlags
+    oper: "tan"
   }, "tan"), /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_2__["default"], {
     task: task,
-    oper: "sqrt",
-    dotFlags: dotFlags,
-    setDotFlags: setDotFlags
+    oper: "sqrt"
   }, "\u221A")), /*#__PURE__*/React.createElement("div", {
     className: "line-container"
   }, /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_2__["default"], {
     task: task,
-    oper: "fact",
-    dotFlags: dotFlags,
-    setDotFlags: setDotFlags
+    oper: "fact"
   }, "x!"), /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_2__["default"], {
     task: task,
-    oper: "nthPower",
-    dotFlags: dotFlags,
-    setDotFlags: setDotFlags
+    oper: "nthPower"
   }, "x", /*#__PURE__*/React.createElement("sup", null, "y")))), /*#__PURE__*/React.createElement("div", {
     className: "buttons-left-alt" + (showAlt ? "" : " buttons-hidden")
   }, /*#__PURE__*/React.createElement("div", {
@@ -5240,50 +5212,34 @@ var ButtonsLeft = function ButtonsLeft(_ref) {
     className: "line-container"
   }, /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_2__["default"], {
     task: task,
-    oper: "sin",
-    dotFlags: dotFlags,
-    setDotFlags: setDotFlags
+    oper: "sin"
   }, "sin"), /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_2__["default"], {
     task: task,
-    oper: "ln",
-    dotFlags: dotFlags,
-    setDotFlags: setDotFlags
+    oper: "ln"
   }, "ln")), /*#__PURE__*/React.createElement("div", {
     className: "line-container"
   }, /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_2__["default"], {
     task: task,
-    oper: "cos",
-    dotFlags: dotFlags,
-    setDotFlags: setDotFlags
+    oper: "cos"
   }, "cos"), /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_2__["default"], {
     task: task,
-    oper: "log",
-    dotFlags: dotFlags,
-    setDotFlags: setDotFlags
+    oper: "log"
   }, "log")), /*#__PURE__*/React.createElement("div", {
     className: "line-container"
   }, /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_2__["default"], {
     task: task,
-    oper: "tan",
-    dotFlags: dotFlags,
-    setDotFlags: setDotFlags
+    oper: "tan"
   }, "tan"), /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_2__["default"], {
     task: task,
-    oper: "sqrt",
-    dotFlags: dotFlags,
-    setDotFlags: setDotFlags
+    oper: "sqrt"
   }, "\u221A")), /*#__PURE__*/React.createElement("div", {
     className: "line-container"
   }, /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_2__["default"], {
     task: task,
-    oper: "fact",
-    dotFlags: dotFlags,
-    setDotFlags: setDotFlags
+    oper: "fact"
   }, "x!"), /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_2__["default"], {
     task: task,
-    oper: "nthPower",
-    dotFlags: dotFlags,
-    setDotFlags: setDotFlags
+    oper: "nthPower"
   }, "x", /*#__PURE__*/React.createElement("sup", null, "y")))));
 };
 /* harmony default export */ __webpack_exports__["default"] = (ButtonsLeft);
@@ -5304,27 +5260,19 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var ButtonsRight = function ButtonsRight(_ref) {
-  var task = _ref.task,
-    dotFlags = _ref.dotFlags,
-    setDotFlags = _ref.setDotFlags;
+  var task = _ref.task;
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     className: "buttons-right"
   }, /*#__PURE__*/React.createElement("div", {
     className: "line-container"
   }, /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_0__["default"], {
     task: task,
-    dotFlags: dotFlags,
-    setDotFlags: setDotFlags,
     oper: "pi"
   }, "\u03C0"), /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_0__["default"], {
     task: task,
-    dotFlags: dotFlags,
-    setDotFlags: setDotFlags,
     oper: "e"
   }, "e"), /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_0__["default"], {
     task: task,
-    dotFlags: dotFlags,
-    setDotFlags: setDotFlags,
     id: "ans",
     oper: "ans"
   }, "Ans"), /*#__PURE__*/React.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__.Form, {
@@ -5335,70 +5283,42 @@ var ButtonsRight = function ButtonsRight(_ref) {
   }, "C"))), /*#__PURE__*/React.createElement("div", {
     className: "line-container"
   }, /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_0__["default"], {
-    task: task,
-    dotFlags: dotFlags,
-    setDotFlags: setDotFlags
+    task: task
   }, "7"), /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_0__["default"], {
-    task: task,
-    dotFlags: dotFlags,
-    setDotFlags: setDotFlags
+    task: task
   }, "8"), /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_0__["default"], {
-    task: task,
-    dotFlags: dotFlags,
-    setDotFlags: setDotFlags
+    task: task
   }, "9"), /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_0__["default"], {
     task: task,
-    dotFlags: dotFlags,
-    setDotFlags: setDotFlags,
     oper: "/"
   }, "\xF7")), /*#__PURE__*/React.createElement("div", {
     className: "line-container"
   }, /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_0__["default"], {
-    task: task,
-    dotFlags: dotFlags,
-    setDotFlags: setDotFlags
+    task: task
   }, "4"), /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_0__["default"], {
-    task: task,
-    dotFlags: dotFlags,
-    setDotFlags: setDotFlags
+    task: task
   }, "5"), /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_0__["default"], {
-    task: task,
-    dotFlags: dotFlags,
-    setDotFlags: setDotFlags
+    task: task
   }, "6"), /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_0__["default"], {
     task: task,
-    dotFlags: dotFlags,
-    setDotFlags: setDotFlags,
     oper: "*"
   }, "\xD7")), /*#__PURE__*/React.createElement("div", {
     className: "line-container"
   }, /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_0__["default"], {
-    task: task,
-    dotFlags: dotFlags,
-    setDotFlags: setDotFlags
+    task: task
   }, "1"), /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_0__["default"], {
-    task: task,
-    dotFlags: dotFlags,
-    setDotFlags: setDotFlags
+    task: task
   }, "2"), /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_0__["default"], {
-    task: task,
-    dotFlags: dotFlags,
-    setDotFlags: setDotFlags
+    task: task
   }, "3"), /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_0__["default"], {
     task: task,
-    dotFlags: dotFlags,
-    setDotFlags: setDotFlags,
     oper: "-"
   }, "-")), /*#__PURE__*/React.createElement("div", {
     className: "line-container"
   }, /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_0__["default"], {
-    task: task,
-    dotFlags: dotFlags,
-    setDotFlags: setDotFlags
+    task: task
   }, "0"), /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_0__["default"], {
     task: task,
-    dotFlags: dotFlags,
-    setDotFlags: setDotFlags,
     oper: "."
   }, "."), /*#__PURE__*/React.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__.Form, {
     method: "post"
@@ -5407,8 +5327,6 @@ var ButtonsRight = function ButtonsRight(_ref) {
     value: "equals"
   }, "=")), /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_0__["default"], {
     task: task,
-    dotFlags: dotFlags,
-    setDotFlags: setDotFlags,
     oper: "+"
   }, "+"))));
 };
@@ -5465,6 +5383,9 @@ var Display = function Display(_ref) {
     return state.tasksReducer;
   });
   var taskUpdated = (0,_tasks__WEBPACK_IMPORTED_MODULE_0__.getTask)(tasks, task.id);
+  var zerosCnt = (0,_store__WEBPACK_IMPORTED_MODULE_1__.useTypedSelector)(function (state) {
+    return state.zerosCntReducer;
+  });
   if (taskUpdated === null) {
     dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_2__.createTask)());
   }
@@ -5472,9 +5393,9 @@ var Display = function Display(_ref) {
   var expr;
   if (!isEmpty) {
     var _taskUpdated$oper;
-    var num1 = taskUpdated.num1 === undefined ? "" : taskUpdated.num1.toString();
+    var num1 = taskUpdated.num1 === undefined ? "" : taskUpdated.num1.toString() + (zerosCnt[0] ? taskUpdated.num1.toString().includes(".") ? "" : "." : "") + "0".repeat(zerosCnt[0]);
     var oper = (_taskUpdated$oper = taskUpdated.oper) !== null && _taskUpdated$oper !== void 0 ? _taskUpdated$oper : "";
-    var num2 = taskUpdated.num2 === undefined ? "" : taskUpdated.num2.toString();
+    var num2 = taskUpdated.num2 === undefined ? "" : taskUpdated.num2.toString() + (zerosCnt[1] ? taskUpdated.num2.toString().includes(".") ? "" : "." : "") + "0".repeat(zerosCnt[1]);
     expr = "".concat(num1, " ").concat(oper, " ").concat(num2);
   } else {
     expr = "0";
@@ -5620,6 +5541,35 @@ var ErrorPage = function ErrorPage() {
 __webpack_require__.r(__webpack_exports__);
 var singleOpers = ["ln", "log", "sin", "tan", "cos", "fact", "sqrt"];
 /* harmony default export */ __webpack_exports__["default"] = (singleOpers);
+
+/***/ }),
+
+/***/ "./src/redux/slices/dotFlagsSlice.ts":
+/*!*******************************************!*\
+  !*** ./src/redux/slices/dotFlagsSlice.ts ***!
+  \*******************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   dotFlagsSlice: function() { return /* binding */ dotFlagsSlice; },
+/* harmony export */   setFlags: function() { return /* binding */ setFlags; }
+/* harmony export */ });
+/* harmony import */ var _reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @reduxjs/toolkit */ "./node_modules/@reduxjs/toolkit/dist/redux-toolkit.modern.mjs");
+
+var dotFlagsSlice = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.createSlice)({
+  name: 'tasks',
+  initialState: [false, false],
+  reducers: {
+    setFlags: function setFlags(state, action) {
+      return action.payload;
+    }
+  }
+});
+var setFlags = dotFlagsSlice.actions.setFlags;
+
+/* harmony default export */ __webpack_exports__["default"] = (dotFlagsSlice.reducer);
 
 /***/ }),
 
@@ -5788,18 +5738,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-router-dom */ "./node_modules/@remix-run/router/dist/router.js");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/dist/index.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-router-dom */ "./node_modules/@remix-run/router/dist/router.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/dist/index.js");
 /* harmony import */ var _tasks__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../tasks */ "./src/tasks.ts");
 /* harmony import */ var _redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../redux/slices/tasksSlice */ "./src/redux/slices/tasksSlice.ts");
 /* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../store */ "./src/store.ts");
 /* harmony import */ var _components_Calculator_Calculator__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/Calculator/Calculator */ "./src/components/Calculator/Calculator.tsx");
+/* harmony import */ var _redux_slices_dotFlagsSlice__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../redux/slices/dotFlagsSlice */ "./src/redux/slices/dotFlagsSlice.ts");
 /* provided dependency */ var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+
 
 
 
@@ -5827,7 +5779,7 @@ function _action() {
           _iterator.s();
         case 9:
           if ((_step = _iterator.n()).done) {
-            _context.next = 21;
+            _context.next = 22;
             break;
           }
           i = _step.value;
@@ -5839,7 +5791,7 @@ function _action() {
           return _context.abrupt("return", _store__WEBPACK_IMPORTED_MODULE_4__["default"].dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_3__.calcTask)(params.taskId)));
         case 14:
           if (!((task === null || task === void 0 ? void 0 : task.num1) === undefined || (task === null || task === void 0 ? void 0 : task.oper) === undefined || (task === null || task === void 0 ? void 0 : task.num2) === undefined || (task === null || task === void 0 ? void 0 : task.res) === undefined)) {
-            _context.next = 17;
+            _context.next = 18;
             break;
           }
           _store__WEBPACK_IMPORTED_MODULE_4__["default"].dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_3__.updateTask)({
@@ -5847,36 +5799,38 @@ function _action() {
             num1: undefined,
             oper: undefined,
             num2: undefined,
-            res: undefined
+            res: undefined,
+            isDecimal: undefined
           }));
-          return _context.abrupt("return", (0,react_router_dom__WEBPACK_IMPORTED_MODULE_6__.redirect)(""));
-        case 17:
+          _store__WEBPACK_IMPORTED_MODULE_4__["default"].dispatch((0,_redux_slices_dotFlagsSlice__WEBPACK_IMPORTED_MODULE_6__.setFlags)([false, false]));
+          return _context.abrupt("return", (0,react_router_dom__WEBPACK_IMPORTED_MODULE_7__.redirect)(""));
+        case 18:
           _store__WEBPACK_IMPORTED_MODULE_4__["default"].dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_3__.createTask)());
-          return _context.abrupt("return", (0,react_router_dom__WEBPACK_IMPORTED_MODULE_6__.redirect)("/".concat(_store__WEBPACK_IMPORTED_MODULE_4__["default"].getState().tasksReducer[0].id)));
-        case 19:
+          return _context.abrupt("return", (0,react_router_dom__WEBPACK_IMPORTED_MODULE_7__.redirect)("/".concat(_store__WEBPACK_IMPORTED_MODULE_4__["default"].getState().tasksReducer[0].id)));
+        case 20:
           _context.next = 9;
           break;
-        case 21:
-          _context.next = 26;
+        case 22:
+          _context.next = 27;
           break;
-        case 23:
-          _context.prev = 23;
+        case 24:
+          _context.prev = 24;
           _context.t0 = _context["catch"](7);
           _iterator.e(_context.t0);
-        case 26:
-          _context.prev = 26;
+        case 27:
+          _context.prev = 27;
           _iterator.f();
-          return _context.finish(26);
-        case 29:
+          return _context.finish(27);
+        case 30:
           return _context.abrupt("return", _store__WEBPACK_IMPORTED_MODULE_4__["default"].dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_3__.updateTask)({
             id: params.taskId
             // isDone: formData.get("isDone") === "true",
           })));
-        case 30:
+        case 31:
         case "end":
           return _context.stop();
       }
-    }, _callee, null, [[7, 23, 26, 29]]);
+    }, _callee, null, [[7, 24, 27, 30]]);
   }));
   return _action.apply(this, arguments);
 }
@@ -5895,7 +5849,7 @@ function loader(_ref2) {
   };
 }
 var Contact = function Contact() {
-  var _ref3 = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_7__.useLoaderData)(),
+  var _ref3 = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_8__.useLoaderData)(),
     task = _ref3.task;
   var tasks = (0,_store__WEBPACK_IMPORTED_MODULE_4__.useTypedSelector)(function (state) {
     return state.tasksReducer;
@@ -5935,18 +5889,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   useTypedDispatch: function() { return /* binding */ useTypedDispatch; },
 /* harmony export */   useTypedSelector: function() { return /* binding */ useTypedSelector; }
 /* harmony export */ });
-/* harmony import */ var _reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @reduxjs/toolkit */ "./node_modules/@reduxjs/toolkit/dist/redux-toolkit.modern.mjs");
+/* harmony import */ var _reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @reduxjs/toolkit */ "./node_modules/@reduxjs/toolkit/dist/redux-toolkit.modern.mjs");
 /* harmony import */ var _redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./redux/slices/tasksSlice */ "./src/redux/slices/tasksSlice.ts");
-/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/dist/react-redux.mjs");
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/dist/react-redux.mjs");
 /* harmony import */ var _redux_slices_zerosCntSlice__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./redux/slices/zerosCntSlice */ "./src/redux/slices/zerosCntSlice.ts");
+/* harmony import */ var _redux_slices_dotFlagsSlice__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./redux/slices/dotFlagsSlice */ "./src/redux/slices/dotFlagsSlice.ts");
 
 
 
 
-var store = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_2__.configureStore)({
+
+var store = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_3__.configureStore)({
   reducer: {
     tasksReducer: _redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_0__["default"],
-    zerosCntReducer: _redux_slices_zerosCntSlice__WEBPACK_IMPORTED_MODULE_1__["default"]
+    zerosCntReducer: _redux_slices_zerosCntSlice__WEBPACK_IMPORTED_MODULE_1__["default"],
+    dotFlagsReducer: _redux_slices_dotFlagsSlice__WEBPACK_IMPORTED_MODULE_2__["default"]
   },
   middleware: function middleware(getDefaultMiddleware) {
     return getDefaultMiddleware({
@@ -5961,8 +5918,8 @@ var store = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_2__.configureStore)({
 // Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
 
 // Use throughout your app instead of plain `useDispatch` and `useSelector`
-var useTypedDispatch = react_redux__WEBPACK_IMPORTED_MODULE_3__.useDispatch.withTypes();
-var useTypedSelector = react_redux__WEBPACK_IMPORTED_MODULE_3__.useSelector.withTypes();
+var useTypedDispatch = react_redux__WEBPACK_IMPORTED_MODULE_4__.useDispatch.withTypes();
+var useTypedSelector = react_redux__WEBPACK_IMPORTED_MODULE_4__.useSelector.withTypes();
 
 /***/ }),
 

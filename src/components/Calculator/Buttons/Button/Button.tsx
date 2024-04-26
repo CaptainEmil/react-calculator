@@ -34,7 +34,6 @@ const Button = ({ task, children, oper, id }: ButtonProps) => {
             }
 
             if (!(taskUpdated.num1 ?? 0).toString().includes(".")) {
-                console.log(111, dotFlags[0]);
                 dispatch(setFlags([true, false]));
             }
             return;
