@@ -64,8 +64,6 @@ const Button = ({ task, children, oper, id }: ButtonProps) => {
             const bigDec2 = taskUpdated.num2 ?? new BigDecimal("0");
 
             if (taskUpdated.oper === undefined || singleOpers.includes(taskUpdated.calcOper!)) {
-                console.log(new BigDecimal(bigDec1.toString() + (dotFlags[0] ? "." : "") + "0".repeat(zerosCnt[0]!) + newNum).toString());
-                console.log(taskUpdated.isDecimal);
 
                 if ((dotFlags[0] || (taskUpdated.isDecimal && taskUpdated.isDecimal[0])) && newNum === 0) {
                     dispatch(updateTask({
@@ -80,7 +78,7 @@ const Button = ({ task, children, oper, id }: ButtonProps) => {
                 dispatch(reset());
                 return;
             }
-            console.log(bigDec2.toString(), newNum, bigDec2.toString() + newNum);
+            
             if ((dotFlags[1] || (taskUpdated.isDecimal && taskUpdated.isDecimal[1])) && newNum === 0) {
                 dispatch(updateTask({
                     id: task.id, isDecimal: [taskUpdated.isDecimal === undefined ? false : taskUpdated.isDecimal[0]!, true]
