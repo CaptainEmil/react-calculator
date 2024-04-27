@@ -4522,7 +4522,7 @@ var BigDecimal = /*#__PURE__*/function () {
       var resBefDotLen = resBefDot === 0n ? 0 : resBefDot.toString().length;
       var resAfDot = 0n;
       var zerosBefNum2 = 0;
-      for (var i = 0; i <= 10 + resBefDotLen && bigDec1Join > 0; ++i) {
+      for (var i = 0; i <= 100 + resBefDotLen && bigDec1Join > 0; ++i) {
         // console.log(bigDec1Join + "/" + bigDec2Join + "=" + (bigDec1Join / bigDec2Join));
 
         if (i >= 1) {
@@ -5017,7 +5017,6 @@ var Button = function Button(_ref) {
         return;
       }
       if (!((_taskUpdated$num = taskUpdated.num1) !== null && _taskUpdated$num !== void 0 ? _taskUpdated$num : 0).toString().includes(".")) {
-        console.log(111, dotFlags[0]);
         dispatch((0,_redux_slices_dotFlagsSlice__WEBPACK_IMPORTED_MODULE_6__.setFlags)([true, false]));
       }
       return;
@@ -5056,8 +5055,6 @@ var Button = function Button(_ref) {
       var bigDec1 = (_taskUpdated$num2 = taskUpdated.num1) !== null && _taskUpdated$num2 !== void 0 ? _taskUpdated$num2 : new _BigDecimal__WEBPACK_IMPORTED_MODULE_3__["default"]("0");
       var bigDec2 = (_taskUpdated$num3 = taskUpdated.num2) !== null && _taskUpdated$num3 !== void 0 ? _taskUpdated$num3 : new _BigDecimal__WEBPACK_IMPORTED_MODULE_3__["default"]("0");
       if (taskUpdated.oper === undefined || _options_singleOpers__WEBPACK_IMPORTED_MODULE_4__["default"].includes(taskUpdated.calcOper)) {
-        console.log(new _BigDecimal__WEBPACK_IMPORTED_MODULE_3__["default"](bigDec1.toString() + (dotFlags[0] ? "." : "") + "0".repeat(zerosCnt[0]) + newNum).toString());
-        console.log(taskUpdated.isDecimal);
         if ((dotFlags[0] || taskUpdated.isDecimal && taskUpdated.isDecimal[0]) && newNum === 0) {
           dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_1__.updateTask)({
             id: task.id,
@@ -5074,7 +5071,6 @@ var Button = function Button(_ref) {
         dispatch((0,_redux_slices_zerosCntSlice__WEBPACK_IMPORTED_MODULE_5__.reset)());
         return;
       }
-      console.log(bigDec2.toString(), newNum, bigDec2.toString() + newNum);
       if ((dotFlags[1] || taskUpdated.isDecimal && taskUpdated.isDecimal[1]) && newNum === 0) {
         dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_1__.updateTask)({
           id: task.id,
@@ -5215,32 +5211,32 @@ var ButtonsLeft = function ButtonsLeft(_ref) {
     oper: "sin"
   }, "sin"), /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_2__["default"], {
     task: task,
-    oper: "ln"
-  }, "ln")), /*#__PURE__*/React.createElement("div", {
+    oper: "exp"
+  }, "e", /*#__PURE__*/React.createElement("sup", null, "x"))), /*#__PURE__*/React.createElement("div", {
     className: "line-container"
   }, /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_2__["default"], {
     task: task,
     oper: "cos"
   }, "cos"), /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_2__["default"], {
     task: task,
-    oper: "log"
-  }, "log")), /*#__PURE__*/React.createElement("div", {
+    oper: "powerOf10"
+  }, "10", /*#__PURE__*/React.createElement("sup", null, "x"))), /*#__PURE__*/React.createElement("div", {
     className: "line-container"
   }, /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_2__["default"], {
     task: task,
     oper: "tan"
   }, "tan"), /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_2__["default"], {
     task: task,
-    oper: "sqrt"
-  }, "\u221A")), /*#__PURE__*/React.createElement("div", {
+    oper: "square"
+  }, "x", /*#__PURE__*/React.createElement("sup", null, "2"))), /*#__PURE__*/React.createElement("div", {
     className: "line-container"
   }, /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_2__["default"], {
     task: task,
     oper: "fact"
   }, "x!"), /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_2__["default"], {
     task: task,
-    oper: "nthPower"
-  }, "x", /*#__PURE__*/React.createElement("sup", null, "y")))));
+    oper: "nthRoot"
+  }, /*#__PURE__*/React.createElement("sup", null, "y"), "\u221Ax"))));
 };
 /* harmony default export */ __webpack_exports__["default"] = (ButtonsLeft);
 
@@ -5382,6 +5378,9 @@ var Display = function Display(_ref) {
   var tasks = (0,_store__WEBPACK_IMPORTED_MODULE_1__.useTypedSelector)(function (state) {
     return state.tasksReducer;
   });
+  var dotFlags = (0,_store__WEBPACK_IMPORTED_MODULE_1__.useTypedSelector)(function (state) {
+    return state.dotFlagsReducer;
+  });
   var taskUpdated = (0,_tasks__WEBPACK_IMPORTED_MODULE_0__.getTask)(tasks, task.id);
   var zerosCnt = (0,_store__WEBPACK_IMPORTED_MODULE_1__.useTypedSelector)(function (state) {
     return state.zerosCntReducer;
@@ -5393,12 +5392,12 @@ var Display = function Display(_ref) {
   var expr;
   if (!isEmpty) {
     var _taskUpdated$oper;
-    var num1 = taskUpdated.num1 === undefined ? "" : taskUpdated.num1.toString() + (zerosCnt[0] ? taskUpdated.num1.toString().includes(".") ? "" : "." : "") + "0".repeat(zerosCnt[0]);
+    var num1 = taskUpdated.num1 === undefined ? "" : taskUpdated.num1.toString() + (dotFlags[0] && !taskUpdated.num1.toString().includes(".") ? "." : "") + "0".repeat(zerosCnt[0]);
     var oper = (_taskUpdated$oper = taskUpdated.oper) !== null && _taskUpdated$oper !== void 0 ? _taskUpdated$oper : "";
-    var num2 = taskUpdated.num2 === undefined ? "" : taskUpdated.num2.toString() + (zerosCnt[1] ? taskUpdated.num2.toString().includes(".") ? "" : "." : "") + "0".repeat(zerosCnt[1]);
+    var num2 = taskUpdated.num2 === undefined ? "" : taskUpdated.num2.toString() + (dotFlags[1] && !taskUpdated.num2.toString().includes(".") ? "." : "") + "0".repeat(zerosCnt[1]);
     expr = "".concat(num1, " ").concat(oper, " ").concat(num2);
   } else {
-    expr = "0";
+    expr = "0" + (dotFlags[0] ? "." : "");
   }
   return /*#__PURE__*/React.createElement("div", {
     className: "display-container"

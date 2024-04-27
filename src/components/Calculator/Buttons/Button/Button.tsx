@@ -64,30 +64,28 @@ const Button = ({ task, children, oper, id }: ButtonProps) => {
             const bigDec2 = taskUpdated.num2 ?? new BigDecimal("0");
 
             if (taskUpdated.oper === undefined || singleOpers.includes(taskUpdated.calcOper!)) {
+                console.log(dotFlags[0]);
 
-                if ((dotFlags[0] || (taskUpdated.isDecimal && taskUpdated.isDecimal[0])) && newNum === 0) {
-                    dispatch(updateTask({
-                        id: task.id, isDecimal: [true, taskUpdated.isDecimal === undefined ? false : taskUpdated.isDecimal[0]!]
-                    }));
+
+                if ((dotFlags[0]) && newNum === 0) {
+
                     dispatch(increment1());
                     return;
                 }
 
-                dispatch(updateTask({ id: task.id, num1: new BigDecimal(bigDec1.toString() + (dotFlags[0] ? "." : "") + "0".repeat(zerosCnt[0]!) + newNum) }));
-                dispatch(setFlags([false, false]));
+                dispatch(updateTask({ id: task.id, num1: new BigDecimal(bigDec1.toString() + (dotFlags[0] && !bigDec1.toString().includes(".") ? "." : "") + "0".repeat(zerosCnt[0]!) + newNum) }));
+
                 dispatch(reset());
                 return;
             }
-            
-            if ((dotFlags[1] || (taskUpdated.isDecimal && taskUpdated.isDecimal[1])) && newNum === 0) {
-                dispatch(updateTask({
-                    id: task.id, isDecimal: [taskUpdated.isDecimal === undefined ? false : taskUpdated.isDecimal[0]!, true]
-                }))
+
+            if ((dotFlags[1]) && newNum === 0) {
+
                 dispatch(increment2());
                 return;
             }
-            dispatch(updateTask({ id: task.id, num2: new BigDecimal(bigDec2.toString() + (dotFlags[1] ? "." : "") + "0".repeat(zerosCnt[1]!) + newNum) }));
-            dispatch(setFlags([false, false]));
+            dispatch(updateTask({ id: task.id, num2: new BigDecimal(bigDec2.toString() + (dotFlags[1] && !bigDec2.toString().includes(".") ? "." : "") + "0".repeat(zerosCnt[1]!) + newNum) }));
+
             dispatch(reset());
             return;
         }
