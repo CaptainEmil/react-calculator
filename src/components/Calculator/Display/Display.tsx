@@ -2,6 +2,8 @@ import { getTask } from "../../../tasks";
 import { useTypedDispatch, useTypedSelector } from "../../../store";
 import TaskType from "src/types/Task";
 import { createTask } from "../../../redux/slices/tasksSlice";
+import singleOpers from "../../../options/singleOpers";
+import UniqDisplay from "./UniqDisplay/UniqDisplay";
 type DisplayProps = {
     task: TaskType
 }
@@ -30,7 +32,24 @@ const Display = ({ task }: DisplayProps) => {
     else {
         expr = "0" + (dotFlags[0] ? "." : "");
     }
+    const uniqOpers = [...singleOpers];
+    uniqOpers.push("nthPower", "nthRoot");
+    console.log(taskUpdated.oper,taskUpdated.calcOper);
 
+    if (taskUpdated.oper !== undefined && uniqOpers.includes(taskUpdated.calcOper ?? "")) {
+        console.log(taskUpdated.oper);
+
+        return (
+            <div className="display-container">
+                <div id="upper"><UniqDisplay task={task}></UniqDisplay></div>
+                <div id="lower">{
+                    taskUpdated.res === undefined ? (<UniqDisplay task={task}></UniqDisplay>)
+                        : taskUpdated.res.toString()
+                }
+                </div>
+            </div>
+        )
+    }
     return (
         <div className="display-container">
             <div id="upper">{expr}</div>

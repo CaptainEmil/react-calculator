@@ -184,7 +184,7 @@ export default class BigDecimal {
         for (let i = 2n; i <= bigDec.num1; i++) {
             fact *= i;
         }
-        return fact;
+        return new BigDecimal(fact.toString());
     }
 
     static bigIntPow(x: bigint, n: bigint): bigint {
@@ -205,7 +205,7 @@ export default class BigDecimal {
     }
 
 
-    static nthRoot(bigDec: BigDecimal, root: bigint) {
+    static nthRoot(bigDec: BigDecimal, root: bigint = 2n) {
         console.log(bigDec.num1, root, typeof bigDec.num1, typeof root);
 
         const arr = [new BigDecimal(BigDecimal.bigIntNthRoot(bigDec.num1, root).toString())];
@@ -384,20 +384,22 @@ export default class BigDecimal {
 
     static sin(bigDec: BigDecimal) {
         const mod = BigDecimal.mod(bigDec, BigDecimal.prod(new BigDecimal(2), BigDecimal.PI()));
+        console.log(mod.toString());
         const num = Number(mod.toString().slice(0, 15));
-        return new BigDecimal(Math.sin(num).toString());
+
+        return new BigDecimal(Math.sin(num).toFixed(20).toString());
     }
 
     static cos(bigDec: BigDecimal) {
         const mod = BigDecimal.mod(bigDec, BigDecimal.prod(new BigDecimal(2), BigDecimal.PI()));
         const num = Number(mod.toString().slice(0, 15));
-        return new BigDecimal(Math.cos(num).toString());
+        return new BigDecimal(Math.cos(num).toFixed(20).toString());
     }
 
     static tan(bigDec: BigDecimal) {
         const mod = BigDecimal.mod(bigDec, BigDecimal.prod(new BigDecimal(2), BigDecimal.PI()));
         const num = Number(mod.toString().slice(0, 15));
-        return new BigDecimal(Math.tan(num).toString());
+        return new BigDecimal(Math.tan(num).toFixed(20).toString());
     }
 
     static PI() {

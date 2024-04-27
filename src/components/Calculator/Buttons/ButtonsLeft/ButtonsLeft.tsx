@@ -30,7 +30,7 @@ const ButtonsLeft = ({ task }: ButtonsLeftProps) => {
                     <Button task={task} oper="sqrt" >√</Button>
                 </div>
                 <div className="line-container">
-                    <Button task={task} oper="fact" >x!</Button>
+                    <Button task={task} oper="fac" >x!</Button>
                     <Button task={task} oper="nthPower" >x<sup>y</sup></Button>
                 </div>
             </div>

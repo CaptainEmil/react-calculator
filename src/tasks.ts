@@ -67,6 +67,36 @@ export const calcTask: CaseReducer<TaskType[], PayloadAction<string>> = (state, 
 		case "nthRoot":
 			res = BigDecimal.nthRoot(task.num1, task.num2!.num1);
 			break;
+		case "sin":
+			res = BigDecimal.sin(task.num1);
+			break;
+		case "cos":
+			res = BigDecimal.cos(task.num1);
+			break;
+		case "tan":
+			res = BigDecimal.tan(task.num1);
+			break;
+		case "log":
+			res = BigDecimal.log(task.num1);
+			break;
+		case "fac":
+			res = BigDecimal.fac(task.num1);
+			break;
+		case "ln":
+			res = BigDecimal.fac(task.num1);
+			break;
+		case "sqrt":
+			res = BigDecimal.nthRoot(task.num1);
+			break;
+		case "square":
+			res = BigDecimal.pow(task.num1, new BigDecimal("2"));
+			break;
+		case "powerOf10":
+			res = BigDecimal.pow(new BigDecimal("10"), task.num1);
+			break;
+		case "powerOfE":
+			res = BigDecimal.pow(BigDecimal.E(), task.num1);
+			break;
 		default:
 			throw new Error("No such operation:", { cause: task.calcOper });
 	}

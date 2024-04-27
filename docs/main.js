@@ -4363,14 +4363,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": function() { return /* binding */ BigDecimal; }
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
-/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/typeof */ "./node_modules/@babel/runtime/helpers/esm/typeof.js");
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
+
 
 
 var BigDecimal = /*#__PURE__*/function () {
   function BigDecimal(num1, num2) {
     var _num, _num2;
-    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, BigDecimal);
+    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1__["default"])(this, BigDecimal);
     this.isNegative = num1.toString().includes('-');
     this.zerosBefNum2 = 0;
     if (num2 === undefined && (typeof num1 === "string" || typeof num1 === "number")) {
@@ -4391,7 +4393,7 @@ var BigDecimal = /*#__PURE__*/function () {
     this.num1 = BigDecimal.bigIntAbs(BigInt(num1));
     this.num2 = BigDecimal.bigIntAbs(BigInt((_num2 = num2) !== null && _num2 !== void 0 ? _num2 : 0));
   }
-  (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(BigDecimal, [{
+  (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_2__["default"])(BigDecimal, [{
     key: "toFixed",
     value: function toFixed(n) {
       // console.log(this.toString());
@@ -4564,7 +4566,14 @@ var BigDecimal = /*#__PURE__*/function () {
       for (var i = 2n; i <= bigDec.num1; i++) {
         fact *= i;
       }
-      return fact;
+      return new BigDecimal(fact.toString());
+    }
+  }, {
+    key: "bigIntPow",
+    value: function bigIntPow(x, n) {
+      if (n == 0n) return 1n;
+      if (n % 2n == 0n) return BigDecimal.bigIntPow(x * x, n / 2n);
+      return x * BigDecimal.bigIntPow(x, n - 1n);
     }
   }, {
     key: "bigIntNthRoot",
@@ -4574,13 +4583,15 @@ var BigDecimal = /*#__PURE__*/function () {
       var u = base;
       while (u < s) {
         s = u;
-        u = (u * k1 + base / Math.pow(u, k1)) / root;
+        u = (u * k1 + base / BigDecimal.bigIntPow(u, k1)) / root;
       }
       return s;
     }
   }, {
     key: "nthRoot",
-    value: function nthRoot(bigDec, root) {
+    value: function nthRoot(bigDec) {
+      var root = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 2n;
+      console.log(bigDec.num1, root, (0,_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__["default"])(bigDec.num1), (0,_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__["default"])(root));
       var arr = [new BigDecimal(BigDecimal.bigIntNthRoot(bigDec.num1, root).toString())];
       for (var i = 1; i < 10; ++i) {
         var pow = BigDecimal.intPow(arr[i - 1], root - 1n).toFixed(50);
@@ -4757,22 +4768,23 @@ var BigDecimal = /*#__PURE__*/function () {
     key: "sin",
     value: function sin(bigDec) {
       var mod = BigDecimal.mod(bigDec, BigDecimal.prod(new BigDecimal(2), BigDecimal.PI()));
+      console.log(mod.toString());
       var num = Number(mod.toString().slice(0, 15));
-      return new BigDecimal(Math.sin(num).toString());
+      return new BigDecimal(Math.sin(num).toFixed(20).toString());
     }
   }, {
     key: "cos",
     value: function cos(bigDec) {
       var mod = BigDecimal.mod(bigDec, BigDecimal.prod(new BigDecimal(2), BigDecimal.PI()));
       var num = Number(mod.toString().slice(0, 15));
-      return new BigDecimal(Math.cos(num).toString());
+      return new BigDecimal(Math.cos(num).toFixed(20).toString());
     }
   }, {
     key: "tan",
     value: function tan(bigDec) {
       var mod = BigDecimal.mod(bigDec, BigDecimal.prod(new BigDecimal(2), BigDecimal.PI()));
       var num = Number(mod.toString().slice(0, 15));
-      return new BigDecimal(Math.tan(num).toString());
+      return new BigDecimal(Math.tan(num).toFixed(20).toString());
     }
   }, {
     key: "PI",
@@ -5010,15 +5022,44 @@ var Button = function Button(_ref) {
   var navigate = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_7__.useNavigate)();
   var handleClick = function handleClick(e) {
     var text = e.currentTarget.textContent;
+    if (oper === "pi") {
+      if (taskUpdated.oper === undefined || _options_singleOpers__WEBPACK_IMPORTED_MODULE_4__["default"].includes(taskUpdated.calcOper)) {
+        dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_1__.updateTask)({
+          id: task.id,
+          num1: _BigDecimal__WEBPACK_IMPORTED_MODULE_3__["default"].PI()
+        }));
+        dispatch((0,_redux_slices_dotFlagsSlice__WEBPACK_IMPORTED_MODULE_6__.setFlags)([true, false]));
+        return;
+      }
+      dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_1__.updateTask)({
+        id: task.id,
+        num2: _BigDecimal__WEBPACK_IMPORTED_MODULE_3__["default"].PI()
+      }));
+      dispatch((0,_redux_slices_dotFlagsSlice__WEBPACK_IMPORTED_MODULE_6__.setFlags)([false, true]));
+      return;
+    }
+    if (oper === "e") {
+      if (taskUpdated.oper === undefined || _options_singleOpers__WEBPACK_IMPORTED_MODULE_4__["default"].includes(taskUpdated.calcOper)) {
+        dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_1__.updateTask)({
+          id: task.id,
+          num1: _BigDecimal__WEBPACK_IMPORTED_MODULE_3__["default"].E()
+        }));
+        dispatch((0,_redux_slices_dotFlagsSlice__WEBPACK_IMPORTED_MODULE_6__.setFlags)([true, false]));
+        return;
+      }
+      dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_1__.updateTask)({
+        id: task.id,
+        num2: _BigDecimal__WEBPACK_IMPORTED_MODULE_3__["default"].E()
+      }));
+      dispatch((0,_redux_slices_dotFlagsSlice__WEBPACK_IMPORTED_MODULE_6__.setFlags)([false, true]));
+      return;
+    }
     if (oper === ".") {
-      var _taskUpdated$num;
-      if (taskUpdated.num2 !== undefined && !taskUpdated.num2.toString().includes(".")) {
+      if (taskUpdated.num2 !== undefined) {
         dispatch((0,_redux_slices_dotFlagsSlice__WEBPACK_IMPORTED_MODULE_6__.setFlags)([false, true]));
         return;
       }
-      if (!((_taskUpdated$num = taskUpdated.num1) !== null && _taskUpdated$num !== void 0 ? _taskUpdated$num : 0).toString().includes(".")) {
-        dispatch((0,_redux_slices_dotFlagsSlice__WEBPACK_IMPORTED_MODULE_6__.setFlags)([true, false]));
-      }
+      dispatch((0,_redux_slices_dotFlagsSlice__WEBPACK_IMPORTED_MODULE_6__.setFlags)([true, false]));
       return;
     }
     if (oper !== undefined) {
@@ -5051,39 +5092,29 @@ var Button = function Button(_ref) {
     }
     var newNum = Number(text);
     if (taskUpdated.res === undefined) {
-      var _taskUpdated$num2, _taskUpdated$num3;
-      var bigDec1 = (_taskUpdated$num2 = taskUpdated.num1) !== null && _taskUpdated$num2 !== void 0 ? _taskUpdated$num2 : new _BigDecimal__WEBPACK_IMPORTED_MODULE_3__["default"]("0");
-      var bigDec2 = (_taskUpdated$num3 = taskUpdated.num2) !== null && _taskUpdated$num3 !== void 0 ? _taskUpdated$num3 : new _BigDecimal__WEBPACK_IMPORTED_MODULE_3__["default"]("0");
+      var _taskUpdated$num, _taskUpdated$num2;
+      var bigDec1 = (_taskUpdated$num = taskUpdated.num1) !== null && _taskUpdated$num !== void 0 ? _taskUpdated$num : new _BigDecimal__WEBPACK_IMPORTED_MODULE_3__["default"]("0");
+      var bigDec2 = (_taskUpdated$num2 = taskUpdated.num2) !== null && _taskUpdated$num2 !== void 0 ? _taskUpdated$num2 : new _BigDecimal__WEBPACK_IMPORTED_MODULE_3__["default"]("0");
       if (taskUpdated.oper === undefined || _options_singleOpers__WEBPACK_IMPORTED_MODULE_4__["default"].includes(taskUpdated.calcOper)) {
-        if ((dotFlags[0] || taskUpdated.isDecimal && taskUpdated.isDecimal[0]) && newNum === 0) {
-          dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_1__.updateTask)({
-            id: task.id,
-            isDecimal: [true, taskUpdated.isDecimal === undefined ? false : taskUpdated.isDecimal[0]]
-          }));
+        if (dotFlags[0] && newNum === 0) {
           dispatch((0,_redux_slices_zerosCntSlice__WEBPACK_IMPORTED_MODULE_5__.increment1)());
           return;
         }
         dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_1__.updateTask)({
           id: task.id,
-          num1: new _BigDecimal__WEBPACK_IMPORTED_MODULE_3__["default"](bigDec1.toString() + (dotFlags[0] ? "." : "") + "0".repeat(zerosCnt[0]) + newNum)
+          num1: new _BigDecimal__WEBPACK_IMPORTED_MODULE_3__["default"](bigDec1.toString() + (dotFlags[0] && !bigDec1.toString().includes(".") ? "." : "") + "0".repeat(zerosCnt[0]) + newNum)
         }));
-        dispatch((0,_redux_slices_dotFlagsSlice__WEBPACK_IMPORTED_MODULE_6__.setFlags)([false, false]));
         dispatch((0,_redux_slices_zerosCntSlice__WEBPACK_IMPORTED_MODULE_5__.reset)());
         return;
       }
-      if ((dotFlags[1] || taskUpdated.isDecimal && taskUpdated.isDecimal[1]) && newNum === 0) {
-        dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_1__.updateTask)({
-          id: task.id,
-          isDecimal: [taskUpdated.isDecimal === undefined ? false : taskUpdated.isDecimal[0], true]
-        }));
+      if (dotFlags[1] && newNum === 0) {
         dispatch((0,_redux_slices_zerosCntSlice__WEBPACK_IMPORTED_MODULE_5__.increment2)());
         return;
       }
       dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_1__.updateTask)({
         id: task.id,
-        num2: new _BigDecimal__WEBPACK_IMPORTED_MODULE_3__["default"](bigDec2.toString() + (dotFlags[1] ? "." : "") + "0".repeat(zerosCnt[1]) + newNum)
+        num2: new _BigDecimal__WEBPACK_IMPORTED_MODULE_3__["default"](bigDec2.toString() + (dotFlags[1] && !bigDec2.toString().includes(".") ? "." : "") + "0".repeat(zerosCnt[1]) + newNum)
       }));
-      dispatch((0,_redux_slices_dotFlagsSlice__WEBPACK_IMPORTED_MODULE_6__.setFlags)([false, false]));
       dispatch((0,_redux_slices_zerosCntSlice__WEBPACK_IMPORTED_MODULE_5__.reset)());
       return;
     }
@@ -5193,7 +5224,7 @@ var ButtonsLeft = function ButtonsLeft(_ref) {
     className: "line-container"
   }, /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_2__["default"], {
     task: task,
-    oper: "fact"
+    oper: "fac"
   }, "x!"), /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_2__["default"], {
     task: task,
     oper: "nthPower"
@@ -5365,28 +5396,35 @@ var Calculator = function Calculator(_ref) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _tasks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../tasks */ "./src/tasks.ts");
-/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../store */ "./src/store.ts");
-/* harmony import */ var _redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../redux/slices/tasksSlice */ "./src/redux/slices/tasksSlice.ts");
+/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ "./node_modules/@babel/runtime/helpers/esm/toConsumableArray.js");
+/* harmony import */ var _tasks__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../tasks */ "./src/tasks.ts");
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../store */ "./src/store.ts");
+/* harmony import */ var _redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../redux/slices/tasksSlice */ "./src/redux/slices/tasksSlice.ts");
+/* harmony import */ var _options_singleOpers__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../options/singleOpers */ "./src/options/singleOpers.ts");
+/* harmony import */ var _UniqDisplay_UniqDisplay__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./UniqDisplay/UniqDisplay */ "./src/components/Calculator/Display/UniqDisplay/UniqDisplay.tsx");
 /* provided dependency */ var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 
 
+
+
+
 var Display = function Display(_ref) {
+  var _taskUpdated$oper2;
   var task = _ref.task;
-  var dispatch = (0,_store__WEBPACK_IMPORTED_MODULE_1__.useTypedDispatch)();
-  var tasks = (0,_store__WEBPACK_IMPORTED_MODULE_1__.useTypedSelector)(function (state) {
+  var dispatch = (0,_store__WEBPACK_IMPORTED_MODULE_2__.useTypedDispatch)();
+  var tasks = (0,_store__WEBPACK_IMPORTED_MODULE_2__.useTypedSelector)(function (state) {
     return state.tasksReducer;
   });
-  var dotFlags = (0,_store__WEBPACK_IMPORTED_MODULE_1__.useTypedSelector)(function (state) {
+  var dotFlags = (0,_store__WEBPACK_IMPORTED_MODULE_2__.useTypedSelector)(function (state) {
     return state.dotFlagsReducer;
   });
-  var taskUpdated = (0,_tasks__WEBPACK_IMPORTED_MODULE_0__.getTask)(tasks, task.id);
-  var zerosCnt = (0,_store__WEBPACK_IMPORTED_MODULE_1__.useTypedSelector)(function (state) {
+  var taskUpdated = (0,_tasks__WEBPACK_IMPORTED_MODULE_1__.getTask)(tasks, task.id);
+  var zerosCnt = (0,_store__WEBPACK_IMPORTED_MODULE_2__.useTypedSelector)(function (state) {
     return state.zerosCntReducer;
   });
   if (taskUpdated === null) {
-    dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_2__.createTask)());
+    dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_3__.createTask)());
   }
   var isEmpty = taskUpdated.num1 === undefined && taskUpdated.oper === undefined && taskUpdated.num2 === undefined && taskUpdated.res === undefined;
   var expr;
@@ -5399,6 +5437,21 @@ var Display = function Display(_ref) {
   } else {
     expr = "0" + (dotFlags[0] ? "." : "");
   }
+  var uniqOpers = (0,_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__["default"])(_options_singleOpers__WEBPACK_IMPORTED_MODULE_4__["default"]);
+  uniqOpers.push("nthPower", "nthRoot");
+  if (uniqOpers.includes((_taskUpdated$oper2 = taskUpdated.oper) !== null && _taskUpdated$oper2 !== void 0 ? _taskUpdated$oper2 : "")) {
+    return /*#__PURE__*/React.createElement("div", {
+      className: "display-container"
+    }, /*#__PURE__*/React.createElement("div", {
+      id: "upper"
+    }, /*#__PURE__*/React.createElement(_UniqDisplay_UniqDisplay__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      task: task
+    })), /*#__PURE__*/React.createElement("div", {
+      id: "lower"
+    }, taskUpdated.res === undefined ? /*#__PURE__*/React.createElement(_UniqDisplay_UniqDisplay__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      task: task
+    }) : taskUpdated.res.toString()));
+  }
   return /*#__PURE__*/React.createElement("div", {
     className: "display-container"
   }, /*#__PURE__*/React.createElement("div", {
@@ -5408,6 +5461,64 @@ var Display = function Display(_ref) {
   }, taskUpdated.res === undefined ? expr : taskUpdated.res.toString()));
 };
 /* harmony default export */ __webpack_exports__["default"] = (Display);
+
+/***/ }),
+
+/***/ "./src/components/Calculator/Display/UniqDisplay/UniqDisplay.tsx":
+/*!***********************************************************************!*\
+  !*** ./src/components/Calculator/Display/UniqDisplay/UniqDisplay.tsx ***!
+  \***********************************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _tasks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../tasks */ "./src/tasks.ts");
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../store */ "./src/store.ts");
+/* provided dependency */ var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+
+var UniqDisplay = function UniqDisplay(_ref) {
+  var _taskUpdated$num2$num, _taskUpdated$num;
+  var task = _ref.task;
+  var tasks = (0,_store__WEBPACK_IMPORTED_MODULE_1__.useTypedSelector)(function (state) {
+    return state.tasksReducer;
+  });
+  var dotFlags = (0,_store__WEBPACK_IMPORTED_MODULE_1__.useTypedSelector)(function (state) {
+    return state.dotFlagsReducer;
+  });
+  var taskUpdated = (0,_tasks__WEBPACK_IMPORTED_MODULE_0__.getTask)(tasks, task.id);
+  var zerosCnt = (0,_store__WEBPACK_IMPORTED_MODULE_1__.useTypedSelector)(function (state) {
+    return state.zerosCntReducer;
+  });
+  var oper = taskUpdated.oper;
+  var num1 = taskUpdated.num1 === undefined ? "0" : taskUpdated.num1.toString() + (dotFlags[0] && !taskUpdated.num1.toString().includes(".") ? "." : "") + "0".repeat(zerosCnt[0]);
+  var num2 = taskUpdated.num2 === undefined ? "0" : taskUpdated.num2.toString() + (dotFlags[1] && !taskUpdated.num2.toString().includes(".") ? "." : "") + "0".repeat(zerosCnt[1]);
+  console.log(oper);
+  switch (oper) {
+    case "fact":
+      return /*#__PURE__*/React.createElement(React.Fragment, null, num1.toString() + "!");
+    case "sin":
+    case "tan":
+    case "cos":
+    case "sqrt":
+    case "ln":
+    case "log":
+      return /*#__PURE__*/React.createElement(React.Fragment, null, oper + " " + num1.toString());
+    case "nthPower":
+      return /*#__PURE__*/React.createElement(React.Fragment, null, num1.toString(), /*#__PURE__*/React.createElement("sup", null, taskUpdated.num2 === undefined ? "?" : num2));
+    case "nthRoot":
+      return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("sup", null, (_taskUpdated$num2$num = (_taskUpdated$num = taskUpdated.num2) === null || _taskUpdated$num === void 0 ? void 0 : _taskUpdated$num.num1.toString()) !== null && _taskUpdated$num2$num !== void 0 ? _taskUpdated$num2$num : "?"), "\u221A", num1.toString());
+    case "square":
+      return /*#__PURE__*/React.createElement(React.Fragment, null, num1.toString(), /*#__PURE__*/React.createElement("sup", null, "2"));
+    case "powerOf10":
+      return /*#__PURE__*/React.createElement(React.Fragment, null, "10", /*#__PURE__*/React.createElement("sup", null, num1.toString()));
+    case "powerOfE":
+      return /*#__PURE__*/React.createElement(React.Fragment, null, "e", /*#__PURE__*/React.createElement("sup", null, num1.toString()));
+    default:
+      throw new Error("no such unique operation: " + oper);
+  }
+};
+/* harmony default export */ __webpack_exports__["default"] = (UniqDisplay);
 
 /***/ }),
 
@@ -5943,13 +6054,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var sort_by__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! sort-by */ "./node_modules/sort-by/index.js");
 /* harmony import */ var sort_by__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(sort_by__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _BigDecimal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./BigDecimal */ "./src/BigDecimal.ts");
+/* harmony import */ var _options_singleOpers__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./options/singleOpers */ "./src/options/singleOpers.ts");
+
 
 
 
 var getTasks = function getTasks() {
   var tasksStr = localStorage.getItem('tasks');
   var tasks = tasksStr === null ? [] : JSON.parse(tasksStr, function (key, value) {
-    if ((key === "num1" || key === "num2" || key === "res") && typeof value === "string" && value.match(/^\d+$/)) {
+    if ((key === "num1" || key === "num2" || key === "res") && typeof value === "string") {
       return new _BigDecimal__WEBPACK_IMPORTED_MODULE_2__["default"](value);
     }
     return value;
@@ -5982,7 +6095,7 @@ var calcTask = function calcTask(state, action) {
   if (!task) throw new Error("No task found for", {
     cause: action.payload
   });
-  if (task.num1 === undefined || task.num2 === undefined || task.oper === undefined) return tasks;
+  if (task.num1 === undefined || task.oper === undefined || task.num2 === undefined && !_options_singleOpers__WEBPACK_IMPORTED_MODULE_3__["default"].includes(task.oper)) return tasks;
   var res;
   switch (task.calcOper) {
     case "+":
@@ -5996,6 +6109,42 @@ var calcTask = function calcTask(state, action) {
       break;
     case "/":
       res = _BigDecimal__WEBPACK_IMPORTED_MODULE_2__["default"].div(task.num1, task.num2);
+      break;
+    case "nthPower":
+      res = _BigDecimal__WEBPACK_IMPORTED_MODULE_2__["default"].pow(task.num1, task.num2);
+      break;
+    case "nthRoot":
+      res = _BigDecimal__WEBPACK_IMPORTED_MODULE_2__["default"].nthRoot(task.num1, task.num2.num1);
+      break;
+    case "sin":
+      res = _BigDecimal__WEBPACK_IMPORTED_MODULE_2__["default"].sin(task.num1);
+      break;
+    case "cos":
+      res = _BigDecimal__WEBPACK_IMPORTED_MODULE_2__["default"].cos(task.num1);
+      break;
+    case "tan":
+      res = _BigDecimal__WEBPACK_IMPORTED_MODULE_2__["default"].tan(task.num1);
+      break;
+    case "log":
+      res = _BigDecimal__WEBPACK_IMPORTED_MODULE_2__["default"].log(task.num1);
+      break;
+    case "fac":
+      res = _BigDecimal__WEBPACK_IMPORTED_MODULE_2__["default"].fac(task.num1);
+      break;
+    case "ln":
+      res = _BigDecimal__WEBPACK_IMPORTED_MODULE_2__["default"].fac(task.num1);
+      break;
+    case "sqrt":
+      res = _BigDecimal__WEBPACK_IMPORTED_MODULE_2__["default"].nthRoot(task.num1);
+      break;
+    case "square":
+      res = _BigDecimal__WEBPACK_IMPORTED_MODULE_2__["default"].pow(task.num1, new _BigDecimal__WEBPACK_IMPORTED_MODULE_2__["default"]("2"));
+      break;
+    case "powerOf10":
+      res = _BigDecimal__WEBPACK_IMPORTED_MODULE_2__["default"].pow(new _BigDecimal__WEBPACK_IMPORTED_MODULE_2__["default"]("10"), task.num1);
+      break;
+    case "powerOfE":
+      res = _BigDecimal__WEBPACK_IMPORTED_MODULE_2__["default"].pow(_BigDecimal__WEBPACK_IMPORTED_MODULE_2__["default"].E(), task.num1);
       break;
     default:
       throw new Error("No such operation:", {
@@ -43957,6 +44106,25 @@ function _arrayWithHoles(arr) {
 
 /***/ }),
 
+/***/ "./node_modules/@babel/runtime/helpers/esm/arrayWithoutHoles.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/arrayWithoutHoles.js ***!
+  \**********************************************************************/
+/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": function() { return /* binding */ _arrayWithoutHoles; }
+/* harmony export */ });
+/* harmony import */ var _arrayLikeToArray_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./arrayLikeToArray.js */ "./node_modules/@babel/runtime/helpers/esm/arrayLikeToArray.js");
+
+function _arrayWithoutHoles(arr) {
+  if (Array.isArray(arr)) return (0,_arrayLikeToArray_js__WEBPACK_IMPORTED_MODULE_0__["default"])(arr);
+}
+
+/***/ }),
+
 /***/ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js":
 /*!*********************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js ***!
@@ -44083,6 +44251,23 @@ function _defineProperty(obj, key, value) {
 
 /***/ }),
 
+/***/ "./node_modules/@babel/runtime/helpers/esm/iterableToArray.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/iterableToArray.js ***!
+  \********************************************************************/
+/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": function() { return /* binding */ _iterableToArray; }
+/* harmony export */ });
+function _iterableToArray(iter) {
+  if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
+}
+
+/***/ }),
+
 /***/ "./node_modules/@babel/runtime/helpers/esm/iterableToArrayLimit.js":
 /*!*************************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/esm/iterableToArrayLimit.js ***!
@@ -44141,6 +44326,23 @@ function _nonIterableRest() {
 
 /***/ }),
 
+/***/ "./node_modules/@babel/runtime/helpers/esm/nonIterableSpread.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/nonIterableSpread.js ***!
+  \**********************************************************************/
+/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": function() { return /* binding */ _nonIterableSpread; }
+/* harmony export */ });
+function _nonIterableSpread() {
+  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+/***/ }),
+
 /***/ "./node_modules/@babel/runtime/helpers/esm/slicedToArray.js":
 /*!******************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/esm/slicedToArray.js ***!
@@ -44162,6 +44364,31 @@ __webpack_require__.r(__webpack_exports__);
 
 function _slicedToArray(arr, i) {
   return (0,_arrayWithHoles_js__WEBPACK_IMPORTED_MODULE_0__["default"])(arr) || (0,_iterableToArrayLimit_js__WEBPACK_IMPORTED_MODULE_1__["default"])(arr, i) || (0,_unsupportedIterableToArray_js__WEBPACK_IMPORTED_MODULE_2__["default"])(arr, i) || (0,_nonIterableRest_js__WEBPACK_IMPORTED_MODULE_3__["default"])();
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/toConsumableArray.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/toConsumableArray.js ***!
+  \**********************************************************************/
+/***/ (function(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": function() { return /* binding */ _toConsumableArray; }
+/* harmony export */ });
+/* harmony import */ var _arrayWithoutHoles_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./arrayWithoutHoles.js */ "./node_modules/@babel/runtime/helpers/esm/arrayWithoutHoles.js");
+/* harmony import */ var _iterableToArray_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./iterableToArray.js */ "./node_modules/@babel/runtime/helpers/esm/iterableToArray.js");
+/* harmony import */ var _unsupportedIterableToArray_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./unsupportedIterableToArray.js */ "./node_modules/@babel/runtime/helpers/esm/unsupportedIterableToArray.js");
+/* harmony import */ var _nonIterableSpread_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./nonIterableSpread.js */ "./node_modules/@babel/runtime/helpers/esm/nonIterableSpread.js");
+
+
+
+
+function _toConsumableArray(arr) {
+  return (0,_arrayWithoutHoles_js__WEBPACK_IMPORTED_MODULE_0__["default"])(arr) || (0,_iterableToArray_js__WEBPACK_IMPORTED_MODULE_1__["default"])(arr) || (0,_unsupportedIterableToArray_js__WEBPACK_IMPORTED_MODULE_2__["default"])(arr) || (0,_nonIterableSpread_js__WEBPACK_IMPORTED_MODULE_3__["default"])();
 }
 
 /***/ }),
