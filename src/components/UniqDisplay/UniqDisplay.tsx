@@ -1,5 +1,5 @@
-import { getTask } from "../../../../tasks";
-import { useTypedSelector } from "../../../../store";
+import { getTask } from "../../tasks";
+import { useTypedSelector } from "../../store";
 import TaskType from "src/types/Task";
 type DisplayProps = {
     task: TaskType

@@ -3,7 +3,7 @@ import { useTypedDispatch, useTypedSelector } from "../../../store";
 import TaskType from "src/types/Task";
 import { createTask } from "../../../redux/slices/tasksSlice";
 import singleOpers from "../../../options/singleOpers";
-import UniqDisplay from "./UniqDisplay/UniqDisplay";
+import UniqDisplay from "../../UniqDisplay/UniqDisplay";
 type DisplayProps = {
     task: TaskType
 }
