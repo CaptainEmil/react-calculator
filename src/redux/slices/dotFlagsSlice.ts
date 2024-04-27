@@ -4,7 +4,7 @@ export const dotFlagsSlice = createSlice({
     name: 'dotFlags',
     initialState: [false, false],
     reducers: {
-        setFlags: (state, action) => {
+        setFlags: (_, action) => {
             return action.payload;
         }
     }

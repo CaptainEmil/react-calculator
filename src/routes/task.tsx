@@ -14,7 +14,6 @@ import { setAns } from "../redux/slices/ansSlice";
 
 export async function action({ request, params }: ActionFunctionArgs<any>) {
 	const tasks = store.getState().tasksReducer;
-	const ans = store.getState().ansReducer;
 	const task = getTask(tasks, params.taskId);
 	let formData = await request.formData();
 
@@ -23,7 +22,7 @@ export async function action({ request, params }: ActionFunctionArgs<any>) {
 		let oper = i[1];
 
 		if (oper === "equals") {
-			const res=store.dispatch(calcTask(params.taskId!));
+			const res = store.dispatch(calcTask(params.taskId!));
 			store.dispatch(setAns(res));
 			return res;
 		}
@@ -36,7 +35,7 @@ export async function action({ request, params }: ActionFunctionArgs<any>) {
 				num2: undefined,
 				res: undefined
 			}));
-			store.dispatch(setFlags([false,false]));
+			store.dispatch(setFlags([false, false]));
 			return redirect(``);
 		}
 
@@ -44,14 +43,7 @@ export async function action({ request, params }: ActionFunctionArgs<any>) {
 
 		return redirect(`/${store.getState().tasksReducer[0]!.id}`);
 	}
-
-
-
-	return store.dispatch(updateTask({
-		id: params.taskId,
-		// isDone: formData.get("isDone") === "true",
-	}
-	));
+	return;
 }
 
 export function loader({ params }: LoaderFunctionArgs): { task: Nullable<TaskType> } {
@@ -79,19 +71,3 @@ const Contact = () => {
 }
 
 export default Contact;
-
-
-
-
-
-{/* <button
-name="isDone"
-value={isDone ? "false" : "true"}
-aria-label={
-	isDone
-		? "Remove from isDones"
-		: "Add to isDones"
-}
->
-{isDone ? "Done" : "Undone"}
-</button> */}

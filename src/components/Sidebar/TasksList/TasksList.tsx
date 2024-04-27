@@ -4,11 +4,6 @@ import { useTypedSelector } from "../../../store";
 const TasksList = () => {
     const tasks = useTypedSelector((state) => state.tasksReducer);
 
-    const bigIntOpt: BigIntToLocaleStringOptions = {
-        notation: 'scientific',
-        maximumFractionDigits: 3
-    };
-
     return (
         <ul>
             {tasks

@@ -1,10 +1,10 @@
-import { Reducer, UnknownAction, createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 export const ansSlice= createSlice({
     name: 'ans',
     initialState: "",
     reducers: {
-        setAns: (state, action) => {
+        setAns: (_, action) => {
             return action.payload.payload;
         }
     }
