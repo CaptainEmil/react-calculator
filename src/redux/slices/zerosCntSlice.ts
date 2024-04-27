@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export const zerosCntSlice = createSlice({
-    name: 'tasks',
+    name: 'zerosCnt',
     initialState: [0, 0],
     reducers: {
         increment1: (state) => {

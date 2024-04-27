@@ -1,8 +1,6 @@
 import { getTask } from "../../../../tasks";
-import { useTypedDispatch, useTypedSelector } from "../../../../store";
+import { useTypedSelector } from "../../../../store";
 import TaskType from "src/types/Task";
-import { createTask } from "../../../../redux/slices/tasksSlice";
-import BigDecimal from "src/BigDecimal";
 type DisplayProps = {
     task: TaskType
 }

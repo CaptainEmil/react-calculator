@@ -34,10 +34,8 @@ const Display = ({ task }: DisplayProps) => {
     }
     const uniqOpers = [...singleOpers];
     uniqOpers.push("nthPower", "nthRoot");
-    console.log(taskUpdated.oper,taskUpdated.calcOper);
 
     if (taskUpdated.oper !== undefined && uniqOpers.includes(taskUpdated.calcOper ?? "")) {
-        console.log(taskUpdated.oper);
 
         return (
             <div className="display-container">

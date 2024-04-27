@@ -5019,6 +5019,9 @@ var Button = function Button(_ref) {
   var dotFlags = (0,_store__WEBPACK_IMPORTED_MODULE_0__.useTypedSelector)(function (state) {
     return state.dotFlagsReducer;
   });
+  var ans = (0,_store__WEBPACK_IMPORTED_MODULE_0__.useTypedSelector)(function (state) {
+    return state.ansReducer;
+  });
   var navigate = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_7__.useNavigate)();
   var handleClick = function handleClick(e) {
     var text = e.currentTarget.textContent;
@@ -5036,6 +5039,25 @@ var Button = function Button(_ref) {
         num2: _BigDecimal__WEBPACK_IMPORTED_MODULE_3__["default"].PI()
       }));
       dispatch((0,_redux_slices_dotFlagsSlice__WEBPACK_IMPORTED_MODULE_6__.setFlags)([false, true]));
+      return;
+    }
+    if (oper === "ans") {
+      console.log(ans);
+      var _task = (0,_tasks__WEBPACK_IMPORTED_MODULE_2__.getTask)(tasks, ans);
+      var bigDec = _task === null ? new _BigDecimal__WEBPACK_IMPORTED_MODULE_3__["default"]("0") : _task.res;
+      if (taskUpdated.oper === undefined || _options_singleOpers__WEBPACK_IMPORTED_MODULE_4__["default"].includes(taskUpdated.calcOper)) {
+        dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_1__.updateTask)({
+          id: _task.id,
+          num1: bigDec
+        }));
+        dispatch((0,_redux_slices_dotFlagsSlice__WEBPACK_IMPORTED_MODULE_6__.setFlags)([ans.toString().includes("."), false]));
+        return;
+      }
+      dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_1__.updateTask)({
+        id: _task.id,
+        num2: bigDec
+      }));
+      dispatch((0,_redux_slices_dotFlagsSlice__WEBPACK_IMPORTED_MODULE_6__.setFlags)([false, ans.toString().includes(".")]));
       return;
     }
     if (oper === "e") {
@@ -5410,7 +5432,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var Display = function Display(_ref) {
-  var _taskUpdated$oper2;
+  var _taskUpdated$calcOper;
   var task = _ref.task;
   var dispatch = (0,_store__WEBPACK_IMPORTED_MODULE_2__.useTypedDispatch)();
   var tasks = (0,_store__WEBPACK_IMPORTED_MODULE_2__.useTypedSelector)(function (state) {
@@ -5439,7 +5461,7 @@ var Display = function Display(_ref) {
   }
   var uniqOpers = (0,_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__["default"])(_options_singleOpers__WEBPACK_IMPORTED_MODULE_4__["default"]);
   uniqOpers.push("nthPower", "nthRoot");
-  if (uniqOpers.includes((_taskUpdated$oper2 = taskUpdated.oper) !== null && _taskUpdated$oper2 !== void 0 ? _taskUpdated$oper2 : "")) {
+  if (taskUpdated.oper !== undefined && uniqOpers.includes((_taskUpdated$calcOper = taskUpdated.calcOper) !== null && _taskUpdated$calcOper !== void 0 ? _taskUpdated$calcOper : "")) {
     return /*#__PURE__*/React.createElement("div", {
       className: "display-container"
     }, /*#__PURE__*/React.createElement("div", {
@@ -5490,12 +5512,12 @@ var UniqDisplay = function UniqDisplay(_ref) {
   var zerosCnt = (0,_store__WEBPACK_IMPORTED_MODULE_1__.useTypedSelector)(function (state) {
     return state.zerosCntReducer;
   });
-  var oper = taskUpdated.oper;
+  var oper = taskUpdated.calcOper;
   var num1 = taskUpdated.num1 === undefined ? "0" : taskUpdated.num1.toString() + (dotFlags[0] && !taskUpdated.num1.toString().includes(".") ? "." : "") + "0".repeat(zerosCnt[0]);
   var num2 = taskUpdated.num2 === undefined ? "0" : taskUpdated.num2.toString() + (dotFlags[1] && !taskUpdated.num2.toString().includes(".") ? "." : "") + "0".repeat(zerosCnt[1]);
   console.log(oper);
   switch (oper) {
-    case "fact":
+    case "fac":
       return /*#__PURE__*/React.createElement(React.Fragment, null, num1.toString() + "!");
     case "sin":
     case "tan":
@@ -5503,7 +5525,7 @@ var UniqDisplay = function UniqDisplay(_ref) {
     case "sqrt":
     case "ln":
     case "log":
-      return /*#__PURE__*/React.createElement(React.Fragment, null, oper + " " + num1.toString());
+      return /*#__PURE__*/React.createElement(React.Fragment, null, taskUpdated.oper + " " + num1.toString());
     case "nthPower":
       return /*#__PURE__*/React.createElement(React.Fragment, null, num1.toString(), /*#__PURE__*/React.createElement("sup", null, taskUpdated.num2 === undefined ? "?" : num2));
     case "nthRoot":
@@ -5649,8 +5671,37 @@ var ErrorPage = function ErrorPage() {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-var singleOpers = ["ln", "log", "sin", "tan", "cos", "fact", "sqrt"];
+var singleOpers = ["ln", "log", "sin", "tan", "cos", "fac", "sqrt"];
 /* harmony default export */ __webpack_exports__["default"] = (singleOpers);
+
+/***/ }),
+
+/***/ "./src/redux/slices/ansSlice.ts":
+/*!**************************************!*\
+  !*** ./src/redux/slices/ansSlice.ts ***!
+  \**************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ansSlice: function() { return /* binding */ ansSlice; },
+/* harmony export */   setAns: function() { return /* binding */ setAns; }
+/* harmony export */ });
+/* harmony import */ var _reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @reduxjs/toolkit */ "./node_modules/@reduxjs/toolkit/dist/redux-toolkit.modern.mjs");
+
+var ansSlice = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.createSlice)({
+  name: 'ans',
+  initialState: "",
+  reducers: {
+    setAns: function setAns(state, action) {
+      return action.payload.payload;
+    }
+  }
+});
+var setAns = ansSlice.actions.setAns;
+
+/* harmony default export */ __webpack_exports__["default"] = (ansSlice.reducer);
 
 /***/ }),
 
@@ -5669,7 +5720,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @reduxjs/toolkit */ "./node_modules/@reduxjs/toolkit/dist/redux-toolkit.modern.mjs");
 
 var dotFlagsSlice = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.createSlice)({
-  name: 'tasks',
+  name: 'dotFlags',
   initialState: [false, false],
   reducers: {
     setFlags: function setFlags(state, action) {
@@ -5743,7 +5794,7 @@ function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbol
 function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 
 var zerosCntSlice = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_1__.createSlice)({
-  name: 'tasks',
+  name: 'zerosCnt',
   initialState: [0, 0],
   reducers: {
     increment1: function increment1(state) {
@@ -5848,13 +5899,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-router-dom */ "./node_modules/@remix-run/router/dist/router.js");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/dist/index.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-router-dom */ "./node_modules/@remix-run/router/dist/router.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/dist/index.js");
 /* harmony import */ var _tasks__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../tasks */ "./src/tasks.ts");
 /* harmony import */ var _redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../redux/slices/tasksSlice */ "./src/redux/slices/tasksSlice.ts");
 /* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../store */ "./src/store.ts");
 /* harmony import */ var _components_Calculator_Calculator__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/Calculator/Calculator */ "./src/components/Calculator/Calculator.tsx");
 /* harmony import */ var _redux_slices_dotFlagsSlice__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../redux/slices/dotFlagsSlice */ "./src/redux/slices/dotFlagsSlice.ts");
+/* harmony import */ var _redux_slices_ansSlice__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../redux/slices/ansSlice */ "./src/redux/slices/ansSlice.ts");
 /* provided dependency */ var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 
@@ -5868,40 +5920,44 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 
 
+
 function action(_x) {
   return _action.apply(this, arguments);
 }
 function _action() {
   _action = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default().mark(function _callee(_ref) {
-    var request, params, tasks, task, formData, _iterator, _step, i, oper;
+    var request, params, tasks, ans, task, formData, _iterator, _step, i, oper, res;
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
           request = _ref.request, params = _ref.params;
           tasks = _store__WEBPACK_IMPORTED_MODULE_4__["default"].getState().tasksReducer;
+          ans = _store__WEBPACK_IMPORTED_MODULE_4__["default"].getState().ansReducer;
           task = (0,_tasks__WEBPACK_IMPORTED_MODULE_2__.getTask)(tasks, params.taskId);
-          _context.next = 5;
+          _context.next = 6;
           return request.formData();
-        case 5:
+        case 6:
           formData = _context.sent;
           _iterator = _createForOfIteratorHelper(formData);
-          _context.prev = 7;
+          _context.prev = 8;
           _iterator.s();
-        case 9:
+        case 10:
           if ((_step = _iterator.n()).done) {
-            _context.next = 22;
+            _context.next = 25;
             break;
           }
           i = _step.value;
           oper = i[1];
           if (!(oper === "equals")) {
-            _context.next = 14;
+            _context.next = 17;
             break;
           }
-          return _context.abrupt("return", _store__WEBPACK_IMPORTED_MODULE_4__["default"].dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_3__.calcTask)(params.taskId)));
-        case 14:
+          res = _store__WEBPACK_IMPORTED_MODULE_4__["default"].dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_3__.calcTask)(params.taskId));
+          _store__WEBPACK_IMPORTED_MODULE_4__["default"].dispatch((0,_redux_slices_ansSlice__WEBPACK_IMPORTED_MODULE_7__.setAns)(res));
+          return _context.abrupt("return", res);
+        case 17:
           if (!((task === null || task === void 0 ? void 0 : task.num1) === undefined || (task === null || task === void 0 ? void 0 : task.oper) === undefined || (task === null || task === void 0 ? void 0 : task.num2) === undefined || (task === null || task === void 0 ? void 0 : task.res) === undefined)) {
-            _context.next = 18;
+            _context.next = 21;
             break;
           }
           _store__WEBPACK_IMPORTED_MODULE_4__["default"].dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_3__.updateTask)({
@@ -5909,38 +5965,37 @@ function _action() {
             num1: undefined,
             oper: undefined,
             num2: undefined,
-            res: undefined,
-            isDecimal: undefined
+            res: undefined
           }));
           _store__WEBPACK_IMPORTED_MODULE_4__["default"].dispatch((0,_redux_slices_dotFlagsSlice__WEBPACK_IMPORTED_MODULE_6__.setFlags)([false, false]));
-          return _context.abrupt("return", (0,react_router_dom__WEBPACK_IMPORTED_MODULE_7__.redirect)(""));
-        case 18:
+          return _context.abrupt("return", (0,react_router_dom__WEBPACK_IMPORTED_MODULE_8__.redirect)(""));
+        case 21:
           _store__WEBPACK_IMPORTED_MODULE_4__["default"].dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_3__.createTask)());
-          return _context.abrupt("return", (0,react_router_dom__WEBPACK_IMPORTED_MODULE_7__.redirect)("/".concat(_store__WEBPACK_IMPORTED_MODULE_4__["default"].getState().tasksReducer[0].id)));
-        case 20:
-          _context.next = 9;
+          return _context.abrupt("return", (0,react_router_dom__WEBPACK_IMPORTED_MODULE_8__.redirect)("/".concat(_store__WEBPACK_IMPORTED_MODULE_4__["default"].getState().tasksReducer[0].id)));
+        case 23:
+          _context.next = 10;
           break;
-        case 22:
-          _context.next = 27;
+        case 25:
+          _context.next = 30;
           break;
-        case 24:
-          _context.prev = 24;
-          _context.t0 = _context["catch"](7);
-          _iterator.e(_context.t0);
         case 27:
           _context.prev = 27;
-          _iterator.f();
-          return _context.finish(27);
+          _context.t0 = _context["catch"](8);
+          _iterator.e(_context.t0);
         case 30:
+          _context.prev = 30;
+          _iterator.f();
+          return _context.finish(30);
+        case 33:
           return _context.abrupt("return", _store__WEBPACK_IMPORTED_MODULE_4__["default"].dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_3__.updateTask)({
             id: params.taskId
             // isDone: formData.get("isDone") === "true",
           })));
-        case 31:
+        case 34:
         case "end":
           return _context.stop();
       }
-    }, _callee, null, [[7, 24, 27, 30]]);
+    }, _callee, null, [[8, 27, 30, 33]]);
   }));
   return _action.apply(this, arguments);
 }
@@ -5959,7 +6014,7 @@ function loader(_ref2) {
   };
 }
 var Contact = function Contact() {
-  var _ref3 = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_8__.useLoaderData)(),
+  var _ref3 = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_9__.useLoaderData)(),
     task = _ref3.task;
   var tasks = (0,_store__WEBPACK_IMPORTED_MODULE_4__.useTypedSelector)(function (state) {
     return state.tasksReducer;
@@ -5999,21 +6054,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   useTypedDispatch: function() { return /* binding */ useTypedDispatch; },
 /* harmony export */   useTypedSelector: function() { return /* binding */ useTypedSelector; }
 /* harmony export */ });
-/* harmony import */ var _reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @reduxjs/toolkit */ "./node_modules/@reduxjs/toolkit/dist/redux-toolkit.modern.mjs");
+/* harmony import */ var _reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @reduxjs/toolkit */ "./node_modules/@reduxjs/toolkit/dist/redux-toolkit.modern.mjs");
 /* harmony import */ var _redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./redux/slices/tasksSlice */ "./src/redux/slices/tasksSlice.ts");
-/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/dist/react-redux.mjs");
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/dist/react-redux.mjs");
 /* harmony import */ var _redux_slices_zerosCntSlice__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./redux/slices/zerosCntSlice */ "./src/redux/slices/zerosCntSlice.ts");
 /* harmony import */ var _redux_slices_dotFlagsSlice__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./redux/slices/dotFlagsSlice */ "./src/redux/slices/dotFlagsSlice.ts");
+/* harmony import */ var _redux_slices_ansSlice__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./redux/slices/ansSlice */ "./src/redux/slices/ansSlice.ts");
 
 
 
 
 
-var store = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_3__.configureStore)({
+
+var store = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_4__.configureStore)({
   reducer: {
     tasksReducer: _redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_0__["default"],
     zerosCntReducer: _redux_slices_zerosCntSlice__WEBPACK_IMPORTED_MODULE_1__["default"],
-    dotFlagsReducer: _redux_slices_dotFlagsSlice__WEBPACK_IMPORTED_MODULE_2__["default"]
+    dotFlagsReducer: _redux_slices_dotFlagsSlice__WEBPACK_IMPORTED_MODULE_2__["default"],
+    ansReducer: _redux_slices_ansSlice__WEBPACK_IMPORTED_MODULE_3__["default"]
   },
   middleware: function middleware(getDefaultMiddleware) {
     return getDefaultMiddleware({
@@ -6028,8 +6086,8 @@ var store = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_3__.configureStore)({
 // Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
 
 // Use throughout your app instead of plain `useDispatch` and `useSelector`
-var useTypedDispatch = react_redux__WEBPACK_IMPORTED_MODULE_4__.useDispatch.withTypes();
-var useTypedSelector = react_redux__WEBPACK_IMPORTED_MODULE_4__.useSelector.withTypes();
+var useTypedDispatch = react_redux__WEBPACK_IMPORTED_MODULE_5__.useDispatch.withTypes();
+var useTypedSelector = react_redux__WEBPACK_IMPORTED_MODULE_5__.useSelector.withTypes();
 
 /***/ }),
 

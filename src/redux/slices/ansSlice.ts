@@ -1,12 +1,11 @@
-import { createSlice } from "@reduxjs/toolkit";
-import BigDecimal from "src/BigDecimal";
+import { Reducer, UnknownAction, createSlice } from "@reduxjs/toolkit";
 
-export const ansSlice = createSlice({
-    name: 'tasks',
-    initialState: new BigDecimal("0"),
+export const ansSlice= createSlice({
+    name: 'ans',
+    initialState: "",
     reducers: {
         setAns: (state, action) => {
-            return action.payload;
+            return action.payload.payload;
         }
     }
 });

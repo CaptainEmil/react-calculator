@@ -7,12 +7,14 @@ import { updateTask } from "../redux/slices/tasksSlice"
 import store, { useTypedSelector } from "../store";
 import Calculator from "../components/Calculator/Calculator";
 import { setFlags } from "../redux/slices/dotFlagsSlice";
+import { setAns } from "../redux/slices/ansSlice";
 
 
 
 
 export async function action({ request, params }: ActionFunctionArgs<any>) {
 	const tasks = store.getState().tasksReducer;
+	const ans = store.getState().ansReducer;
 	const task = getTask(tasks, params.taskId);
 	let formData = await request.formData();
 
@@ -21,7 +23,9 @@ export async function action({ request, params }: ActionFunctionArgs<any>) {
 		let oper = i[1];
 
 		if (oper === "equals") {
-			return store.dispatch(calcTask(params.taskId!));
+			const res=store.dispatch(calcTask(params.taskId!));
+			store.dispatch(setAns(res));
+			return res;
 		}
 
 		if (task?.num1 === undefined || task?.oper === undefined || task?.num2 === undefined || task?.res === undefined) {
@@ -30,8 +34,7 @@ export async function action({ request, params }: ActionFunctionArgs<any>) {
 				num1: undefined,
 				oper: undefined,
 				num2: undefined,
-				res: undefined,
-				isDecimal: undefined
+				res: undefined
 			}));
 			store.dispatch(setFlags([false,false]));
 			return redirect(``);

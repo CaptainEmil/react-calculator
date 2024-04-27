@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export const dotFlagsSlice = createSlice({
-    name: 'tasks',
+    name: 'dotFlags',
     initialState: [false, false],
     reducers: {
         setFlags: (state, action) => {

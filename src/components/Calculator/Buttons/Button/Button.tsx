@@ -22,6 +22,7 @@ const Button = ({ task, children, oper, id }: ButtonProps) => {
     const taskUpdated = getTask(tasks, task.id) as TaskType;
     const zerosCnt = useTypedSelector((state) => state.zerosCntReducer);
     const dotFlags = useTypedSelector((state) => state.dotFlagsReducer);
+    const ans=useTypedSelector((state) => state.ansReducer);
     const navigate = useNavigate();
 
     const handleClick: React.MouseEventHandler<HTMLButtonElement> | undefined = e => {
@@ -35,6 +36,19 @@ const Button = ({ task, children, oper, id }: ButtonProps) => {
             }
             dispatch(updateTask({ id: task!.id, num2: BigDecimal.PI() }));
             dispatch(setFlags([false, true]));
+            return;
+        }
+
+        if (oper === "ans") {
+            const task=getTask(tasks,ans);
+            const bigDec=task===null?new BigDecimal("0"):task.res;
+            if (taskUpdated.oper === undefined || singleOpers.includes(taskUpdated.calcOper!)) {
+                dispatch(updateTask({ id: taskUpdated!.id, num1:bigDec}));
+                dispatch(setFlags([ans.toString().includes("."), false]));
+                return;
+            }
+            dispatch(updateTask({ id: taskUpdated!.id, num2: bigDec }));
+            dispatch(setFlags([false, ans.toString().includes(".")]));
             return;
         }
 
