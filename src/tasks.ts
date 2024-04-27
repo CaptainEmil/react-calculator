@@ -3,12 +3,13 @@ import TaskType from "./types/Task";
 import Nullable from "./types/Nullable";
 import { CaseReducer, PayloadAction } from "@reduxjs/toolkit";
 import BigDecimal from "./BigDecimal";
+import singleOpers from "./options/singleOpers";
 
 
 export const getTasks = (): TaskType[] => {
 	const tasksStr = localStorage.getItem('tasks');
 	let tasks = tasksStr === null ? [] : JSON.parse(tasksStr, (key, value) => {
-		if ((key === "num1" || key === "num2" || key === "res") && typeof value === "string" && value.match(/^\d+$/)) {
+		if ((key === "num1" || key === "num2" || key === "res") && typeof value === "string") {
 			return new BigDecimal(value);
 		}
 		return value;
@@ -43,22 +44,28 @@ export const calcTask: CaseReducer<TaskType[], PayloadAction<string>> = (state, 
 
 	if (!task) throw new Error("No task found for", { cause: action.payload });
 
-	if (task.num1 === undefined || task.num2 === undefined || task.oper === undefined) return tasks;
+	if (task.num1 === undefined || task.oper === undefined || (task.num2 === undefined && !singleOpers.includes(task.oper))) return tasks;
 
 	let res: BigDecimal;
 
 	switch (task.calcOper) {
 		case "+":
-			res = BigDecimal.sum(task.num1, task.num2);
+			res = BigDecimal.sum(task.num1, task.num2!);
 			break;
 		case "-":
-			res = BigDecimal.diff(task.num1, task.num2);
+			res = BigDecimal.diff(task.num1, task.num2!);
 			break;
 		case "*":
-			res = BigDecimal.prod(task.num1, task.num2);
+			res = BigDecimal.prod(task.num1, task.num2!);
 			break;
 		case "/":
-			res = BigDecimal.div(task.num1, task.num2);
+			res = BigDecimal.div(task.num1, task.num2!);
+			break;
+		case "nthPower":
+			res = BigDecimal.pow(task.num1, task.num2!);
+			break;
+		case "nthRoot":
+			res = BigDecimal.nthRoot(task.num1, task.num2!.num1);
 			break;
 		default:
 			throw new Error("No such operation:", { cause: task.calcOper });

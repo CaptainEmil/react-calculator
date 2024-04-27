@@ -187,18 +187,28 @@ export default class BigDecimal {
         return fact;
     }
 
+    static bigIntPow(x: bigint, n: bigint): bigint {
+
+        if (n == 0n) return 1n;
+        if (n % 2n == 0n) return BigDecimal.bigIntPow(x * x, n / 2n);
+        return x * BigDecimal.bigIntPow(x, n - 1n);
+    }
+
     static bigIntNthRoot(base: bigint, root: bigint) {
         let s = base + 1n;
         let k1 = root - 1n;
         let u = base;
         while (u < s) {
             s = u;
-            u = ((u * k1) + base / (u ** k1)) / root;
+            u = ((u * k1) + base / BigDecimal.bigIntPow(u, k1)) / root;
         }
         return s;
     }
 
+
     static nthRoot(bigDec: BigDecimal, root: bigint) {
+        console.log(bigDec.num1, root, typeof bigDec.num1, typeof root);
+
         const arr = [new BigDecimal(BigDecimal.bigIntNthRoot(bigDec.num1, root).toString())];
 
         for (let i = 1; i < 10; ++i) {

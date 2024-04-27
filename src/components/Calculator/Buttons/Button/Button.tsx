@@ -62,13 +62,10 @@ const Button = ({ task, children, oper, id }: ButtonProps) => {
         if (taskUpdated.res === undefined) {
             const bigDec1 = taskUpdated.num1 ?? new BigDecimal("0");
             const bigDec2 = taskUpdated.num2 ?? new BigDecimal("0");
-
+            
             if (taskUpdated.oper === undefined || singleOpers.includes(taskUpdated.calcOper!)) {
-                console.log(dotFlags[0]);
-
 
                 if ((dotFlags[0]) && newNum === 0) {
-
                     dispatch(increment1());
                     return;
                 }
@@ -80,7 +77,6 @@ const Button = ({ task, children, oper, id }: ButtonProps) => {
             }
 
             if ((dotFlags[1]) && newNum === 0) {
-
                 dispatch(increment2());
                 return;
             }
