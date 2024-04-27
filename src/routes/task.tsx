@@ -8,6 +8,7 @@ import store, { useTypedSelector } from "../store";
 import Calculator from "../components/Calculator/Calculator";
 import { setFlags } from "../redux/slices/dotFlagsSlice";
 import { setAns } from "../redux/slices/ansSlice";
+import singleOpers from "../options/singleOpers";
 
 
 
@@ -27,7 +28,7 @@ export async function action({ request, params }: ActionFunctionArgs<any>) {
 			return res;
 		}
 
-		if (task?.num1 === undefined || task?.oper === undefined || task?.num2 === undefined || task?.res === undefined) {
+		if (task?.num1 === undefined || task?.oper === undefined || (task?.num2 === undefined&&!singleOpers.includes(task?.calcOper!)) || task?.res === undefined) {
 			store.dispatch(updateTask({
 				id: params.taskId,
 				num1: undefined,

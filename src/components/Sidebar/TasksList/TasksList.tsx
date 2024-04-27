@@ -25,7 +25,7 @@ const TasksList = () => {
                                         : ""
                             }
                         >
-                            {uniqOpers.includes(task.calcOper ?? "") ? (<UniqDisplay task={task}></UniqDisplay>) : expr}
+                            {uniqOpers.includes(task.calcOper ?? "") ? (<><UniqDisplay task={task}></UniqDisplay>{task.res === undefined ? "" : `= ${task.res.toString()}`}</>) : expr}
                         </NavLink>
                         <div className="button-container">
                             <Form
