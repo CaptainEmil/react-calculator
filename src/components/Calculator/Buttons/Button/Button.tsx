@@ -27,15 +27,35 @@ const Button = ({ task, children, oper, id }: ButtonProps) => {
     const handleClick: React.MouseEventHandler<HTMLButtonElement> | undefined = e => {
         const text = e.currentTarget.textContent;
 
+        if (oper === "pi") {
+            if (taskUpdated.oper === undefined || singleOpers.includes(taskUpdated.calcOper!)) {
+                dispatch(updateTask({ id: task!.id, num1: BigDecimal.PI() }));
+                dispatch(setFlags([true, false]));
+                return;
+            }
+            dispatch(updateTask({ id: task!.id, num2: BigDecimal.PI() }));
+            dispatch(setFlags([false, true]));
+            return;
+        }
+
+
+        if (oper === "e") {
+            if (taskUpdated.oper === undefined || singleOpers.includes(taskUpdated.calcOper!)) {
+                dispatch(updateTask({ id: task!.id, num1: BigDecimal.E() }));
+                dispatch(setFlags([true, false]));
+                return;
+            }
+            dispatch(updateTask({ id: task!.id, num2: BigDecimal.E() }));
+            dispatch(setFlags([false, true]));
+            return;
+        }
+
         if (oper === ".") {
-            if (taskUpdated.num2 !== undefined && !taskUpdated.num2.toString().includes(".")) {
+            if (taskUpdated.num2 !== undefined) {
                 dispatch(setFlags([false, true]));
                 return;
             }
-
-            if (!(taskUpdated.num1 ?? 0).toString().includes(".")) {
-                dispatch(setFlags([true, false]));
-            }
+            dispatch(setFlags([true, false]));
             return;
         }
 
@@ -62,7 +82,7 @@ const Button = ({ task, children, oper, id }: ButtonProps) => {
         if (taskUpdated.res === undefined) {
             const bigDec1 = taskUpdated.num1 ?? new BigDecimal("0");
             const bigDec2 = taskUpdated.num2 ?? new BigDecimal("0");
-            
+
             if (taskUpdated.oper === undefined || singleOpers.includes(taskUpdated.calcOper!)) {
 
                 if ((dotFlags[0]) && newNum === 0) {

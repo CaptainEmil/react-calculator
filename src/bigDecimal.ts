@@ -188,7 +188,6 @@ export default class BigDecimal {
     }
 
     static bigIntPow(x: bigint, n: bigint): bigint {
-
         if (n == 0n) return 1n;
         if (n % 2n == 0n) return BigDecimal.bigIntPow(x * x, n / 2n);
         return x * BigDecimal.bigIntPow(x, n - 1n);
