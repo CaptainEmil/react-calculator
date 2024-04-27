@@ -4363,23 +4363,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": function() { return /* binding */ BigDecimal; }
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/typeof */ "./node_modules/@babel/runtime/helpers/esm/typeof.js");
-/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
-/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
-
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
 
 
 var BigDecimal = /*#__PURE__*/function () {
   function BigDecimal(num1, num2) {
     var _num, _num2;
-    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1__["default"])(this, BigDecimal);
+    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, BigDecimal);
     this.isNegative = num1.toString().includes('-');
     this.zerosBefNum2 = 0;
     if (num2 === undefined && (typeof num1 === "string" || typeof num1 === "number")) {
       var numArr = num1.toString().split(".");
       if (numArr[1] !== undefined && numArr[1].split('')[0] === '0' && numArr[1].split('').length > 1) {
-        // console.log(numArr[1].replace(/[1-9]+\d*/g, ''));
-
         this.zerosBefNum2 = numArr[1].replace(/[1-9]+\d*/, '').length;
       }
       this.num1 = BigDecimal.bigIntAbs(BigInt(numArr[0] === "-" ? 0 : numArr[0]));
@@ -4393,11 +4389,9 @@ var BigDecimal = /*#__PURE__*/function () {
     this.num1 = BigDecimal.bigIntAbs(BigInt(num1));
     this.num2 = BigDecimal.bigIntAbs(BigInt((_num2 = num2) !== null && _num2 !== void 0 ? _num2 : 0));
   }
-  (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_2__["default"])(BigDecimal, [{
+  (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(BigDecimal, [{
     key: "toFixed",
     value: function toFixed(n) {
-      // console.log(this.toString());
-
       return new BigDecimal(this.toString().slice(0, n));
     }
   }, {
@@ -4418,15 +4412,10 @@ var BigDecimal = /*#__PURE__*/function () {
       var bigDec1Num2Len = bigDec1.num2.toString().replace(/0+$/, '').length + bigDec1.zerosBefNum2;
       var bigDec2Num2Len = bigDec2.num2.toString().replace(/0+$/, '').length + bigDec2.zerosBefNum2;
       var maxLen = Math.max(bigDec1Num2Len, bigDec2Num2Len);
-      // console.log(bigDec1.zerosBefNum2, bigDec2.zerosBefNum2, maxLen);
-
       var bigDec1Num2Str = ("0".repeat(bigDec1.zerosBefNum2) + bigDec1.num2.toString().replace(/0+$/, '')).padEnd(maxLen, '0');
       var bigDec2Num2Str = ("0".repeat(bigDec2.zerosBefNum2) + bigDec2.num2.toString().replace(/0+$/, '')).padEnd(maxLen, '0');
-      // console.log(bigDec1Num2Str, bigDec2Num2Str);
       var bigDec1Join = BigInt((bigDec1.isNegative ? "-" : "") + bigDec1.num1.toString() + bigDec1Num2Str);
       var bigDec2Join = BigInt((bigDec2.isNegative ? "-" : "") + bigDec2.num1.toString() + bigDec2Num2Str);
-      // console.log(bigDec1Join, bigDec2Join);
-
       return {
         bigDecJoinArr: [bigDec1Join, bigDec2Join],
         maxLen: maxLen,
@@ -4444,8 +4433,6 @@ var BigDecimal = /*#__PURE__*/function () {
       var bigDec1Join = bigDecJoinArr[0];
       var bigDec2Join = bigDecJoinArr[1];
       var resBigInt = bigDec1Join + bigDec2Join;
-      // console.log(bigDec1Join,bigDec2Join,resBigInt,maxLen);
-
       var resArr = resBigInt.toString().split('');
       resArr.splice(resBigInt.toString().length - maxLen, 0, '.');
       return new BigDecimal(resArr.join(''));
@@ -4459,22 +4446,13 @@ var BigDecimal = /*#__PURE__*/function () {
       ;
       var bigDec1Join = bigDecJoinArr[0];
       var bigDec2Join = bigDecJoinArr[1];
-
-      // console.log(bigDec1Join, bigDec2Join);
-
       var resBigInt = bigDec1Join - bigDec2Join;
       var isNegative = resBigInt < 0n;
       resBigInt = BigDecimal.bigIntAbs(resBigInt);
-      // console.log(resBigInt);
-
-      // console.log(resBigInt.toString().length - maxLen, maxLen);
-
       var resArr = resBigInt.toString().split('');
       for (var i = resBigInt.toString().length - maxLen; i < 0; ++i) {
         resArr.splice(0, 0, '0');
       }
-      // console.log(resArr);
-
       resArr.splice(Math.max(resBigInt.toString().length - maxLen, 0), 0, '.');
       resArr.splice(0, 0, isNegative ? '-' : "");
       return new BigDecimal(resArr.join(''));
@@ -4489,23 +4467,14 @@ var BigDecimal = /*#__PURE__*/function () {
       var bigDec1Join = bigDec1.num2 === 0n ? bigDec1.num1 : BigInt(bigDecJoinArr[0].toString().replace(/0+$/, ''));
       var bigDec2Join = bigDec2.num2 === 0n ? bigDec2.num1 : BigInt(bigDecJoinArr[1].toString().replace(/0+$/, ''));
       var resBigInt = bigDec1Join * bigDec2Join;
-      // console.log(bigDec1Join, bigDec2Join, resBigInt);
-
       var resArr = resBigInt.toString().split('');
       if (bigDec1.num2 !== 0n || bigDec2.num2 !== 0n) {
         var dotIndex = resBigInt.toString().length - ((bigDec1.num2 === 0n ? 0 : bigDec1.num2.toString().length + bigDec1.zerosBefNum2) + (bigDec2.num2 === 0n ? 0 : bigDec2.num2.toString().length + bigDec2.zerosBefNum2));
-        // console.log(resBigInt.toString().length, bigDec1.num2 === 0n ? 0 : bigDec1.num2.toString().length, bigDec2.num2 === 0n ? 0 : bigDec2.num2.toString().length);
-
-        // console.log(dotIndex);
-
         while (dotIndex < 0) {
           resArr.splice(0, 0, '0');
           dotIndex++;
         }
-        // console.log(resArr.join(''));
         resArr.splice(dotIndex, 0, '.');
-
-        // console.log(resArr.join(''));
       }
       return new BigDecimal(resArr.join(''));
     }
@@ -4517,29 +4486,18 @@ var BigDecimal = /*#__PURE__*/function () {
       ;
       var bigDec1Join = BigDecimal.bigIntAbs(bigDecJoinArr[0]);
       var bigDec2Join = BigDecimal.bigIntAbs(BigInt(bigDec2.zerosBefNum2 > 0 ? bigDecJoinArr[1].toString().replace(/0+$/, "") : bigDecJoinArr[1]));
-      // console.log(bigDec1Join, bigDec2Join);
-
       var isNegative = bigDec2.isNegative !== bigDec1.isNegative;
       var resBefDot = bigDec1Join / bigDec2Join;
       var resBefDotLen = resBefDot === 0n ? 0 : resBefDot.toString().length;
       var resAfDot = 0n;
       var zerosBefNum2 = 0;
       for (var i = 0; i <= 100 + resBefDotLen && bigDec1Join > 0; ++i) {
-        // console.log(bigDec1Join + "/" + bigDec2Join + "=" + (bigDec1Join / bigDec2Join));
-
         if (i >= 1) {
-          // console.log(i, bigDec1Join / bigDec2Join);
-
           resAfDot = resAfDot * 10n + bigDec1Join / bigDec2Join;
           if (resAfDot === 0n) zerosBefNum2++;
         }
-        // console.log(bigDec1Join % bigDec2Join * 10n);
-
         bigDec1Join = bigDec1Join % bigDec2Join * 10n;
       }
-
-      // console.log(resBefDot, resAfDot);
-
       var resArr = ((resBefDot === 0n ? "" : resBefDot.toString()) + "0".repeat(zerosBefNum2) + resAfDot.toString()).split('');
       resArr.splice(resBefDotLen, 0, '.');
       return new BigDecimal((isNegative ? "-" : "") + (resAfDot === 0n ? resBefDot : resArr.join('')));
@@ -4591,7 +4549,6 @@ var BigDecimal = /*#__PURE__*/function () {
     key: "nthRoot",
     value: function nthRoot(bigDec) {
       var root = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 2n;
-      console.log(bigDec.num1, root, (0,_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__["default"])(bigDec.num1), (0,_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__["default"])(root));
       var arr = [new BigDecimal(BigDecimal.bigIntNthRoot(bigDec.num1, root).toString())];
       for (var i = 1; i < 10; ++i) {
         var pow = BigDecimal.intPow(arr[i - 1], root - 1n).toFixed(50);
@@ -4599,26 +4556,13 @@ var BigDecimal = /*#__PURE__*/function () {
         var diff = BigDecimal.diff(div1, arr[i - 1]).toFixed(50);
         var div2 = BigDecimal.div(diff, new BigDecimal(root.toString())).toFixed(50);
         var sum = BigDecimal.sum(arr[i - 1], div2).toFixed(50);
-        // console.log(`${arr[i - 1]!}^${root - 1n}=${pow.toString()}`);
-
-        // console.log(`${bigDec.toString()}/(${arr[i - 1]}^${root - 1n})=${div1.toString()}`);
-        // console.log(`${div1.toString()}-${arr[i - 1]}=${diff.toString()}`);
-        // console.log(`${diff.toString()}/${new BigDecimal(root.toString())}=${div2.toString()}`);
-        // console.log(`${arr[i - 1]!}+${div2.toString()}=${sum.toString()}`);
-
-        // console.log("----------------");
-
         arr[i] = sum;
       }
-      // arr.forEach(i => console.log(i.toString()));
-
       return arr[arr.length - 1];
     }
   }, {
     key: "intPow",
     value: function intPow(bigDec, n) {
-      // console.log(bigDec.toString(), n);
-
       if (n == 0n) return new BigDecimal("1");
       if (n % 2n == 0n) return BigDecimal.intPow(BigDecimal.prod(bigDec, bigDec), n / 2n);
       return BigDecimal.prod(bigDec, BigDecimal.intPow(bigDec, n - 1n)).toFixed(100);
@@ -4627,90 +4571,11 @@ var BigDecimal = /*#__PURE__*/function () {
     key: "pow",
     value: function pow(bigDec, _pow) {
       var num1Pow = BigDecimal.intPow(bigDec, _pow.num1);
-      // console.log(1);
       var denumPow = _pow.num2 === 0n ? new BigDecimal("1") : BigDecimal.nthRoot(bigDec, BigInt("1" + "0".repeat(_pow.num2.toString().length))).toFixed(50);
-      // console.log(2);
       var num2Pow = _pow.num2 === 0n ? new BigDecimal("1") : BigDecimal.intPow(denumPow, _pow.num2).toFixed(50);
-      // console.log(3);
-      // console.log(num1Pow.toString(), denumPow.toString(), num2Pow.toString());
       var prod = BigDecimal.prod(num1Pow, num2Pow);
       return _pow.isNegative ? BigDecimal.div(new BigDecimal("1"), prod) : prod;
     }
-
-    // static ln(bigDec: BigDecimal) {
-    //     const arr = [BigDecimal.div(bigDec, BigDecimal.diff(bigDec, new BigDecimal(1)))];
-    //     for (let i = 1; i <= 11; ++i) {
-    //         console.log(i);
-
-    //         const powOf2 = new BigDecimal((2 ** -i).toString()).toFixed(30);
-    //         console.log(powOf2.toString());
-    //         const powOfx = BigDecimal.pow(bigDec, powOf2).toFixed(30);
-    //         console.log(powOfx.toString());
-    //         const numerator = BigDecimal.prod(powOf2, powOfx);
-    //         const denumenator = BigDecimal.sum(new BigDecimal("1"), powOfx);
-    //         arr[i] = BigDecimal.div(numerator, denumenator);
-    //         console.log("----------------");
-    //     }
-    //     let res = arr[0] as BigDecimal;
-    //     for (let i = 1; i < arr.length; ++i) {
-    //         res = BigDecimal.diff(res, arr[i]!);
-    //     }
-
-    //     return BigDecimal.div(new BigDecimal("1"), res);
-    // }
-
-    // FUNCTION BELOW WORKS ONLY FOR NUMBERS LESS THAN OR EQUAL TO 2 AND GREATER THAN 0
-    // static ln(bigDec: BigDecimal) {
-    //     const arr = [];
-
-    //     for (let i = 1; i < 10; ++i) {
-    //         arr[i] = BigDecimal.div(BigDecimal.pow(BigDecimal.diff(bigDec, new BigDecimal("1")), new BigDecimal(i.toString())), new BigDecimal(i.toString()));
-    //         arr[i]!.isNegative = !((i + 1) % 2 === 0);
-    //     }
-
-    //     let res = arr[1] as BigDecimal;
-    //     arr.forEach((i) => console.log(i?.toString()));
-
-    //     for (let i = 2; i < arr.length; ++i) {
-    //         res = BigDecimal.sum(res, arr[i]!);
-    //     }
-
-    //     return res;
-    // }
-
-    // static ln(bigDec: BigDecimal) {
-    //     const arr = [];
-
-    //     const divOfZ = BigDecimal.div(BigDecimal.diff(bigDec, new BigDecimal("1")), BigDecimal.sum(bigDec, new BigDecimal("1"))).toFixed(20);
-    //     for (let i = 0; i < 250; ++i) {
-    //         if (i % 100 === 0) console.log(i);
-    //         const sumOfI = new BigDecimal((2 * i + 1).toString()).toFixed(50);
-    //         arr[i] = BigDecimal.div(BigDecimal.pow(divOfZ, sumOfI).toFixed(50), sumOfI).toFixed(50);
-
-    //         // console.log(`2*${i}+1=${2 * i + 1}`);
-    //         // console.log(`${BigDecimal.diff(bigDec, new BigDecimal("1")).toString()}/${BigDecimal.sum(bigDec, new BigDecimal("1")).toString()}=${divOfZ.toString()}`);
-    //         // console.log(`${divOfZ.toString()}^${sumOfI.toString()}=${BigDecimal.pow(divOfZ, sumOfI).toFixed(20).toString()}`);
-    //         // console.log(`${BigDecimal.pow(divOfZ, sumOfI).toFixed(10).toString()}/${sumOfI.toString()}=${arr[i]!.toString()}`);
-
-    //         // console.log("----------------");
-
-    //     }
-
-    //     let res = arr[0] as BigDecimal;
-    //     // arr.forEach((i) => console.log(i?.toString()));
-
-    //     for (let i = 1; i < arr.length; ++i) {
-    //         // let prevRes=Object.assign({}, res);
-
-    //         res = BigDecimal.sum(res, arr[i]!);
-
-    //         // console.log(`${prevRes.toString()}+${arr[i]!.toString()}=${res.toString()}`);
-    //     }
-
-    //     res = BigDecimal.prod(res, new BigDecimal("2"));
-
-    //     return res;
-    // }
   }, {
     key: "ln",
     value: function ln(bigDec) {
@@ -4728,42 +4593,6 @@ var BigDecimal = /*#__PURE__*/function () {
       var base = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : new BigDecimal(10);
       return BigDecimal.div(BigDecimal.ln(bigDec), BigDecimal.ln(base));
     }
-
-    // FUNCTION BELOW WORKS ONLY WITH NUMBERS CLOSE TO 0
-    // static sin(bigDec: BigDecimal) {
-    //     function fac(num: number) {
-    //         let result = new BigDecimal(num.toString());
-    //         if (num === 0 || num === 1)
-    //             return new BigDecimal("1");
-    //         while (num > 1) {
-    //             num--;
-    //             result = BigDecimal.prod(result, new BigDecimal(num.toString()));
-    //         }
-    //         return result;
-    //     }
-
-    //     const arr = [];
-
-    //     for (let i = 0; i < 10; ++i) {
-    //         const neg = new BigDecimal(((-1) ** i).toString());
-    //         const numerator = BigDecimal.pow(bigDec, new BigDecimal(2 * i + 1));
-    //         const denumenator = fac(2 * i + 1);
-    //         const res = BigDecimal.div(numerator, denumenator);
-    //         arr[i] = BigDecimal.prod(neg, res);
-    //     }
-
-    //     let res = arr[0] as BigDecimal;
-
-    //     for (let i = 1; i < arr.length; ++i) {
-    //         // let prevRes=Object.assign({}, res);
-
-    //         res = BigDecimal.sum(res, arr[i]!);
-
-    //         // console.log(`${prevRes.toString()}+${arr[i]!.toString()}=${res.toString()}`);
-    //     }
-
-    //     return res;
-    // }
   }, {
     key: "sin",
     value: function sin(bigDec) {
@@ -4798,182 +4627,7 @@ var BigDecimal = /*#__PURE__*/function () {
     }
   }]);
   return BigDecimal;
-}(); // const num1 = new BigDecimal("100000000000000");
-// // const num1 = new BigDecimal("354.05");
-// const num2 = new BigDecimal("2");
-// const cases: Array<
-//     {
-//         args: Array<number[]>
-//         res: {
-//             sum: string,
-//             diff: string,
-//             prod: string,
-//             div: string
-//         }
-//     }
-// > = [
-//         {
-//             args: [
-//                 [100],
-//                 [100]
-//             ],
-//             res: {
-//                 sum: "200",
-//                 diff: "0",
-//                 prod: "10000",
-//                 div: "1"
-//             }
-//         },
-//         {
-//             args: [
-//                 [0, 1],
-//                 [0, 1]
-//             ],
-//             res: {
-//                 sum: "0.2",
-//                 diff: "0",
-//                 prod: "0.01",
-//                 div: "1"
-//             }
-//         },
-//         {
-//             args: [
-//                 [100, 1],
-//                 [100, 1]
-//             ],
-//             res: {
-//                 sum: "200.2",
-//                 diff: "0",
-//                 prod: "10020.01",
-//                 div: "1"
-//             }
-//         },
-//         {
-//             args: [
-//                 [300, 4],
-//                 [100, 2]
-//             ],
-//             res: {
-//                 sum: "400.6",
-//                 diff: "200.2",
-//                 prod: "30100.08",
-//                 div: "2.99800399201"
-//             }
-//         },
-//         {
-//             args: [
-//                 [100, 2],
-//                 [300, 4]
-//             ],
-//             res: {
-//                 sum: "400.6",
-//                 diff: "-200.2",
-//                 prod: "30100.08",
-//                 div: "0.3335552596"
-//             }
-//         },
-//         {
-//             args: [
-//                 [100, 10000000000],
-//                 [100, 100000000000]
-//             ],
-//             res: {
-//                 sum: "200.2",
-//                 diff: "0",
-//                 prod: "10020.01",
-//                 div: "1"
-//             }
-//         },
-//         {
-//             args: [
-//                 [100, 1000000],
-//                 [100, 1000001]
-//             ],
-//             res: {
-//                 sum: "200.2000001",
-//                 diff: "-0.0000001",
-//                 prod: "10020.01001001",
-//                 div: "0.999999999"
-//             }
-//         },
-//         {
-//             args: [
-//                 [-100, 2],
-//                 [300, 4]
-//             ],
-//             res: {
-//                 sum: "200.2",
-//                 diff: "-400.6",
-//                 prod: "-30100.08",
-//                 div: "-0.3335552596"
-//             }
-//         },
-//         {
-//             args: [
-//                 [-100, 2],
-//                 [-300, 4]
-//             ],
-//             res: {
-//                 sum: "-400.6",
-//                 diff: "200.2",
-//                 prod: "30100.08",
-//                 div: "0.3335552596"
-//             }
-//         },
-//         {
-//             args: [
-//                 [100, 2],
-//                 [-300, 4]
-//             ],
-//             res: {
-//                 sum: "-200.2",
-//                 diff: "400.6",
-//                 prod: "-30100.08",
-//                 div: "-0.3335552596"
-//             }
-//         },
-//         {
-//             args: [
-//                 [3000, 4],
-//                 [100, 2]
-//             ],
-//             res: {
-//                 sum: "3100.6",
-//                 diff: "2900.2",
-//                 prod: "300640.08",
-//                 div: "29.944111776447"
-//             }
-//         },
-//         {
-//             args: [
-//                 [3, 0],
-//                 [2, 0]
-//             ],
-//             res: {
-//                 sum: "5",
-//                 diff: "1",
-//                 prod: "6",
-//                 div: "1.5"
-//             }
-//         },
-//     ]
-// for (let i of cases) {
-//     const num1 = new BigDecimal(i.args[0]![0]!, i.args[0]![1]!);
-//     const num2 = new BigDecimal(i.args[1]![0]!, i.args[1]![1]!);
-//     const res = {
-//         sum: BigDecimal.sum(num1, num2).toString(),
-//         diff: BigDecimal.diff(num1, num2).toString(),
-//         prod: BigDecimal.prod(num1, num2).toString(),
-//         div: BigDecimal.div(num1, num2).toString(),
-//     }
-//     for (let j in res) {
-//         if (res[j as keyof typeof i.res] !== i.res[j as keyof typeof i.res]) console.log(...i.args + ` did not pass ${j}. Expected Result: ${i.res[j as keyof typeof i.res]} Got Result: ${res[j as keyof typeof i.res]}`);
-//     }
-// }
-// console.log(BigDecimal.sqrt(num1).toString());
-// console.log(BigDecimal.prod(num1, num2).toString());
-// console.log(BigDecimal.sin(new BigDecimal("0.1")).toString());
-// console.log(BigDecimal.log(num1).toString());
+}();
 
 
 /***/ }),
@@ -5004,10 +4658,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var Button = function Button(_ref) {
+  var _ref2;
   var task = _ref.task,
     children = _ref.children,
-    oper = _ref.oper,
-    id = _ref.id;
+    oper = _ref.oper;
   var dispatch = (0,_store__WEBPACK_IMPORTED_MODULE_0__.useTypedDispatch)();
   var tasks = (0,_store__WEBPACK_IMPORTED_MODULE_0__.useTypedSelector)(function (state) {
     return state.tasksReducer;
@@ -5042,19 +4696,18 @@ var Button = function Button(_ref) {
       return;
     }
     if (oper === "ans") {
-      console.log(ans);
       var _task = (0,_tasks__WEBPACK_IMPORTED_MODULE_2__.getTask)(tasks, ans);
       var bigDec = _task === null ? new _BigDecimal__WEBPACK_IMPORTED_MODULE_3__["default"]("0") : _task.res;
       if (taskUpdated.oper === undefined || _options_singleOpers__WEBPACK_IMPORTED_MODULE_4__["default"].includes(taskUpdated.calcOper)) {
         dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_1__.updateTask)({
-          id: _task.id,
+          id: taskUpdated.id,
           num1: bigDec
         }));
         dispatch((0,_redux_slices_dotFlagsSlice__WEBPACK_IMPORTED_MODULE_6__.setFlags)([ans.toString().includes("."), false]));
         return;
       }
       dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_1__.updateTask)({
-        id: _task.id,
+        id: taskUpdated.id,
         num2: bigDec
       }));
       dispatch((0,_redux_slices_dotFlagsSlice__WEBPACK_IMPORTED_MODULE_6__.setFlags)([false, ans.toString().includes(".")]));
@@ -5150,7 +4803,7 @@ var Button = function Button(_ref) {
   };
   return /*#__PURE__*/React.createElement("button", {
     onClick: handleClick,
-    id: id !== null && id !== void 0 ? id : undefined
+    id: "b-" + ((_ref2 = oper !== null && oper !== void 0 ? oper : children === null || children === void 0 ? void 0 : children.toString()) === null || _ref2 === void 0 ? void 0 : _ref2.replace("+", "sum").replace("-", "diff").replace("*", "prod").replace("/", "div"))
   }, children);
 };
 /* harmony default export */ __webpack_exports__["default"] = (Button);
@@ -5322,7 +4975,6 @@ var ButtonsRight = function ButtonsRight(_ref) {
     oper: "e"
   }, "e"), /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_0__["default"], {
     task: task,
-    id: "ans",
     oper: "ans"
   }, "Ans"), /*#__PURE__*/React.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__.Form, {
     method: "post"
@@ -5373,6 +5025,7 @@ var ButtonsRight = function ButtonsRight(_ref) {
     method: "post"
   }, /*#__PURE__*/React.createElement("button", {
     name: "oper",
+    id: "equal",
     value: "equals"
   }, "=")), /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_0__["default"], {
     task: task,
@@ -5423,7 +5076,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../store */ "./src/store.ts");
 /* harmony import */ var _redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../redux/slices/tasksSlice */ "./src/redux/slices/tasksSlice.ts");
 /* harmony import */ var _options_singleOpers__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../options/singleOpers */ "./src/options/singleOpers.ts");
-/* harmony import */ var _UniqDisplay_UniqDisplay__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./UniqDisplay/UniqDisplay */ "./src/components/Calculator/Display/UniqDisplay/UniqDisplay.tsx");
+/* harmony import */ var _UniqDisplay_UniqDisplay__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../UniqDisplay/UniqDisplay */ "./src/components/UniqDisplay/UniqDisplay.tsx");
 /* provided dependency */ var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 
@@ -5486,64 +5139,6 @@ var Display = function Display(_ref) {
 
 /***/ }),
 
-/***/ "./src/components/Calculator/Display/UniqDisplay/UniqDisplay.tsx":
-/*!***********************************************************************!*\
-  !*** ./src/components/Calculator/Display/UniqDisplay/UniqDisplay.tsx ***!
-  \***********************************************************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _tasks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../tasks */ "./src/tasks.ts");
-/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../store */ "./src/store.ts");
-/* provided dependency */ var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-
-
-var UniqDisplay = function UniqDisplay(_ref) {
-  var _taskUpdated$num2$num, _taskUpdated$num;
-  var task = _ref.task;
-  var tasks = (0,_store__WEBPACK_IMPORTED_MODULE_1__.useTypedSelector)(function (state) {
-    return state.tasksReducer;
-  });
-  var dotFlags = (0,_store__WEBPACK_IMPORTED_MODULE_1__.useTypedSelector)(function (state) {
-    return state.dotFlagsReducer;
-  });
-  var taskUpdated = (0,_tasks__WEBPACK_IMPORTED_MODULE_0__.getTask)(tasks, task.id);
-  var zerosCnt = (0,_store__WEBPACK_IMPORTED_MODULE_1__.useTypedSelector)(function (state) {
-    return state.zerosCntReducer;
-  });
-  var oper = taskUpdated.calcOper;
-  var num1 = taskUpdated.num1 === undefined ? "0" : taskUpdated.num1.toString() + (dotFlags[0] && !taskUpdated.num1.toString().includes(".") ? "." : "") + "0".repeat(zerosCnt[0]);
-  var num2 = taskUpdated.num2 === undefined ? "0" : taskUpdated.num2.toString() + (dotFlags[1] && !taskUpdated.num2.toString().includes(".") ? "." : "") + "0".repeat(zerosCnt[1]);
-  console.log(oper);
-  switch (oper) {
-    case "fac":
-      return /*#__PURE__*/React.createElement(React.Fragment, null, num1.toString() + "!");
-    case "sin":
-    case "tan":
-    case "cos":
-    case "sqrt":
-    case "ln":
-    case "log":
-      return /*#__PURE__*/React.createElement(React.Fragment, null, taskUpdated.oper + " " + num1.toString());
-    case "nthPower":
-      return /*#__PURE__*/React.createElement(React.Fragment, null, num1.toString(), /*#__PURE__*/React.createElement("sup", null, taskUpdated.num2 === undefined ? "?" : num2));
-    case "nthRoot":
-      return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("sup", null, (_taskUpdated$num2$num = (_taskUpdated$num = taskUpdated.num2) === null || _taskUpdated$num === void 0 ? void 0 : _taskUpdated$num.num1.toString()) !== null && _taskUpdated$num2$num !== void 0 ? _taskUpdated$num2$num : "?"), "\u221A", num1.toString());
-    case "square":
-      return /*#__PURE__*/React.createElement(React.Fragment, null, num1.toString(), /*#__PURE__*/React.createElement("sup", null, "2"));
-    case "powerOf10":
-      return /*#__PURE__*/React.createElement(React.Fragment, null, "10", /*#__PURE__*/React.createElement("sup", null, num1.toString()));
-    case "powerOfE":
-      return /*#__PURE__*/React.createElement(React.Fragment, null, "e", /*#__PURE__*/React.createElement("sup", null, num1.toString()));
-    default:
-      throw new Error("no such unique operation: " + oper);
-  }
-};
-/* harmony default export */ __webpack_exports__["default"] = (UniqDisplay);
-
-/***/ }),
-
 /***/ "./src/components/Sidebar/Sidebar.tsx":
 /*!********************************************!*\
   !*** ./src/components/Sidebar/Sidebar.tsx ***!
@@ -5597,34 +5192,41 @@ var Sidebar = function Sidebar() {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/dist/index.js");
-/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../store */ "./src/store.ts");
+/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ "./node_modules/@babel/runtime/helpers/esm/toConsumableArray.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/dist/index.js");
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../store */ "./src/store.ts");
+/* harmony import */ var _options_singleOpers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../options/singleOpers */ "./src/options/singleOpers.ts");
+/* harmony import */ var _UniqDisplay_UniqDisplay__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../UniqDisplay/UniqDisplay */ "./src/components/UniqDisplay/UniqDisplay.tsx");
 /* provided dependency */ var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 
+
+
+
 var TasksList = function TasksList() {
-  var tasks = (0,_store__WEBPACK_IMPORTED_MODULE_0__.useTypedSelector)(function (state) {
+  var tasks = (0,_store__WEBPACK_IMPORTED_MODULE_1__.useTypedSelector)(function (state) {
     return state.tasksReducer;
   });
-  var bigIntOpt = {
-    notation: 'scientific',
-    maximumFractionDigits: 3
-  };
   return /*#__PURE__*/React.createElement("ul", null, tasks.map(function (task) {
-    var _task$oper;
+    var _task$oper, _task$calcOper;
     if (task.res === undefined) return;
+    var expr = "".concat(task.num1 === undefined ? "" : task.num1.toString(), " ").concat((_task$oper = task.oper) !== null && _task$oper !== void 0 ? _task$oper : "", " ").concat(task.num2 === undefined ? "" : task.num2.toString(), " ") + (task.res === undefined ? "" : "= ".concat(task.res.toString()));
+    var uniqOpers = (0,_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__["default"])(_options_singleOpers__WEBPACK_IMPORTED_MODULE_2__["default"]);
+    uniqOpers.push("nthPower", "nthRoot");
     return /*#__PURE__*/React.createElement("li", {
       key: task.id
-    }, /*#__PURE__*/React.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__.NavLink, {
+    }, /*#__PURE__*/React.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.NavLink, {
       to: "/".concat(task.id),
       className: function className(_ref) {
         var isActive = _ref.isActive,
           isPending = _ref.isPending;
         return isActive ? "active" : isPending ? "pending" : "";
       }
-    }, "".concat(task.num1 === undefined ? "" : task.num1.toString(), " ").concat((_task$oper = task.oper) !== null && _task$oper !== void 0 ? _task$oper : "", " ").concat(task.num2 === undefined ? "" : task.num2.toString(), " ") + (task.res === undefined ? "" : "= ".concat(task.res.toString()))), /*#__PURE__*/React.createElement("div", {
+    }, uniqOpers.includes((_task$calcOper = task.calcOper) !== null && _task$calcOper !== void 0 ? _task$calcOper : "") ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(_UniqDisplay_UniqDisplay__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      task: task
+    }), task.res === undefined ? "" : "= ".concat(task.res.toString())) : expr), /*#__PURE__*/React.createElement("div", {
       className: "button-container"
-    }, /*#__PURE__*/React.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__.Form, {
+    }, /*#__PURE__*/React.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Form, {
       method: "post",
       action: "/".concat(task.id, "/destroy"),
       onSubmit: function onSubmit(event) {
@@ -5638,6 +5240,64 @@ var TasksList = function TasksList() {
   }));
 };
 /* harmony default export */ __webpack_exports__["default"] = (TasksList);
+
+/***/ }),
+
+/***/ "./src/components/UniqDisplay/UniqDisplay.tsx":
+/*!****************************************************!*\
+  !*** ./src/components/UniqDisplay/UniqDisplay.tsx ***!
+  \****************************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _tasks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../tasks */ "./src/tasks.ts");
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../store */ "./src/store.ts");
+/* provided dependency */ var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+
+var UniqDisplay = function UniqDisplay(_ref) {
+  var _taskUpdated$num2$num, _taskUpdated$num;
+  var task = _ref.task;
+  var tasks = (0,_store__WEBPACK_IMPORTED_MODULE_1__.useTypedSelector)(function (state) {
+    return state.tasksReducer;
+  });
+  var dotFlags = (0,_store__WEBPACK_IMPORTED_MODULE_1__.useTypedSelector)(function (state) {
+    return state.dotFlagsReducer;
+  });
+  var taskUpdated = (0,_tasks__WEBPACK_IMPORTED_MODULE_0__.getTask)(tasks, task.id);
+  var zerosCnt = (0,_store__WEBPACK_IMPORTED_MODULE_1__.useTypedSelector)(function (state) {
+    return state.zerosCntReducer;
+  });
+  var oper = taskUpdated.calcOper;
+  var num1 = taskUpdated.num1 === undefined ? "0" : taskUpdated.num1.toString() + (dotFlags[0] && !taskUpdated.num1.toString().includes(".") ? "." : "") + "0".repeat(zerosCnt[0]);
+  var num2 = taskUpdated.num2 === undefined ? "0" : taskUpdated.num2.toString() + (dotFlags[1] && !taskUpdated.num2.toString().includes(".") ? "." : "") + "0".repeat(zerosCnt[1]);
+  console.log(oper);
+  switch (oper) {
+    case "fac":
+      return /*#__PURE__*/React.createElement(React.Fragment, null, num1.toString() + "!");
+    case "sin":
+    case "tan":
+    case "cos":
+    case "sqrt":
+    case "ln":
+    case "log":
+      return /*#__PURE__*/React.createElement(React.Fragment, null, taskUpdated.oper + " " + num1.toString());
+    case "nthPower":
+      return /*#__PURE__*/React.createElement(React.Fragment, null, num1.toString(), /*#__PURE__*/React.createElement("sup", null, taskUpdated.num2 === undefined ? "?" : num2));
+    case "nthRoot":
+      return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("sup", null, (_taskUpdated$num2$num = (_taskUpdated$num = taskUpdated.num2) === null || _taskUpdated$num === void 0 ? void 0 : _taskUpdated$num.num1.toString()) !== null && _taskUpdated$num2$num !== void 0 ? _taskUpdated$num2$num : "?"), "\u221A", num1.toString());
+    case "square":
+      return /*#__PURE__*/React.createElement(React.Fragment, null, num1.toString(), /*#__PURE__*/React.createElement("sup", null, "2"));
+    case "powerOf10":
+      return /*#__PURE__*/React.createElement(React.Fragment, null, "10", /*#__PURE__*/React.createElement("sup", null, num1.toString()));
+    case "powerOfE":
+      return /*#__PURE__*/React.createElement(React.Fragment, null, "e", /*#__PURE__*/React.createElement("sup", null, num1.toString()));
+    default:
+      throw new Error("no such unique operation: " + oper);
+  }
+};
+/* harmony default export */ __webpack_exports__["default"] = (UniqDisplay);
 
 /***/ }),
 
@@ -5694,7 +5354,7 @@ var ansSlice = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.createSlice)({
   name: 'ans',
   initialState: "",
   reducers: {
-    setAns: function setAns(state, action) {
+    setAns: function setAns(_, action) {
       return action.payload.payload;
     }
   }
@@ -5723,7 +5383,7 @@ var dotFlagsSlice = (0,_reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_0__.createSlice
   name: 'dotFlags',
   initialState: [false, false],
   reducers: {
-    setFlags: function setFlags(state, action) {
+    setFlags: function setFlags(_, action) {
       return action.payload;
     }
   }
@@ -5875,6 +5535,42 @@ function action() {
 }
 var Root = function Root() {
   var navigation = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_4__.useNavigation)();
+  var handleKeyDown = function handleKeyDown(e) {
+    e.preventDefault();
+    var sym;
+    switch (e.code) {
+      case "NumpadAdd":
+      case "Plus":
+        sym = "sum";
+        break;
+      case "NumpadMultiply":
+        sym = "prod";
+        break;
+      case "NumpadSubtract":
+      case "Minus":
+        sym = "diff";
+        break;
+      case "NumpadDivide":
+        sym = "div";
+        break;
+      case "Equal":
+        sym = "equal";
+        break;
+      default:
+        sym = e.code.split("")[e.code.length - 1];
+    }
+    console.log(e.code);
+    console.log(sym);
+    var btn = document.querySelector("#b-" + sym);
+    var event = new MouseEvent("click", {
+      bubbles: true,
+      cancelable: true,
+      view: window
+    });
+    if (btn === null) return;
+    btn.dispatchEvent(event);
+  };
+  document.body.addEventListener("keydown", handleKeyDown);
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(_components_Sidebar_Sidebar__WEBPACK_IMPORTED_MODULE_2__["default"], null), /*#__PURE__*/React.createElement("div", {
     id: "detail",
     className: navigation.state === "loading" ? "loading" : ""
@@ -5899,14 +5595,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-router-dom */ "./node_modules/@remix-run/router/dist/router.js");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/dist/index.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-router-dom */ "./node_modules/@remix-run/router/dist/router.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/dist/index.js");
 /* harmony import */ var _tasks__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../tasks */ "./src/tasks.ts");
 /* harmony import */ var _redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../redux/slices/tasksSlice */ "./src/redux/slices/tasksSlice.ts");
 /* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../store */ "./src/store.ts");
 /* harmony import */ var _components_Calculator_Calculator__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/Calculator/Calculator */ "./src/components/Calculator/Calculator.tsx");
 /* harmony import */ var _redux_slices_dotFlagsSlice__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../redux/slices/dotFlagsSlice */ "./src/redux/slices/dotFlagsSlice.ts");
 /* harmony import */ var _redux_slices_ansSlice__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../redux/slices/ansSlice */ "./src/redux/slices/ansSlice.ts");
+/* harmony import */ var _options_singleOpers__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../options/singleOpers */ "./src/options/singleOpers.ts");
 /* provided dependency */ var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 
@@ -5921,43 +5618,43 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 
 
+
 function action(_x) {
   return _action.apply(this, arguments);
 }
 function _action() {
   _action = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default().mark(function _callee(_ref) {
-    var request, params, tasks, ans, task, formData, _iterator, _step, i, oper, res;
+    var request, params, tasks, task, formData, _iterator, _step, i, oper, res;
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
           request = _ref.request, params = _ref.params;
           tasks = _store__WEBPACK_IMPORTED_MODULE_4__["default"].getState().tasksReducer;
-          ans = _store__WEBPACK_IMPORTED_MODULE_4__["default"].getState().ansReducer;
           task = (0,_tasks__WEBPACK_IMPORTED_MODULE_2__.getTask)(tasks, params.taskId);
-          _context.next = 6;
+          _context.next = 5;
           return request.formData();
-        case 6:
+        case 5:
           formData = _context.sent;
           _iterator = _createForOfIteratorHelper(formData);
-          _context.prev = 8;
+          _context.prev = 7;
           _iterator.s();
-        case 10:
+        case 9:
           if ((_step = _iterator.n()).done) {
-            _context.next = 25;
+            _context.next = 24;
             break;
           }
           i = _step.value;
           oper = i[1];
           if (!(oper === "equals")) {
-            _context.next = 17;
+            _context.next = 16;
             break;
           }
           res = _store__WEBPACK_IMPORTED_MODULE_4__["default"].dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_3__.calcTask)(params.taskId));
           _store__WEBPACK_IMPORTED_MODULE_4__["default"].dispatch((0,_redux_slices_ansSlice__WEBPACK_IMPORTED_MODULE_7__.setAns)(res));
           return _context.abrupt("return", res);
-        case 17:
-          if (!((task === null || task === void 0 ? void 0 : task.num1) === undefined || (task === null || task === void 0 ? void 0 : task.oper) === undefined || (task === null || task === void 0 ? void 0 : task.num2) === undefined || (task === null || task === void 0 ? void 0 : task.res) === undefined)) {
-            _context.next = 21;
+        case 16:
+          if (!((task === null || task === void 0 ? void 0 : task.num1) === undefined || (task === null || task === void 0 ? void 0 : task.oper) === undefined || (task === null || task === void 0 ? void 0 : task.num2) === undefined && !_options_singleOpers__WEBPACK_IMPORTED_MODULE_8__["default"].includes(task === null || task === void 0 ? void 0 : task.calcOper) || (task === null || task === void 0 ? void 0 : task.res) === undefined)) {
+            _context.next = 20;
             break;
           }
           _store__WEBPACK_IMPORTED_MODULE_4__["default"].dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_3__.updateTask)({
@@ -5968,34 +5665,31 @@ function _action() {
             res: undefined
           }));
           _store__WEBPACK_IMPORTED_MODULE_4__["default"].dispatch((0,_redux_slices_dotFlagsSlice__WEBPACK_IMPORTED_MODULE_6__.setFlags)([false, false]));
-          return _context.abrupt("return", (0,react_router_dom__WEBPACK_IMPORTED_MODULE_8__.redirect)(""));
-        case 21:
+          return _context.abrupt("return", (0,react_router_dom__WEBPACK_IMPORTED_MODULE_9__.redirect)(""));
+        case 20:
           _store__WEBPACK_IMPORTED_MODULE_4__["default"].dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_3__.createTask)());
-          return _context.abrupt("return", (0,react_router_dom__WEBPACK_IMPORTED_MODULE_8__.redirect)("/".concat(_store__WEBPACK_IMPORTED_MODULE_4__["default"].getState().tasksReducer[0].id)));
-        case 23:
-          _context.next = 10;
+          return _context.abrupt("return", (0,react_router_dom__WEBPACK_IMPORTED_MODULE_9__.redirect)("/".concat(_store__WEBPACK_IMPORTED_MODULE_4__["default"].getState().tasksReducer[0].id)));
+        case 22:
+          _context.next = 9;
           break;
-        case 25:
-          _context.next = 30;
+        case 24:
+          _context.next = 29;
           break;
-        case 27:
-          _context.prev = 27;
-          _context.t0 = _context["catch"](8);
+        case 26:
+          _context.prev = 26;
+          _context.t0 = _context["catch"](7);
           _iterator.e(_context.t0);
-        case 30:
-          _context.prev = 30;
+        case 29:
+          _context.prev = 29;
           _iterator.f();
-          return _context.finish(30);
+          return _context.finish(29);
+        case 32:
+          return _context.abrupt("return");
         case 33:
-          return _context.abrupt("return", _store__WEBPACK_IMPORTED_MODULE_4__["default"].dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_3__.updateTask)({
-            id: params.taskId
-            // isDone: formData.get("isDone") === "true",
-          })));
-        case 34:
         case "end":
           return _context.stop();
       }
-    }, _callee, null, [[8, 27, 30, 33]]);
+    }, _callee, null, [[7, 26, 29, 32]]);
   }));
   return _action.apply(this, arguments);
 }
@@ -6014,7 +5708,7 @@ function loader(_ref2) {
   };
 }
 var Contact = function Contact() {
-  var _ref3 = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_9__.useLoaderData)(),
+  var _ref3 = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_10__.useLoaderData)(),
     task = _ref3.task;
   var tasks = (0,_store__WEBPACK_IMPORTED_MODULE_4__.useTypedSelector)(function (state) {
     return state.tasksReducer;
@@ -6028,17 +5722,6 @@ var Contact = function Contact() {
   });
 };
 /* harmony default export */ __webpack_exports__["default"] = (Contact);
-{/* <button
- name="isDone"
- value={isDone ? "false" : "true"}
- aria-label={
- isDone
- 	? "Remove from isDones"
- 	: "Add to isDones"
- }
- >
- {isDone ? "Done" : "Undone"}
- </button> */}
 
 /***/ }),
 
@@ -6153,7 +5836,8 @@ var calcTask = function calcTask(state, action) {
   if (!task) throw new Error("No task found for", {
     cause: action.payload
   });
-  if (task.num1 === undefined || task.oper === undefined || task.num2 === undefined && !_options_singleOpers__WEBPACK_IMPORTED_MODULE_3__["default"].includes(task.oper)) return tasks;
+  console.log(_options_singleOpers__WEBPACK_IMPORTED_MODULE_3__["default"]);
+  if (task.num1 === undefined || task.oper === undefined || task.num2 === undefined && !_options_singleOpers__WEBPACK_IMPORTED_MODULE_3__["default"].includes(task.calcOper)) return tasks;
   var res;
   switch (task.calcOper) {
     case "+":
@@ -6193,6 +5877,7 @@ var calcTask = function calcTask(state, action) {
       res = _BigDecimal__WEBPACK_IMPORTED_MODULE_2__["default"].fac(task.num1);
       break;
     case "sqrt":
+      console.log("works");
       res = _BigDecimal__WEBPACK_IMPORTED_MODULE_2__["default"].nthRoot(task.num1);
       break;
     case "square":
@@ -50560,21 +50245,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": function() { return /* binding */ Index; }
 /* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_dom_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom/client */ "./node_modules/react-dom/client.js");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/dist/index.js");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/dist/index.js");
-/* harmony import */ var _index_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./index.css */ "./src/index.css");
-/* harmony import */ var _routes_root__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./routes/root */ "./src/routes/root.tsx");
-/* harmony import */ var _error_page__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./error-page */ "./src/error-page.tsx");
-/* harmony import */ var _routes_task__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./routes/task */ "./src/routes/task.tsx");
-/* harmony import */ var _routes_destroy__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./routes/destroy */ "./src/routes/destroy.tsx");
-/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/dist/react-redux.mjs");
-/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./store */ "./src/store.ts");
-/* harmony import */ var _redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./redux/slices/tasksSlice */ "./src/redux/slices/tasksSlice.ts");
+/* harmony import */ var react_dom_client__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react-dom/client */ "./node_modules/react-dom/client.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/dist/index.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/dist/index.js");
+/* harmony import */ var _index_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./index.css */ "./src/index.css");
+/* harmony import */ var _routes_root__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./routes/root */ "./src/routes/root.tsx");
+/* harmony import */ var _error_page__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./error-page */ "./src/error-page.tsx");
+/* harmony import */ var _routes_task__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./routes/task */ "./src/routes/task.tsx");
+/* harmony import */ var _routes_destroy__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./routes/destroy */ "./src/routes/destroy.tsx");
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/dist/react-redux.mjs");
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./store */ "./src/store.ts");
+/* harmony import */ var _redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./redux/slices/tasksSlice */ "./src/redux/slices/tasksSlice.ts");
 /* provided dependency */ var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-
 
 
 
@@ -50588,40 +50270,40 @@ __webpack_require__.r(__webpack_exports__);
 var rootContainer = document.querySelector('#root');
 if (rootContainer === null) throw new Error('Can\'t find root container');
 function Index() {
-  var tasks = (0,_store__WEBPACK_IMPORTED_MODULE_7__.useTypedSelector)(function (state) {
+  var tasks = (0,_store__WEBPACK_IMPORTED_MODULE_6__.useTypedSelector)(function (state) {
     return state.tasksReducer;
   });
-  var dispatch = (0,_store__WEBPACK_IMPORTED_MODULE_7__.useTypedDispatch)();
-  if (tasks[0] === undefined) dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_8__.createTask)());
-  return /*#__PURE__*/React.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_9__.Navigate, {
-    to: "/".concat(_store__WEBPACK_IMPORTED_MODULE_7__["default"].getState().tasksReducer[0].id)
+  var dispatch = (0,_store__WEBPACK_IMPORTED_MODULE_6__.useTypedDispatch)();
+  if (tasks[0] === undefined) dispatch((0,_redux_slices_tasksSlice__WEBPACK_IMPORTED_MODULE_7__.createTask)());
+  return /*#__PURE__*/React.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_8__.Navigate, {
+    to: "/".concat(_store__WEBPACK_IMPORTED_MODULE_6__["default"].getState().tasksReducer[0].id)
   });
 }
-var router = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_10__.createBrowserRouter)([{
+var router = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_9__.createBrowserRouter)([{
   path: "/",
-  element: /*#__PURE__*/React.createElement(_routes_root__WEBPACK_IMPORTED_MODULE_3__["default"], null),
-  errorElement: /*#__PURE__*/React.createElement(_error_page__WEBPACK_IMPORTED_MODULE_4__["default"], null),
-  action: _routes_root__WEBPACK_IMPORTED_MODULE_3__.action,
+  element: /*#__PURE__*/React.createElement(_routes_root__WEBPACK_IMPORTED_MODULE_2__["default"], null),
+  errorElement: /*#__PURE__*/React.createElement(_error_page__WEBPACK_IMPORTED_MODULE_3__["default"], null),
+  action: _routes_root__WEBPACK_IMPORTED_MODULE_2__.action,
   children: [{
     index: true,
     element: /*#__PURE__*/React.createElement(Index, null)
   }, {
     path: "/:taskId",
-    element: /*#__PURE__*/React.createElement(_routes_task__WEBPACK_IMPORTED_MODULE_5__["default"], null),
-    loader: _routes_task__WEBPACK_IMPORTED_MODULE_5__.loader,
-    action: _routes_task__WEBPACK_IMPORTED_MODULE_5__.action
+    element: /*#__PURE__*/React.createElement(_routes_task__WEBPACK_IMPORTED_MODULE_4__["default"], null),
+    loader: _routes_task__WEBPACK_IMPORTED_MODULE_4__.loader,
+    action: _routes_task__WEBPACK_IMPORTED_MODULE_4__.action
   }, {
     path: "/:taskId/destroy",
-    action: _routes_destroy__WEBPACK_IMPORTED_MODULE_6__.action,
+    action: _routes_destroy__WEBPACK_IMPORTED_MODULE_5__.action,
     errorElement: /*#__PURE__*/React.createElement("div", null, "Oops! There was an error.")
   }]
 }]);
-var root = (0,react_dom_client__WEBPACK_IMPORTED_MODULE_1__.createRoot)(rootContainer);
-root.render( /*#__PURE__*/React.createElement(react__WEBPACK_IMPORTED_MODULE_0__.StrictMode, null, /*#__PURE__*/React.createElement(react_redux__WEBPACK_IMPORTED_MODULE_11__.Provider, {
-  store: _store__WEBPACK_IMPORTED_MODULE_7__["default"]
-}, /*#__PURE__*/React.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_10__.RouterProvider, {
+var root = (0,react_dom_client__WEBPACK_IMPORTED_MODULE_0__.createRoot)(rootContainer);
+root.render( /*#__PURE__*/React.createElement(react_redux__WEBPACK_IMPORTED_MODULE_10__.Provider, {
+  store: _store__WEBPACK_IMPORTED_MODULE_6__["default"]
+}, /*#__PURE__*/React.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_9__.RouterProvider, {
   router: router
-}))));
+})));
 }();
 /******/ })()
 ;

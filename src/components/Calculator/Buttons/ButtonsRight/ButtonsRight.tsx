@@ -13,7 +13,7 @@ const ButtonsRight = ({ task }: ButtonsRightProps) => {
                 <div className="line-container">
                     <Button task={task} oper="pi">π</Button>
                     <Button task={task} oper="e">e</Button>
-                    <Button task={task} id="ans" oper="ans">Ans</Button>
+                    <Button task={task} oper="ans">Ans</Button>
                     <Form method="post">
                         <button name="oper" value="clear">
                             C
@@ -43,7 +43,7 @@ const ButtonsRight = ({ task }: ButtonsRightProps) => {
                     <Button task={task} >0</Button>
                     <Button task={task} oper=".">.</Button>
                     <Form method="post">
-                        <button name="oper" value="equals">
+                        <button name="oper" id="b-equal" type="submit" value="equals">
                             =
                         </button>
                     </Form>

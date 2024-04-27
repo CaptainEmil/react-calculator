@@ -75,9 +75,9 @@ const router = createBrowserRouter([
 const root = createRoot(rootContainer);
 
 root.render(
-	<StrictMode>
+	
 		<Provider store={store}>
 			<RouterProvider router={router} />
 		</Provider>
-	</StrictMode>
+	
 )

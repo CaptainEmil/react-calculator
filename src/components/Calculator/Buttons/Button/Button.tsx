@@ -13,16 +13,15 @@ type ButtonProps = {
     task: TaskType;
     children: ReactNode;
     oper?: string;
-    id?: string;
 }
 
-const Button = ({ task, children, oper, id }: ButtonProps) => {
+const Button = ({ task, children, oper }: ButtonProps) => {
     const dispatch = useTypedDispatch();
     const tasks = useTypedSelector((state) => state.tasksReducer);
     const taskUpdated = getTask(tasks, task.id) as TaskType;
     const zerosCnt = useTypedSelector((state) => state.zerosCntReducer);
     const dotFlags = useTypedSelector((state) => state.dotFlagsReducer);
-    const ans=useTypedSelector((state) => state.ansReducer);
+    const ans = useTypedSelector((state) => state.ansReducer);
     const navigate = useNavigate();
 
     const handleClick: React.MouseEventHandler<HTMLButtonElement> | undefined = e => {
@@ -40,10 +39,10 @@ const Button = ({ task, children, oper, id }: ButtonProps) => {
         }
 
         if (oper === "ans") {
-            const task=getTask(tasks,ans);
-            const bigDec=task===null?new BigDecimal("0"):task.res;
+            const task = getTask(tasks, ans);
+            const bigDec = task === null ? new BigDecimal("0") : task.res;
             if (taskUpdated.oper === undefined || singleOpers.includes(taskUpdated.calcOper!)) {
-                dispatch(updateTask({ id: taskUpdated!.id, num1:bigDec}));
+                dispatch(updateTask({ id: taskUpdated!.id, num1: bigDec }));
                 dispatch(setFlags([ans.toString().includes("."), false]));
                 return;
             }
@@ -128,7 +127,12 @@ const Button = ({ task, children, oper, id }: ButtonProps) => {
     }
 
     return (
-        <button onClick={handleClick} id={id ?? undefined}>{children}</button>
+        <button onClick={handleClick} id={"b-" +
+            (oper ?? children?.toString())?.replace("+", "sum")
+                .replace("-", "diff")
+                .replace("*", "prod")
+                .replace("/", "div")
+        }>{children}</button>
     )
 }
 
