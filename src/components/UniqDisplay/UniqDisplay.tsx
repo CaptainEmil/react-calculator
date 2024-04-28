@@ -13,7 +13,6 @@ const UniqDisplay = ({ task }: DisplayProps) => {
     const oper = taskUpdated.calcOper;
     const num1 = taskUpdated.num1 === undefined ? "0" : taskUpdated.num1.toString() + (dotFlags[0] && !taskUpdated.num1.toString().includes(".") ? "." : "") + "0".repeat(zerosCnt[0]!);
     const num2 = taskUpdated.num2 === undefined ? "0" : taskUpdated.num2.toString() + (dotFlags[1] && !taskUpdated.num2.toString().includes(".") ? "." : "") + "0".repeat(zerosCnt[1]!);
-    console.log(oper);
 
     switch (oper) {
         case "fac":

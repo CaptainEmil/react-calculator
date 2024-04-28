@@ -43,7 +43,6 @@ export const calcTask: CaseReducer<TaskType[], PayloadAction<string>> = (state, 
 	let task = tasks.find(task => task.id === action.payload);
 
 	if (!task) throw new Error("No task found for", { cause: action.payload });
-	console.log(singleOpers);
 	
 
 	if (task.num1 === undefined || task.oper === undefined || (task.num2 === undefined && !singleOpers.includes(task.calcOper!))) return tasks;
@@ -88,7 +87,6 @@ export const calcTask: CaseReducer<TaskType[], PayloadAction<string>> = (state, 
 			res = BigDecimal.fac(task.num1);
 			break;
 		case "sqrt":
-			console.log("works");
 			res = BigDecimal.nthRoot(task.num1);
 			break;
 		case "square":

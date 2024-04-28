@@ -226,7 +226,6 @@ export default class BigDecimal {
 
     static sin(bigDec: BigDecimal) {
         const mod = BigDecimal.mod(bigDec, BigDecimal.prod(new BigDecimal(2), BigDecimal.PI()));
-        console.log(mod.toString());
         const num = Number(mod.toString().slice(0, 15));
 
         return new BigDecimal(Math.sin(num).toFixed(20).toString());
