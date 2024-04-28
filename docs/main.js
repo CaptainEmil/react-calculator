@@ -5025,7 +5025,8 @@ var ButtonsRight = function ButtonsRight(_ref) {
     method: "post"
   }, /*#__PURE__*/React.createElement("button", {
     name: "oper",
-    id: "equal",
+    id: "b-equal",
+    type: "submit",
     value: "equals"
   }, "=")), /*#__PURE__*/React.createElement(_Button_Button__WEBPACK_IMPORTED_MODULE_0__["default"], {
     task: task,
@@ -5533,43 +5534,47 @@ function action() {
   var task = tasks[tasks.length - 1];
   return (0,react_router_dom__WEBPACK_IMPORTED_MODULE_3__.redirect)("/".concat(task.id, "/edit"));
 }
+var handleKeyDown = function handleKeyDown(e) {
+  var _sym;
+  e.preventDefault();
+  var sym;
+  if (!e.code.includes("Digit") && !e.code.includes("Minus") && !e.code.includes("Equal") && !e.code.includes("Numpad") && !e.code.includes("KeyE") && !e.code.includes("KeyP")) {
+    return;
+  }
+  switch (e.code) {
+    case "NumpadAdd":
+    case "Equal":
+      sym = "sum";
+      break;
+    case "NumpadMultiply":
+      sym = "prod";
+      break;
+    case "NumpadSubtract":
+    case "Minus":
+      sym = "diff";
+      break;
+    case "NumpadDivide":
+      sym = "div";
+      break;
+    case "KeyP":
+      sym = "pi";
+      break;
+    default:
+      sym = e.code.split("")[e.code.length - 1];
+  }
+  console.log(e.code);
+  console.log(sym);
+  var btn = document.querySelector("#b-" + ((_sym = sym) === null || _sym === void 0 ? void 0 : _sym.toLowerCase()));
+  var event = new MouseEvent("click", {
+    bubbles: true,
+    cancelable: true,
+    view: window
+  });
+  if (btn === null) return;
+  btn.dispatchEvent(event);
+};
 var Root = function Root() {
   var navigation = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_4__.useNavigation)();
-  var handleKeyDown = function handleKeyDown(e) {
-    e.preventDefault();
-    var sym;
-    switch (e.code) {
-      case "NumpadAdd":
-      case "Plus":
-        sym = "sum";
-        break;
-      case "NumpadMultiply":
-        sym = "prod";
-        break;
-      case "NumpadSubtract":
-      case "Minus":
-        sym = "diff";
-        break;
-      case "NumpadDivide":
-        sym = "div";
-        break;
-      case "Equal":
-        sym = "equal";
-        break;
-      default:
-        sym = e.code.split("")[e.code.length - 1];
-    }
-    console.log(e.code);
-    console.log(sym);
-    var btn = document.querySelector("#b-" + sym);
-    var event = new MouseEvent("click", {
-      bubbles: true,
-      cancelable: true,
-      view: window
-    });
-    if (btn === null) return;
-    btn.dispatchEvent(event);
-  };
   document.body.addEventListener("keydown", handleKeyDown);
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(_components_Sidebar_Sidebar__WEBPACK_IMPORTED_MODULE_2__["default"], null), /*#__PURE__*/React.createElement("div", {
     id: "detail",

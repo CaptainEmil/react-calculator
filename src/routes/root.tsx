@@ -39,6 +39,9 @@ const handleKeyDown: unknown = (e: React.KeyboardEvent<HTMLBodyElement>) => {
 		case ("NumpadDivide"):
 			sym = "div"
 			break;
+		case ("NumpadDecimal"):
+			sym = "dot"
+			break;
 		case ("KeyP"):
 			sym = "pi"
 			break;
@@ -46,9 +49,7 @@ const handleKeyDown: unknown = (e: React.KeyboardEvent<HTMLBodyElement>) => {
 			sym = e.code.split("")[e.code.length - 1];
 
 	}
-	console.log(e.code);
-
-	console.log(sym);
+	
 	const btn = document.querySelector("#b-" + sym?.toLowerCase());
 	const event = new MouseEvent("click", {
 		bubbles: true,

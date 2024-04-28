@@ -132,6 +132,7 @@ const Button = ({ task, children, oper }: ButtonProps) => {
                 .replace("-", "diff")
                 .replace("*", "prod")
                 .replace("/", "div")
+                .replace(".","dot")
         }>{children}</button>
     )
 }
