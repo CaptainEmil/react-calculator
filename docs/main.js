@@ -4597,7 +4597,6 @@ var BigDecimal = /*#__PURE__*/function () {
     key: "sin",
     value: function sin(bigDec) {
       var mod = BigDecimal.mod(bigDec, BigDecimal.prod(new BigDecimal(2), BigDecimal.PI()));
-      console.log(mod.toString());
       var num = Number(mod.toString().slice(0, 15));
       return new BigDecimal(Math.sin(num).toFixed(20).toString());
     }
@@ -4803,7 +4802,7 @@ var Button = function Button(_ref) {
   };
   return /*#__PURE__*/React.createElement("button", {
     onClick: handleClick,
-    id: "b-" + ((_ref2 = oper !== null && oper !== void 0 ? oper : children === null || children === void 0 ? void 0 : children.toString()) === null || _ref2 === void 0 ? void 0 : _ref2.replace("+", "sum").replace("-", "diff").replace("*", "prod").replace("/", "div"))
+    id: "b-" + ((_ref2 = oper !== null && oper !== void 0 ? oper : children === null || children === void 0 ? void 0 : children.toString()) === null || _ref2 === void 0 ? void 0 : _ref2.replace("+", "sum").replace("-", "diff").replace("*", "prod").replace("/", "div").replace(".", "dot"))
   }, children);
 };
 /* harmony default export */ __webpack_exports__["default"] = (Button);
@@ -5273,7 +5272,6 @@ var UniqDisplay = function UniqDisplay(_ref) {
   var oper = taskUpdated.calcOper;
   var num1 = taskUpdated.num1 === undefined ? "0" : taskUpdated.num1.toString() + (dotFlags[0] && !taskUpdated.num1.toString().includes(".") ? "." : "") + "0".repeat(zerosCnt[0]);
   var num2 = taskUpdated.num2 === undefined ? "0" : taskUpdated.num2.toString() + (dotFlags[1] && !taskUpdated.num2.toString().includes(".") ? "." : "") + "0".repeat(zerosCnt[1]);
-  console.log(oper);
   switch (oper) {
     case "fac":
       return /*#__PURE__*/React.createElement(React.Fragment, null, num1.toString() + "!");
@@ -5556,14 +5554,15 @@ var handleKeyDown = function handleKeyDown(e) {
     case "NumpadDivide":
       sym = "div";
       break;
+    case "NumpadDecimal":
+      sym = "dot";
+      break;
     case "KeyP":
       sym = "pi";
       break;
     default:
       sym = e.code.split("")[e.code.length - 1];
   }
-  console.log(e.code);
-  console.log(sym);
   var btn = document.querySelector("#b-" + ((_sym = sym) === null || _sym === void 0 ? void 0 : _sym.toLowerCase()));
   var event = new MouseEvent("click", {
     bubbles: true,
@@ -5841,7 +5840,6 @@ var calcTask = function calcTask(state, action) {
   if (!task) throw new Error("No task found for", {
     cause: action.payload
   });
-  console.log(_options_singleOpers__WEBPACK_IMPORTED_MODULE_3__["default"]);
   if (task.num1 === undefined || task.oper === undefined || task.num2 === undefined && !_options_singleOpers__WEBPACK_IMPORTED_MODULE_3__["default"].includes(task.calcOper)) return tasks;
   var res;
   switch (task.calcOper) {
@@ -5882,7 +5880,6 @@ var calcTask = function calcTask(state, action) {
       res = _BigDecimal__WEBPACK_IMPORTED_MODULE_2__["default"].fac(task.num1);
       break;
     case "sqrt":
-      console.log("works");
       res = _BigDecimal__WEBPACK_IMPORTED_MODULE_2__["default"].nthRoot(task.num1);
       break;
     case "square":

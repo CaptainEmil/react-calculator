@@ -20,7 +20,8 @@ const handleKeyDown: unknown = (e: React.KeyboardEvent<HTMLBodyElement>) => {
 		!e.code.includes("Equal") &&
 		!e.code.includes("Numpad") &&
 		!e.code.includes("KeyE") &&
-		!e.code.includes("KeyP")
+		!e.code.includes("KeyP") &&
+		!e.code.includes("Period")
 	) {
 		return;
 	}
@@ -40,6 +41,7 @@ const handleKeyDown: unknown = (e: React.KeyboardEvent<HTMLBodyElement>) => {
 			sym = "div"
 			break;
 		case ("NumpadDecimal"):
+		case ("Period"):
 			sym = "dot"
 			break;
 		case ("KeyP"):
@@ -49,7 +51,7 @@ const handleKeyDown: unknown = (e: React.KeyboardEvent<HTMLBodyElement>) => {
 			sym = e.code.split("")[e.code.length - 1];
 
 	}
-	
+
 	const btn = document.querySelector("#b-" + sym?.toLowerCase());
 	const event = new MouseEvent("click", {
 		bubbles: true,
